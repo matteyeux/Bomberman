@@ -15,8 +15,8 @@ endif
 RM      = rm -f
 TARGET  = bomberman
 
-SRC 	= 	src/main.c \
-			src/bomberman.c
+SRC 	= 	main.c game.c#src/main.c \
+			#src/bomberman.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -31,6 +31,8 @@ $(TARGET): $(OBJ)
 src/%.o : src/%.c
 	@echo "CC	$<"
 	@$(CC) $(CFLAGS) -c $< -o $@
+
+coffee: all clean
 
 clean:
 	$(RM) $(OBJ)
