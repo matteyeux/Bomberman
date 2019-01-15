@@ -1,7 +1,16 @@
 CC      = gcc
 SDL_FLAGS = -I/usr/include/SDL2 -D_REENTRANT
 CFLAGS  = -I. -Wall -Wextra -g3 $(SDL_FLAGS)
-LDFLAGS  = -L/usr/lib/x86_64-linux-gnu -lSDL2 -lSDL2_image -lSDL2_ttf
+LDFLAGS =
+
+ifeq ($(shell uname), Linux)
+	LDFLAGS  += -L/usr/lib/x86_64-linux-gnu -lSDL2 -lSDL2_image -lSDL2_ttf
+endif
+
+ifeq ($(shell uname), Darwin)
+	LDFLAGS += blabla
+endif
+
 
 RM      = rm -f
 TARGET  = bomberman
