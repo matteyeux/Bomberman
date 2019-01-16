@@ -81,6 +81,7 @@ void destroy_interface(interface_t *interface)
 		{
 			TTF_CloseFont(interface->Font);
 		}
+
 		TTF_Quit();
 
 		SDL_Quit();
