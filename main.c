@@ -6,6 +6,8 @@ int main(void)
 
     printf("ok SDL\n");
 
+    SDL_Delay(5000);
+
     game_destroy(game);
     
     return (0);
