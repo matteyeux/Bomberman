@@ -16,6 +16,8 @@ player_t *init_player(interface_t *interface)
 		return NULL;
 	}
 
+	player->id = 0;
+	player->score = 0;
 	player->playerPositionRect.x = interface->screenSize.x / 2;
 	player->playerPositionRect.y = interface->screenSize.y / 2;
 	player->playerPositionRect.w = 50;
