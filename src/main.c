@@ -9,6 +9,7 @@ int main(void)
 {
 	interface_t *interface = NULL;
 	player_t *player = NULL;
+	int status = 0;
 
 	interface = init_interface();
 
@@ -17,7 +18,6 @@ int main(void)
 	}
 
 	fprintf(stdout, "Successfully initialized interface !\n");
-	SDL_Delay(3000);
 
 	player = init_player(interface);
 
@@ -26,7 +26,14 @@ int main(void)
 	}
 
 	fprintf(stdout, "Successfully initialized player !\n");
-	SDL_Delay(3000);
+
+	while (status != -1) {
+		draw_game(interface, player);
+
+		status = game_event();
+
+		SDL_Delay(20);
+	}
 
 	destroy_game(interface, player);
 }
