@@ -48,10 +48,8 @@ player_t *init_player(interface_t *interface)
 
 void destroy_player(player_t *player)
 {
-	if (player)
-	{
-		if (player->TexPlayer)
-		{
+	if (player) {
+		if (player->TexPlayer) {
 			SDL_DestroyTexture(player->TexPlayer);
 		}
 

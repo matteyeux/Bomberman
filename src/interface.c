@@ -15,7 +15,7 @@ interface_t *init_interface(void)
 	}
 
 	interface->screenSize.x = 640;
-	interface->screenSize.y = 480; 
+	interface->screenSize.y = 480;
 
 	interface->Window = NULL;
 	interface->Renderer = NULL;
@@ -38,8 +38,7 @@ interface_t *init_interface(void)
 	// Load font
 	interface->Font = TTF_OpenFont("fonts/arial.ttf", 25);
 
-	if (!interface->Font)
-	{
+	if (!interface->Font) {
 		fprintf(stderr, "unable to open TTF : %s\n", TTF_GetError());
 		destroy_interface(interface);
 		return NULL;	
@@ -77,8 +76,7 @@ void destroy_interface(interface_t *interface)
 			SDL_DestroyWindow(interface->Window);
 		}
 
-		if (interface->Font)
-		{
+		if (interface->Font) {
 			TTF_CloseFont(interface->Font);
 		}
 

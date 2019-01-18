@@ -24,8 +24,7 @@ int game_event(void)
 
 	SDL_Event e;
 
-	if (SDL_PollEvent(&e))
-	{
+	if (SDL_PollEvent(&e)) {
 		if (e.type == SDL_QUIT) {
 			status = -1;
 		} else if (e.type == SDL_KEYDOWN) {
