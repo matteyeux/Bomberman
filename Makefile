@@ -8,16 +8,19 @@ ifeq ($(shell uname), Linux)
 endif
 
 ifeq ($(shell uname), Darwin)
-	LDFLAGS += -lSDL2 -lSDL2_Image
+	#LDFLAGS += -lSDL2 -lSDL2_Image -framework SDL2_ttf
 	#LDFLAGS += -lSDL2_Image
-	#LDFLAGS += -framework SDL2_main
+	LDFLAGS += -framework SDL2 -framework SDL2_Image
 endif
 
 
 RM      = rm -f
 TARGET  = bomberman
 
-SRC 	= 	main.c game.c#src/main.c \
+SRC 	= 	\
+			main.c game.c
+			#mainTest.c
+			#src/main.c \
 			#src/bomberman.c
 
 OBJ = $(SRC:.c=.o)

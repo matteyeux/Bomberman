@@ -2,11 +2,13 @@
 
 int main(void)
 {
+    SDL_Event event;
+
     stGame *game = game_init();
 
-    printf("ok SDL\n");
-
-    SDL_Delay(5000);
+    do {
+        SDL_WaitEvent(&event);
+    }while(event.type != SDL_QUIT);
 
     game_destroy(game);
     
