@@ -15,10 +15,7 @@ endif
 RM		= rm -f
 TARGET	= bomberman
 
-SRC		=	src/main.c \
-			src/bomberman.c \
-			src/interface.c \
-			src/player.c
+SRC		=	$(wildcard src/*c)
 
 OBJ		= $(SRC:.c=.o)
 
