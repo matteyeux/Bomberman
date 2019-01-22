@@ -11,6 +11,11 @@ stGame *game_init()
     game->pWindow = NULL;
     game->pRenderer = NULL;
     game->pTexPlayer = NULL;
+    game->playerPositionRect->x = game->screenSize.x / 2;
+    game->playerPositionRect->y = game->screenSize.y / 2;
+    game->playerPositionRect->w = 60;
+    game->playerPositionRect->h = 60;
+    
 
     printf("Game Init \n");
 
@@ -94,4 +99,17 @@ void game_destroy(stGame *game)
 
         free(game);
     }
+}
+
+void game_draw(stGame *game)
+{
+    // Dessine le fond en noir
+    SDL_SetRenderDrawColor(game->pRenderer, 0, 0, 0, 255);
+    SDL_RenderClear(game->pRenderer);
+
+    // Dessine la texture
+    //SDL_RenderCopy(game->pRenderer, game->pTexPlayer, NULL, game->playerPositionRect);
+
+    // Retourne le rendu
+    SDL_RenderPresent(game->pRenderer);
 }

@@ -13,10 +13,13 @@ typedef struct {
     SDL_Renderer *pRenderer;
 
     SDL_Texture *pTexPlayer;
+
+    SDL_Rect *playerPositionRect;
 } stGame;
 
 stGame *game_init(void);
 void game_destroy(stGame *pGame);
+void game_draw(stGame *pGame);
 
 
 #endif
