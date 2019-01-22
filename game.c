@@ -11,11 +11,19 @@ stGame *game_init()
     game->pWindow = NULL;
     game->pRenderer = NULL;
     game->pTexPlayer = NULL;
+    game->playerPositionRect = NULL;
+
+    // Il faut malloc le rectangle
+    game->playerPositionRect = malloc(sizeof(SDL_Rect));
+    if (game->playerPositionRect == NULL) {
+        game_destroy(game);
+        return (NULL);
+    }
+
     game->playerPositionRect->x = game->screenSize.x / 2;
     game->playerPositionRect->y = game->screenSize.y / 2;
     game->playerPositionRect->w = 60;
     game->playerPositionRect->h = 60;
-    
 
     printf("Game Init \n");
 
@@ -25,6 +33,8 @@ stGame *game_init()
         game_destroy(game);
         return (NULL);
     }
+
+    printf("Game launched\n");
 
     // Création de la window de jeu
     game->pWindow = SDL_CreateWindow(
@@ -46,7 +56,11 @@ stGame *game_init()
         return (NULL);
     }
 
+    printf("Window Launched \n");
     // Création d'une texture
+    
+
+    printf("Planted ???\n");
     // nécessite une surface
     SDL_Surface *sdlSurface = IMG_Load("./img.png");
     if (!sdlSurface) {
@@ -74,6 +88,7 @@ void game_destroy(stGame *game)
     // Si la structure existe
     if (game) {
 
+        
         // Si la texture existe
         if (game->pTexPlayer) {
             printf("Free du Texture \n");
@@ -93,6 +108,11 @@ void game_destroy(stGame *game)
             SDL_DestroyWindow(game->pWindow);
             //free(game->pWindow);
         }
+
+        if (game->playerPositionRect) {
+            printf("Free RECT\n");
+            free(game->playerPositionRect);
+        }
         SDL_Quit();
 
         printf("Game Destroy\n");
@@ -108,7 +128,7 @@ void game_draw(stGame *game)
     SDL_RenderClear(game->pRenderer);
 
     // Dessine la texture
-    //SDL_RenderCopy(game->pRenderer, game->pTexPlayer, NULL, game->playerPositionRect);
+    SDL_RenderCopy(game->pRenderer, game->pTexPlayer, NULL, game->playerPositionRect);
 
     // Retourne le rendu
     SDL_RenderPresent(game->pRenderer);
