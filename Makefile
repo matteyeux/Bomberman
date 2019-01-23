@@ -8,7 +8,7 @@ ifeq ($(shell uname), Linux)
 endif
 
 ifeq ($(shell uname), Darwin)
-	LDFLAGS += -framework SDL2
+	LDFLAGS += -lSDL2 -lSDL2_image -lSDL2_ttf
 endif
 
 
@@ -30,6 +30,8 @@ $(TARGET): $(OBJ)
 src/%.o : src/%.c
 	@echo "CC	$<"
 	@$(CC) $(CFLAGS) -c $< -o $@
+
+coffee: all clean
 
 clean:
 	$(RM) $(OBJ)
