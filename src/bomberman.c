@@ -10,12 +10,6 @@ void draw_game(interface_t *interface, player_t *player)
 	SDL_SetRenderDrawColor(interface->Renderer, 0, 0, 0, 255);
 	SDL_RenderClear(interface->Renderer);
 
-	//player->playerImg.x = 16;
-	//player->playerImg.y = 0;
-	//player->playerImg.w = 16;
-	//player->playerImg.h = 16;
-	
-
 	// display player
 	SDL_RenderCopy(interface->Renderer, player->TexPlayer, &player->playerImg,&player->playerPositionRect);
 
