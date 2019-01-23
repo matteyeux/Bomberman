@@ -14,8 +14,8 @@ interface_t *init_interface(void)
 		return NULL;
 	}
 
-	interface->screenSize.x = 640;
-	interface->screenSize.y = 480;
+	interface->screenSize.x = 14*60;
+	interface->screenSize.y = 12*60;
 
 	interface->Window = NULL;
 	interface->Renderer = NULL;

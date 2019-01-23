@@ -20,12 +20,16 @@ player_t *init_player(interface_t *interface)
 	player->score = 0;
 	player->playerPositionRect.x = interface->screenSize.x / 2;
 	player->playerPositionRect.y = interface->screenSize.y / 2;
-	player->playerPositionRect.w = 50;
+	player->playerPositionRect.w = 60;
 	player->playerPositionRect.h = 60;
-
+	player->playerImg.x = 16;
+	player->playerImg.y = 16;
+	player->playerImg.w = 16;
+	player->playerImg.h = 16;
 
 	// load player texture
-	SDL_Surface *playerSurface = IMG_Load("images/bomberman_front.png");
+	//SDL_Surface *playerSurface = IMG_Load("images/bomberman_front.png");
+	SDL_Surface *playerSurface = IMG_Load("images/bomberman.bmp");
 
 	if (!playerSurface) {
 		fprintf(stderr, "unable to load image : %s\n", IMG_GetError());

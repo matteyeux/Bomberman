@@ -13,6 +13,9 @@ struct player_s
 	int id;
 	int score;
 
+	// player img
+	SDL_Rect playerImg;
+
 	// player texture
 	SDL_Texture *TexPlayer;
 	
