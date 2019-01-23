@@ -1,6 +1,6 @@
 CC      = gcc
 SDL_FLAGS = -I/usr/include/SDL2 -D_REENTRANT
-CFLAGS  = -I. -Wall -Wextra -g3 $(SDL_FLAGS)
+CFLAGS  = -I. -Wall -Wextra -g $(SDL_FLAGS)
 LDFLAGS =
 
 ifeq ($(shell uname), Linux)

@@ -30,7 +30,7 @@ int main(void)
 	while (status != -1) {
 		draw_game(interface, player);
 
-		status = game_event();
+		status = game_event(player, interface);
 
 		SDL_Delay(20);
 	}

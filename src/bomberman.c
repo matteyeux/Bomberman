@@ -18,7 +18,7 @@ void draw_game(interface_t *interface, player_t *player)
 	SDL_RenderPresent(interface->Renderer);
 }
 
-int game_event(void)
+int game_event(player_t *player, interface_t *interface)
 {
 	int status = 0;
 
@@ -36,7 +36,7 @@ int game_event(void)
 				case SDLK_DOWN:
 				case SDLK_LEFT:
 				case SDLK_RIGHT:
-					printf("move\n");
+					movePlayer(player, interface, e.key.keysym.sym);
 					break;
 				default :
 				fprintf(stderr, "unknown key : %d\n", e.key.keysym.sym);
