@@ -1,0 +1,21 @@
+# This file is used to configure travis-ci build
+os :
+  - linux
+
+dist: trusty
+sudo: required
+
+language: C
+
+compiler:
+  - clang
+  - gcc
+
+
+before_script : 
+  - sudo apt-get install libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev
+  - ./scripts/normes.py src/*.c
+
+script : 
+  - ./scripts/normes.py src/*.c
+  - make
