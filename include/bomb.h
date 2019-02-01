@@ -1,0 +1,4 @@
+#ifndef BOMBERMAN_BOMB_H
+#define BOMBERMAN_BOMB_H
+
+#endif //BOMBERMAN_BOMB_H
