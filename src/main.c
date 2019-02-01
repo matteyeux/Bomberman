@@ -4,6 +4,7 @@
 #include <include/interface.h>
 #include <include/player.h>
 #include <include/bomberman.h>
+#include <include/wallHard.h>
 
 int main(void)
 {

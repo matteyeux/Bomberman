@@ -7,7 +7,7 @@
 void draw_game(interface_t *interface, player_t *player)
 {
 	// back screen
-	SDL_SetRenderDrawColor(interface->Renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(interface->Renderer, 16, 120, 48, 255);
 	SDL_RenderClear(interface->Renderer);
 
 
@@ -52,4 +52,9 @@ void destroy_game(interface_t *interface, player_t *player)
 {
 	destroy_player(player);
 	destroy_interface(interface);
+}
+
+void destroy_game_by_wallHard(interface_t *interface, wallHard_t *wallHard)
+{
+
 }
