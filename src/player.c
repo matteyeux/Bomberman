@@ -4,6 +4,7 @@
 #include <include/player.h>
 #include <include/interface.h>
 #include <include/bomberman.h>
+#include <include/bomb.h>
 
 player_t *init_player(interface_t *interface)
 {
@@ -68,6 +69,18 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction)
 		fprintf(stderr, "unknown direction\n");
 	}
 }
+
+bomb_t *dropBomb(interface_t *interface, bomb_t *bomb)
+{
+	bomb_t *newBomb = NULL;
+
+	if (!bomb) {
+		newBomb = init_bomb(interface);
+	}
+
+	return newBomb;
+}
+
 
 void destroy_player(player_t *player)
 {

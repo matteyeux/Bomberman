@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-
+#include <include/bomb.h>
 #include <include/interface.h>
 
 #ifndef PLAYER_H_
@@ -23,5 +23,6 @@ struct player_s
 player_t *init_player(interface_t *interface);
 void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction);
 void destroy_player(player_t *player);
+bomb_t *dropBomb(interface_t *interface, bomb_t *bomb);
 
 #endif /* PLAYER_H_ */

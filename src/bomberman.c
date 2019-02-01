@@ -2,23 +2,27 @@
 
 #include <include/interface.h>
 #include <include/player.h>
+#include <include/bomb.h>
 #include <include/bomberman.h>
 
-void draw_game(interface_t *interface, player_t *player)
+void draw_game(interface_t *interface, player_t *player, bomb_t *bomb)
 {
 	// back screen
 	SDL_SetRenderDrawColor(interface->Renderer, 16, 120, 48, 255);
 	SDL_RenderClear(interface->Renderer);
 
-
 	// display player
+	if (bomb) {
+		SDL_RenderCopy(interface->Renderer, bomb->TexBomb, NULL, &bomb->bombPositionRect);
+		printf("%s", "ahah");
+	}
 	SDL_RenderCopy(interface->Renderer, player->TexPlayer, NULL, &player->playerPositionRect);
 
 	// show renderer
 	SDL_RenderPresent(interface->Renderer);
 }
 
-int game_event(player_t *player, interface_t *interface)
+int game_event(player_t *player, interface_t *interface, bomb_t *bomb)
 {
 	int status = 0;
 
@@ -38,6 +42,10 @@ int game_event(player_t *player, interface_t *interface)
 				case SDLK_RIGHT:
 					movePlayer(player, interface, e.key.keysym.sym);
 					break;
+				case SDLK_d:
+					bomb = dropBomb(interface, bomb);
+					printf("%s", "come on bitch\n");
+					break;
 				default :
 				fprintf(stderr, "unknown key : %d\n", e.key.keysym.sym);
 				break;
@@ -54,7 +62,7 @@ void destroy_game(interface_t *interface, player_t *player)
 	destroy_interface(interface);
 }
 
-void destroy_game_by_wallHard(interface_t *interface, wallHard_t *wallHard)
+void destroy_game_by_bomb(interface_t *interface, bomb_t *bomb)
 {
 
 }
