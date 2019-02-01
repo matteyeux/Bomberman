@@ -22,7 +22,7 @@ void draw_game(interface_t *interface, player_t *player, bomb_t *bomb)
 	SDL_RenderPresent(interface->Renderer);
 }
 
-int game_event(player_t *player, interface_t *interface, bomb_t *bomb)
+int game_event(player_t *player, interface_t *interface, bomb_t **bomb)
 {
 	int status = 0;
 
@@ -43,7 +43,7 @@ int game_event(player_t *player, interface_t *interface, bomb_t *bomb)
 					movePlayer(player, interface, e.key.keysym.sym);
 					break;
 				case SDLK_d:
-					bomb = dropBomb(interface, bomb);
+					*bomb = dropBomb(interface, bomb);
 					printf("%s", "come on bitch\n");
 					break;
 				default :

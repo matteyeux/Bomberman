@@ -39,7 +39,11 @@ int main(void)
 	while (status != -1) {
 		draw_game(interface, player, bomb);
 
-		status = game_event(player, interface, bomb);
+		status = game_event(player, interface, &bomb);
+
+		if (bomb) {
+			printf("%s", "ZZZZZZZZZZZZZZZ");
+		}
 
 		SDL_Delay(20);
 	}

@@ -72,13 +72,11 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction)
 
 bomb_t *dropBomb(interface_t *interface, bomb_t *bomb)
 {
-	bomb_t *newBomb = NULL;
-
 	if (!bomb) {
-		newBomb = init_bomb(interface);
+		bomb = init_bomb(interface);
 	}
 
-	return newBomb;
+	return bomb;
 }
 
 
