@@ -27,7 +27,7 @@ int main(void)
 		return (EXIT_FAILURE);
 	}
 
-	//bomb = init_bomb(interface);
+	bomb = init_bomb(interface);
 	//bomb = newBomb(interface);
 
 	if (bomb == NULL) {
@@ -39,11 +39,21 @@ int main(void)
 	while (status != -1) {
 		draw_game(interface, player, bomb);
 
-		status = game_event(player, interface, &bomb);
+		status = game_event(player, interface, bomb);
 
+
+		//printf("%d %s", bomb->bombPositionRect.x, "\n");
+
+		/*
 		if (bomb) {
-			printf("%s", "ZZZZZZZZZZZZZZZ");
+			printf("%d %s %d %s", 0, " - ", 0, "\n");
+			SDL_Delay(1000);
+			destroy_game(interface, player);
+			SDL_Delay(1000);
+		}else{
+			printf("%s", "null\n");
 		}
+		*/
 
 		SDL_Delay(20);
 	}

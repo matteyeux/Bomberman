@@ -12,9 +12,9 @@ void draw_game(interface_t *interface, player_t *player, bomb_t *bomb)
 	SDL_RenderClear(interface->Renderer);
 
 	// display player
-	if (bomb) {
+	if (bomb->exist == 1) {
 		SDL_RenderCopy(interface->Renderer, bomb->TexBomb, NULL, &bomb->bombPositionRect);
-		printf("%s", "ahah");
+		//printf("%s", "ahah");
 	}
 	SDL_RenderCopy(interface->Renderer, player->TexPlayer, NULL, &player->playerPositionRect);
 
@@ -22,7 +22,7 @@ void draw_game(interface_t *interface, player_t *player, bomb_t *bomb)
 	SDL_RenderPresent(interface->Renderer);
 }
 
-int game_event(player_t *player, interface_t *interface, bomb_t **bomb)
+int game_event(player_t *player, interface_t *interface, bomb_t *bomb)
 {
 	int status = 0;
 
@@ -43,8 +43,7 @@ int game_event(player_t *player, interface_t *interface, bomb_t **bomb)
 					movePlayer(player, interface, e.key.keysym.sym);
 					break;
 				case SDLK_d:
-					*bomb = dropBomb(interface, bomb);
-					printf("%s", "come on bitch\n");
+					dropBomb(player, bomb);
 					break;
 				default :
 				fprintf(stderr, "unknown key : %d\n", e.key.keysym.sym);

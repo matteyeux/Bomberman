@@ -70,10 +70,10 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction)
 	}
 }
 
-bomb_t *dropBomb(interface_t *interface, bomb_t *bomb)
+bomb_t *dropBomb(player_t *player, bomb_t *bomb)
 {
-	if (!bomb) {
-		bomb = init_bomb(interface);
+	if (bomb->exist == 0) {
+		placeBomb(bomb, player);
 	}
 
 	return bomb;

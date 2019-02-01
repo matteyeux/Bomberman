@@ -23,6 +23,6 @@ struct player_s
 player_t *init_player(interface_t *interface);
 void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction);
 void destroy_player(player_t *player);
-bomb_t *dropBomb(interface_t *interface, bomb_t *bomb);
+bomb_t *dropBomb(player_t *player, bomb_t *bomb);
 
 #endif /* PLAYER_H_ */

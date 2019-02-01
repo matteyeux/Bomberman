@@ -16,8 +16,9 @@ bomb_t *init_bomb(interface_t *interface)
         return NULL;
     }
 
-    bomb->bombPositionRect.x = interface->screenSize.x / 2;
-    bomb->bombPositionRect.y = interface->screenSize.y / 2;
+    bomb->exist = 0;
+    bomb->bombPositionRect.x = 156;
+    bomb->bombPositionRect.y = 78;
     bomb->bombPositionRect.w = 40;
     bomb->bombPositionRect.h = 40;
 
@@ -43,27 +44,11 @@ bomb_t *init_bomb(interface_t *interface)
     return bomb;
 }
 
-void moveBomb(bomb_t *bomb, interface_t *interface, SDL_Keycode direction)
+void placeBomb(bomb_t *bomb, player_t *player)
 {
-    if (direction == SDLK_UP){
-        if (bomb->bombPositionRect.y > 0) {
-            bomb->bombPositionRect.y -= 10;
-        }
-    } else if (direction == SDLK_DOWN) {
-        if (bomb->bombPositionRect.y < (interface->screenSize.y - bomb->bombPositionRect.h)) {
-            bomb->bombPositionRect.y += 10;
-        }
-    } else if (direction == SDLK_LEFT) {
-        if (bomb->bombPositionRect.x > 0) {
-            bomb->bombPositionRect.x -= 10;
-        }
-    } else if (direction == SDLK_RIGHT) {
-        if (bomb->bombPositionRect.x < (interface->screenSize.x - bomb->bombPositionRect.w)) {
-            bomb->bombPositionRect.x += 10;
-        }
-    } else {
-        fprintf(stderr, "unknown direction\n");
-    }
+    bomb->exist= 1;
+    bomb->bombPositionRect.x = player->playerPositionRect.x + 5;
+    bomb->bombPositionRect.y = player->playerPositionRect.y + 20;
 }
 
 void destroy_bomb(bomb_t *bomb)

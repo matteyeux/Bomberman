@@ -10,6 +10,9 @@ typedef struct bomb_s bomb_t;
 
 struct bomb_s
 {
+    // Does the bomb exist
+    int exist;
+
     // bomb texture
     SDL_Texture *TexBomb;
 
@@ -18,7 +21,6 @@ struct bomb_s
 };
 
 bomb_t *init_bomb(interface_t *interface);
-void moveBomb(bomb_t *bomb, interface_t *interface, SDL_Keycode direction);
 void destroy_bomb(bomb_t *bomb);
 
 #endif //BOMBERMAN_BOMB_H
