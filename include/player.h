@@ -1,5 +1,3 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <include/bomb.h>
 #include <include/interface.h>
 

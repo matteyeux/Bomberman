@@ -30,14 +30,14 @@ player_t *init_player(interface_t *interface)
 
 	if (!playerSurface) {
 		fprintf(stderr, "unable to load image : %s\n", IMG_GetError());
-		destroy_game(interface, player);
+		destroy_game(interface, player, NULL);
 		return NULL;	
 	} else {
 		player->TexPlayer = SDL_CreateTextureFromSurface(interface->Renderer, playerSurface);
 
 		if (!player->TexPlayer) {
 			fprintf(stderr, "unable to handle texture : %s\n", SDL_GetError());
-			destroy_game(interface, player);
+			destroy_game(interface, player, NULL);
 			return NULL;
 		}
 

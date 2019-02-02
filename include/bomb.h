@@ -1,12 +1,10 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-
 #include <include/interface.h>
 
-#ifndef BOMBERMAN_BOMB_H
-#define BOMBERMAN_BOMB_H
+#ifndef BOMB_H_
+#define BOMB_H_
 
 typedef struct bomb_s bomb_t;
+typedef struct player_s player_t;
 
 struct bomb_s
 {
@@ -21,6 +19,7 @@ struct bomb_s
 };
 
 bomb_t *init_bomb(interface_t *interface);
+void placeBomb(bomb_t *bomb, player_t *player);
 void destroy_bomb(bomb_t *bomb);
 
-#endif //BOMBERMAN_BOMB_H
+#endif // BOMB_H_

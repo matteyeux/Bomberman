@@ -17,18 +17,21 @@ int main(void)
 	if (interface == NULL) {
 		return (EXIT_FAILURE);
 	}
+
 	fprintf(stdout, "Successfully initialized interface !\n");
 
 	player = init_player(interface);
 	if (player == NULL) {
 		return (EXIT_FAILURE);
 	}
+
 	fprintf(stdout, "Successfully initialized player !\n");
 
 	bomb = init_bomb(interface);
 	if (bomb == NULL) {
 		return (EXIT_FAILURE);
 	}
+
 	fprintf(stdout, "Successfully initialized bomb !\n");
 
 	while (status != -1) {
@@ -39,5 +42,5 @@ int main(void)
 		SDL_Delay(20);
 	}
 
-	destroy_game(interface, player);
+	destroy_game(interface, player, bomb);
 }

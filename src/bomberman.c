@@ -55,13 +55,9 @@ int game_event(player_t *player, interface_t *interface, bomb_t *bomb)
 	return status;
 }
 
-void destroy_game(interface_t *interface, player_t *player)
+void destroy_game(interface_t *interface, player_t *player, bomb_t *bomb)
 {
+	destroy_bomb(bomb);
 	destroy_player(player);
 	destroy_interface(interface);
-}
-
-void destroy_game_by_bomb(interface_t *interface, bomb_t *bomb)
-{
-
 }

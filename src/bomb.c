@@ -27,14 +27,13 @@ bomb_t *init_bomb(interface_t *interface)
 
     if (!bombSurface) {
         fprintf(stderr, "unable to load image : %s\n", IMG_GetError());
-        destroy_game_by_bomb(interface, bomb);
         return NULL;
     } else {
         bomb->TexBomb = SDL_CreateTextureFromSurface(interface->Renderer, bombSurface);
 
         if (!bomb->TexBomb) {
             fprintf(stderr, "unable to handle texture : %s\n", SDL_GetError());
-            destroy_game(interface, bomb);
+            destroy_bomb(bomb);
             return NULL;
         }
 
