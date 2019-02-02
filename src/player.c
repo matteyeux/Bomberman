@@ -4,6 +4,7 @@
 #include <include/player.h>
 #include <include/interface.h>
 #include <include/bomberman.h>
+#include <include/bomb.h>
 
 player_t *init_player(interface_t *interface)
 {
@@ -29,14 +30,14 @@ player_t *init_player(interface_t *interface)
 
 	if (!playerSurface) {
 		fprintf(stderr, "unable to load image : %s\n", IMG_GetError());
-		destroy_game(interface, player);
+		destroy_game(interface, player, NULL);
 		return NULL;	
 	} else {
 		player->TexPlayer = SDL_CreateTextureFromSurface(interface->Renderer, playerSurface);
 
 		if (!player->TexPlayer) {
 			fprintf(stderr, "unable to handle texture : %s\n", SDL_GetError());
-			destroy_game(interface, player);
+			destroy_game(interface, player, NULL);
 			return NULL;
 		}
 
@@ -68,6 +69,16 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction)
 		fprintf(stderr, "unknown direction\n");
 	}
 }
+
+bomb_t *dropBomb(player_t *player, bomb_t *bomb)
+{
+	if (bomb->exist == 0) {
+		placeBomb(bomb, player);
+	}
+
+	return bomb;
+}
+
 
 void destroy_player(player_t *player)
 {
