@@ -49,7 +49,7 @@ player_t *init_player(interface_t *interface)
 
 void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction)
 {
-	if (direction == SDLK_UP){
+	if (direction == SDLK_UP) {
 		if (player->playerPositionRect.y > 0) {
 			player->playerPositionRect.y -= 10;
 		}

@@ -3,3 +3,4 @@
 #include <include/bomb.h>
 
 void game_loop(interface_t *interface, player_t *player, bomb_t *bomb);
+int start_networking(char *type);

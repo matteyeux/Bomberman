@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include <include/interface.h>
 #include <include/player.h>
@@ -8,15 +9,30 @@
 #include <include/bomb.h>
 #include <include/game.h>
 #include <include/server.h>
+#include <include/client.h>
 
-#define PORT 12345
 
-int main(void)
+/*
+* CLI usage only.
+* waiting for someone to implement GUI menu
+*/
+void usage(char *arg)
+{
+	printf("usage : %s <type>\n", arg);
+	printf("type : client or server\n");
+}
+
+int main(int argc, char *argv[])
 {
 	interface_t *interface = NULL;
 	player_t *player = NULL;
 	bomb_t *bomb = NULL;
 	pid_t pid;
+
+	if (argc != 2) {
+		usage(argv[0]);
+		return 3;
+	}
 
 	interface = init_interface();
 	if (interface == NULL) {
@@ -43,7 +59,7 @@ int main(void)
 
 	switch(pid) {
 		case 0: // son, put server function here
-			server(PORT);
+			start_networking(argv[1]);
 		case -1:
 			printf("fork : %d\n", pid);
 			perror("fork");
@@ -52,5 +68,6 @@ int main(void)
 			game_loop(interface, player, bomb);
 	}
 
+	kill(pid ,SIGKILL);
 	destroy_game(interface, player, bomb);
 }
