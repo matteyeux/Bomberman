@@ -1,7 +1,7 @@
 CC      = gcc
 SDL_FLAGS = -I/usr/include/SDL2 -D_REENTRANT
 CFLAGS  = -I. -Wall -Wextra -g $(SDL_FLAGS)
-LDFLAGS =
+LDFLAGS = -lpthread
 
 ifeq ($(shell uname), Linux)
 	LDFLAGS  += -L/usr/lib/x86_64-linux-gnu -lSDL2 -lSDL2_image -lSDL2_ttf
