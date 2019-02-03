@@ -46,7 +46,6 @@ int game_event(player_t *player, interface_t *interface, bomb_t *bomb)
 					dropBomb(player, bomb);
 					break;
 				default :
-				fprintf(stderr, "unknown key : %d\n", e.key.keysym.sym);
 				break;
 			}
 		}
