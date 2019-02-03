@@ -50,7 +50,6 @@ int main(void)
 			return -1;
 		default:
 			game_loop(interface, player, bomb);
-
 	}
 
 	destroy_game(interface, player, bomb);
