@@ -31,12 +31,13 @@ int client(char *ip_addr, int port)
 		return -2;
 	}
 
-	// copy simple string into buff 
-	strcpy(buff,"client_message\n"); 
 
 	while (1) {
+		// copy simple string into buff
+		strcpy(buff,"client_message\n");
+
 		// send string to server
-		send(sock, buff, sizeof(buff), 0); 
+		send(sock, buff, sizeof(buff), 0);
 
 		// set buff to 0 so we can reuse it
 		bzero(buff, sizeof(buff));
