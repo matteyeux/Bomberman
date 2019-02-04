@@ -8,7 +8,7 @@ ifeq ($(shell uname), Linux)
 endif
 
 ifeq ($(shell uname), Darwin)
-	LDFLAGS += -framework SDL2
+	LDFLAGS += -lSDL2 -lSDL2_image -lSDL2_ttf
 endif
 
 
