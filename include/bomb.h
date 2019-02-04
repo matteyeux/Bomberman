@@ -8,14 +8,14 @@ typedef struct player_s player_t;
 
 struct bomb_s
 {
-    // Does the bomb exist
-    int exist;
+	// Does the bomb exist
+	int exist;
 
-    // bomb texture
-    SDL_Texture *TexBomb;
+	// bomb texture
+	SDL_Texture *TexBomb;
 
-    // position of bomb
-    SDL_Rect bombPositionRect;
+	// position of bomb
+	SDL_Rect bombPositionRect;
 };
 
 bomb_t *init_bomb(interface_t *interface);
