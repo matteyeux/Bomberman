@@ -35,7 +35,7 @@ types = ["int ", "float ", "char ", "void "]
 def check_curly_function(line):
 	found = 0
 	for type in types:
-		if type in line and "{" in line and found == 0:
+		if type in line and "{" in line and "(" in line and found == 0:
 			found = 1
 			print("  [line %d] found curly bracket after function" % (j+1))
 
