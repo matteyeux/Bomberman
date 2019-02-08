@@ -65,7 +65,7 @@ void game_loop(interface_t *interface, player_t *player, bomb_t *bomb)
 int start_networking(char *type)
 {
 	if (!strcmp(type, "server")) {
-		server(PORT);
+		init_server(PORT);
 	} else if (!strcmp(type, "client")) {
 		client(IP, PORT);
 	} else {
