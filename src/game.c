@@ -51,7 +51,7 @@ void *game_loop(void *game_struct)
 {
 	int status = 0;
 	game_t *game = (game_t *)game_struct;
-	printf("here\n");
+
 	while (status != -1) {
 		draw_game(game->interface, game->player, game->bomb);
 
