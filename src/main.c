@@ -33,6 +33,12 @@ int main(int argc, char *argv[])
 	}
 
 	game = init_game();
+
+	if (game == NULL) {
+		fprintf(stderr, "failed to to init game\n");
+		exit(EXIT_FAILURE);
+	}
+
 	pid = fork();
 
 	switch(pid) {
