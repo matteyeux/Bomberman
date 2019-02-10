@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <pthread.h>
 
 #include <include/interface.h>
 #include <include/player.h>
@@ -25,7 +26,7 @@ void usage(char *arg)
 int main(int argc, char *argv[])
 {
 	game_t *game = NULL;
-	pid_t pid;
+	pthread_t thread_sdl, thread_net;
 
 	if (argc != 2) {
 		usage(argv[0]);
@@ -39,19 +40,24 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	pid = fork();
-
-	switch(pid) {
-		case 0:
-			start_networking(argv[1]);
-		case -1:
-			printf("fork : %d\n", pid);
-			perror("fork");
-			return -1;
-		default:
-			game_loop(game->interface, game->player, game->bomb);
+	if (pthread_create(&thread_sdl, NULL, game_loop, (void*) game) < 0) {
+		perror("pthread_create");
+		exit(EXIT_FAILURE);
 	}
 
-	kill(pid ,SIGKILL);
+	if (pthread_create(&thread_net, NULL, start_networking, (void*) argv[1]) < 0) {
+		perror("pthread_create");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pthread_join(thread_sdl, NULL) != 0) {
+		perror("pthread_join");
+		exit(EXIT_FAILURE);
+	}
+
+	printf("stop\n");
+	pthread_kill(thread_net, SIGSTOP);
+	perror("pthread_kill");
+
 	destroy_game(game->interface, game->player, game->bomb);
 }

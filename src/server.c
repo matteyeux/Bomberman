@@ -10,6 +10,7 @@
 #include <pthread.h>
 
 #include <include/server.h>
+#include <include/bomberman.h>
 
 static int run_server(int sock, net_data_t *network_data);
 
@@ -69,6 +70,7 @@ int init_server(unsigned short port)
 static int run_server(int sock, net_data_t *network_data)
 {
 	int client_sock = 1;
+	int client_cnt = 1;
 	unsigned int client_addr_len;
 	pthread_t thread_id;
 
@@ -81,29 +83,39 @@ static int run_server(int sock, net_data_t *network_data)
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 	}
 
-	while (client_sock) {
+	while (client_sock && status != -1) {
 		/* Set the size of the in-out parameter */
 		client_addr_len = sizeof(struct sockaddr_in);
 
-		client_sock = accept(sock, (struct sockaddr *)&client, (socklen_t *)&client_addr_len);
+		printf("wait here\n");
+		printf("%d\n", pthread_self());
 
-		if (client_sock == -1) {
-			perror("accept");
-			return -1;
-		}
+		if (client_cnt > 3) {
+			printf("cannot accept more than 4 clients\n");
+			client_sock = -1;
+		} else {
+			client_sock = accept(sock, (struct sockaddr *)&client, (socklen_t *)&client_addr_len);
 
-		network_data->client_sock = client_sock;
-		memcpy(&(network_data->client), &client, sizeof(struct sockaddr_in));
-		network_data->client_addr_len = client_addr_len;
+			printf("passed\n");
+			if (client_sock == -1) {
+				perror("accept");
+				return -1;
+			}
 
+			client_cnt++;
 
-		network_data->message = message;
+			network_data->client_sock = client_sock;
+			memcpy(&(network_data->client), &client, sizeof(struct sockaddr_in));
+			network_data->client_addr_len = client_addr_len;
 
-		printf("connection accepted\n");
+			network_data->message = message;
 
-		if (pthread_create(&thread_id, NULL, handler, (void*) network_data) < 0) {
-			perror("pthread_create");
-			return -1;
+			printf("connection accepted\n");
+
+			if (pthread_create(&thread_id, NULL, handler, (void*) network_data) < 0) {
+				perror("pthread_create");
+				return -1;
+			}
 		}
 	}
 
@@ -115,6 +127,8 @@ static int run_server(int sock, net_data_t *network_data)
 	free(message);
 	close(client_sock);
 	close(sock);
+	printf("new here\n");
+	pthread_exit(NULL);
 	return 0;
 }
 
@@ -141,7 +155,7 @@ void *handler(void *input)
 
 	memcpy(message, (net_data_t *)input, sizeof(net_data_t));
 
-	while (1) {
+	while (status != -1) {
 		client_sock = message->client_sock;
 
 		client_addr_len = message->client_addr_len;
