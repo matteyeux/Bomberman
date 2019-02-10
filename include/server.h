@@ -1,7 +1,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
-
+extern int sock;
 struct msg_struct
 {
 	int id;
@@ -20,5 +20,4 @@ struct net_data_s {
 
 
 int init_server(unsigned short port);
-//int server(unsigned short port);
 void *handler(void *input);

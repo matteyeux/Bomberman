@@ -12,11 +12,17 @@
 #include <include/server.h>
 #include <include/bomberman.h>
 
+int sock;
+
+/*
+* function defined else it would cause
+* each source file that included the header
+*  file to have its own private copy of the function
+*/
 static int run_server(int sock, net_data_t *network_data);
 
 int init_server(unsigned short port)
 {
-	int sock;
 	struct sockaddr_in server; /* Local address */
 
 	int enable = 1;
@@ -87,16 +93,16 @@ static int run_server(int sock, net_data_t *network_data)
 		/* Set the size of the in-out parameter */
 		client_addr_len = sizeof(struct sockaddr_in);
 
-		printf("wait here\n");
-		printf("%d\n", pthread_self());
-
 		if (client_cnt > 3) {
 			printf("cannot accept more than 4 clients\n");
 			client_sock = -1;
 		} else {
 			client_sock = accept(sock, (struct sockaddr *)&client, (socklen_t *)&client_addr_len);
 
-			printf("passed\n");
+			/*
+			* when you press exit you'll get :
+			* accept: Invalid argument
+			*/
 			if (client_sock == -1) {
 				perror("accept");
 				return -1;
@@ -127,7 +133,6 @@ static int run_server(int sock, net_data_t *network_data)
 	free(message);
 	close(client_sock);
 	close(sock);
-	printf("new here\n");
 	pthread_exit(NULL);
 	return 0;
 }
@@ -150,7 +155,7 @@ void *handler(void *input)
 
 	message = malloc(sizeof(net_data_t));
 	if (message == NULL) {
-		printf("message null\n");
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 	}
 
 	memcpy(message, (net_data_t *)input, sizeof(net_data_t));

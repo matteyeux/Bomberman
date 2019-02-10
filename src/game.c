@@ -59,6 +59,12 @@ void *game_loop(void *game_struct)
 		SDL_Delay(20);
 	}
 
+	/*
+	* SHUT_RDWR is used to disable further
+	* receptions and transmissions
+	*/
+	shutdown(sock, SHUT_RDWR);
+	close(sock);
 	return (void *)game_struct;
 }
 
@@ -66,12 +72,13 @@ void *game_loop(void *game_struct)
 * temp workaround, waiting for the menu
 * blame lepage_b
 */
-void *start_networking(void *type)
+void *start_networking(void *input)
 {
+	char *type =  (char *)input;
 
-	if (!strcmp((char *)type, "server")) {
+	if (!strcmp(type, "server")) {
 		init_server(PORT);
-	} else if (!strcmp((char *)type, "client")) {
+	} else if (!strcmp(type, "client")) {
 		client(IP, PORT);
 	} else {
 		printf("no\n");

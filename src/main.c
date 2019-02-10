@@ -55,9 +55,5 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	printf("stop\n");
-	pthread_kill(thread_net, SIGSTOP);
-	perror("pthread_kill");
-
 	destroy_game(game->interface, game->player, game->bomb);
 }

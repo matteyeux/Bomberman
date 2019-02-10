@@ -34,7 +34,6 @@ int client(char *ip_addr, unsigned short port)
 	my_message->id = 1234;
 	strcpy(my_message->message, "message");
 
-
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock < 0) {
 		perror("socket");
