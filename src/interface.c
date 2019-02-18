@@ -14,8 +14,8 @@ interface_t *init_interface(void)
 		return NULL;
 	}
 
-	interface->screenSize.x = 640;
-	interface->screenSize.y = 480;
+	interface->screenSize.x = 840;
+	interface->screenSize.y = 680;
 
 	interface->Window = NULL;
 	interface->Renderer = NULL;
@@ -32,7 +32,7 @@ interface_t *init_interface(void)
 	if (TTF_Init() != 0) {
 		fprintf(stderr, "unable to init TTF : %s\n", TTF_GetError());
 		destroy_interface(interface);
-		return NULL;		
+		return NULL;
 	}
 
 	// Load font
@@ -41,7 +41,7 @@ interface_t *init_interface(void)
 	if (!interface->Font) {
 		fprintf(stderr, "unable to open TTF : %s\n", TTF_GetError());
 		destroy_interface(interface);
-		return NULL;	
+		return NULL;
 	}
 
 	// build window
@@ -50,7 +50,7 @@ interface_t *init_interface(void)
 	if (interface->Window) {
 		// create renderer
 		interface->Renderer = SDL_CreateRenderer(interface->Window, -1, SDL_RENDERER_ACCELERATED);
-		
+
 		if (!interface->Renderer) {
 			fprintf(stderr, "unable to create renderer : %s\n", SDL_GetError());
 			destroy_interface(interface);

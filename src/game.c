@@ -1,38 +1,89 @@
+#include <pthread.h>
+#include <unistd.h>
+
 #include <include/interface.h>
 #include <include/player.h>
 #include <include/bomb.h>
 #include <include/bomberman.h>
 #include <include/client.h>
 #include <include/server.h>
+#include <include/game.h>
 
 #define IP "127.0.0.1"
 #define PORT 12345
 
-void game_loop(interface_t *interface, player_t *player, bomb_t *bomb)
+game_t *init_game(void)
 {
-	int status = 0;
+	game_t *game = NULL;
 
-	while (status != -1) {
-		draw_game(interface, player, bomb);
+	game = malloc(sizeof(game_t));
 
-		status = game_event(player, interface, bomb);
-
-		SDL_Delay(20);
+	if (game == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
 	}
-	return;
+
+	game->interface = init_interface();
+	if (game->interface == NULL) {
+		return NULL;
+	}
+
+	fprintf(stdout, "Successfully initialized interface !\n");
+
+	game->player = init_player(game->interface);
+	if (game->player == NULL) {
+		return NULL;
+	}
+
+	fprintf(stdout, "Successfully initialized player !\n");
+
+	game->bomb = init_bomb(game->interface);
+	if (game->bomb == NULL) {
+		return NULL;
+	}
+
+	fprintf(stdout, "Successfully initialized bomb !\n");
+
+	return game;
 }
 
-
-int start_networking(char *type)
+void *game_loop(void *game_struct)
 {
+	int status = 0;
+	game_t *game = (game_t *)game_struct;
+
+	while (status != -1) {
+		draw_game(game->interface, game->player, game->bomb);
+
+		status = game_event(game->player, game->interface, game->bomb);
+		SDL_Delay(20);
+	}
+
+	/*
+	* SHUT_RDWR is used to disable further
+	* receptions and transmissions
+	*/
+	shutdown(sock, SHUT_RDWR);
+	close(sock);
+	return (void *)game_struct;
+}
+
+/*
+* temp workaround, waiting for the menu
+* blame lepage_b
+*/
+void *start_networking(void *input)
+{
+	char *type =  (char *)input;
+
 	if (!strcmp(type, "server")) {
-		server(PORT);
+		init_server(PORT);
 	} else if (!strcmp(type, "client")) {
 		client(IP, PORT);
 	} else {
 		printf("no\n");
-		return -1;
+		return NULL;
 	}
 
-	return 0;
+	return (void *)type;
 }
