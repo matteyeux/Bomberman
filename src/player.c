@@ -31,7 +31,7 @@ player_t *init_player(interface_t *interface)
 	if (!playerSurface) {
 		fprintf(stderr, "unable to load image : %s\n", IMG_GetError());
 		destroy_game(interface, player, NULL);
-		return NULL;	
+		return NULL;
 	} else {
 		player->TexPlayer = SDL_CreateTextureFromSurface(interface->Renderer, playerSurface);
 

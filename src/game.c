@@ -1,3 +1,6 @@
+#include <pthread.h>
+#include <unistd.h>
+
 #include <include/interface.h>
 #include <include/player.h>
 #include <include/bomb.h>
@@ -44,34 +47,43 @@ game_t *init_game(void)
 	return game;
 }
 
-void game_loop(interface_t *interface, player_t *player, bomb_t *bomb)
+void *game_loop(void *game_struct)
 {
 	int status = 0;
+	game_t *game = (game_t *)game_struct;
 
 	while (status != -1) {
-		draw_game(interface, player, bomb);
+		draw_game(game->interface, game->player, game->bomb);
 
-		status = game_event(player, interface, bomb);
-
+		status = game_event(game->player, game->interface, game->bomb);
 		SDL_Delay(20);
 	}
-	return;
+
+	/*
+	* SHUT_RDWR is used to disable further
+	* receptions and transmissions
+	*/
+	shutdown(sock, SHUT_RDWR);
+	close(sock);
+	return (void *)game_struct;
 }
 
 /*
 * temp workaround, waiting for the menu
 * blame lepage_b
 */
-int start_networking(char *type)
+void *start_networking(void *input)
 {
+	char *type =  (char *)input;
+
 	if (!strcmp(type, "server")) {
-		server(PORT);
+		init_server(PORT);
 	} else if (!strcmp(type, "client")) {
 		client(IP, PORT);
 	} else {
 		printf("no\n");
-		return -1;
+		return NULL;
 	}
 
-	return 0;
+	return (void *)type;
 }

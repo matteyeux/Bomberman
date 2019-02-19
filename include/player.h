@@ -7,13 +7,13 @@
 typedef struct player_s player_t;
 
 struct player_s
-{	
+{
 	int id;
 	int score;
 
 	// player texture
 	SDL_Texture *TexPlayer;
-	
+
 	// position of player
 	SDL_Rect playerPositionRect;
 };

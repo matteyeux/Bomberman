@@ -31,6 +31,8 @@ src/%.o : src/%.c
 	@echo "CC	$<"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
+coffee: all clean
+
 clean:
 	$(RM) $(OBJ)
 

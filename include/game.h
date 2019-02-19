@@ -11,5 +11,5 @@ struct game_s {
 };
 
 game_t *init_game(void);
-void game_loop(interface_t *interface, player_t *player, bomb_t *bomb);
-int start_networking(char *type);
+void *game_loop(void *game_struct);
+void *start_networking(void *type);
