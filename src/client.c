@@ -48,7 +48,7 @@ client_t *init_client(char *ip_addr, unsigned short port)
 
 int client(client_t *client_data)
 {
-	int sock, sender, receiver;
+	int sender, receiver;
 	unsigned int server_addr_len;
 
 	struct msg_struct *my_message;
