@@ -76,7 +76,7 @@ int client(client_t *client_data)
 
 	while (1) {
 
-		// should segfault here
+		// should segfault in this loop
 		printf("will send, id : %d\t message : %s\n", my_message->id, my_message->message);
 
 		// Send the int and string to the server
@@ -106,3 +106,15 @@ int client(client_t *client_data)
 	free(my_message);
 	return 0;
 }
+
+#if 0
+int send_data(int id, char *key)
+{
+	// data to send
+}
+
+void receive_data(void)
+{
+	// data to receive
+}
+#endif
