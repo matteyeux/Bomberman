@@ -75,11 +75,13 @@ void *game_loop(void *game_struct)
 void *start_networking(void *input)
 {
 	char *type =  (char *)input;
+	client_t *client_struct = NULL;
 
 	if (!strcmp(type, "server")) {
 		init_server(PORT);
 	} else if (!strcmp(type, "client")) {
-		client(IP, PORT);
+		client_struct = init_client(IP, PORT);
+		client(client_struct);
 	} else {
 		printf("no\n");
 		return NULL;
