@@ -2,11 +2,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-// #include <strings.h>
-// #include <arpa/inet.h>
-// #include <netinet/in.h>
-// #include <sys/types.h>
-// #include <sys/socket.h>
 
 #include <include/client.h>
 #include <include/server.h>
@@ -108,9 +103,18 @@ int client(client_t *client_data)
 }
 
 #if 0
-int send_data(int id, char *key)
+int send_data(client_t *client_data)
 {
-	// data to send
+	ssize_t sender = -1;
+
+	sender = sendto(client_data->sock, my_message, sizeof(struct msg_struct), MSG_NOSIGNAL, (struct sockaddr *)&client_data->server, sizeof(client_data->server));
+
+	if (sender == -1 ) {
+		perror("sendto");
+		return -1;
+	}
+
+	return 0;
 }
 
 void receive_data(void)
