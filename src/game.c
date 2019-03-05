@@ -81,7 +81,10 @@ void *start_networking(void *input)
 		init_server(PORT);
 	} else if (!strcmp(type, "client")) {
 		client_struct = init_client(IP, PORT);
-		client(client_struct);
+
+		if (client_struct != NULL) {
+			client(client_struct);
+		}
 	} else {
 		printf("no\n");
 		return NULL;
