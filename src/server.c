@@ -73,10 +73,10 @@ int init_server(unsigned short port)
 	return 0;
 }
 
+int client_cnt = 0;
 static int run_server(int sock, net_data_t *network_data)
 {
 	int client_sock = 1;
-	int client_cnt = 1;
 	unsigned int client_addr_len;
 	pthread_t thread_id;
 
@@ -89,12 +89,17 @@ static int run_server(int sock, net_data_t *network_data)
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 	}
 
+	client_addr_len = sizeof(struct sockaddr_in);
+
 	while (client_sock && status != -1) {
 		/* Set the size of the in-out parameter */
-		client_addr_len = sizeof(struct sockaddr_in);
 
-		if (client_cnt > 3) {
-			printf("cannot accept more than 4 clients\n");
+		/*
+		* if client count is >= 4
+		* set client_sock to -1
+		* loop until client_cnt is decremented
+		*/
+		if (client_cnt >= 4) {
 			client_sock = -1;
 		} else {
 			client_sock = accept(sock, (struct sockaddr *)&client, (socklen_t *)&client_addr_len);
@@ -104,6 +109,7 @@ static int run_server(int sock, net_data_t *network_data)
 			* accept: Invalid argument
 			*/
 			if (client_sock == -1) {
+				client_cnt--;
 				perror("accept");
 				return -1;
 			}
@@ -126,6 +132,8 @@ static int run_server(int sock, net_data_t *network_data)
 	}
 
 	if (client_sock < 0) {
+		printf("here\n");
+		printf("%d\n", client_cnt );
 		perror("accept");
 		return 1;
 	}
@@ -146,31 +154,31 @@ static int run_server(int sock, net_data_t *network_data)
 */
 void *handler(void *input)
 {
-	struct net_data_s *message;
+	net_data_t *server_data;
 
 	int client_sock, sender;
 	unsigned int client_addr_len;
 	struct sockaddr_in client;
 	ssize_t receiver;
 
-	message = malloc(sizeof(net_data_t));
-	if (message == NULL) {
+	server_data = malloc(sizeof(net_data_t));
+	if (server_data == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 	}
 
-	memcpy(message, (net_data_t *)input, sizeof(net_data_t));
+	memcpy(server_data, (net_data_t *)input, sizeof(net_data_t));
 
 	while (status != -1) {
-		client_sock = message->client_sock;
+		client_sock = server_data->client_sock;
 
-		client_addr_len = message->client_addr_len;
-		client = message->client;
+		client_addr_len = server_data->client_addr_len;
+		client = server_data->client;
 
-		message->message->id = 0;
-		bzero(message->message->message, 100);
+		server_data->message->id = 0;
+		bzero(server_data->message->key, 10);
 
-		receiver = recvfrom(client_sock, message->message,
-							sizeof(*(message->message)), 0,
+		receiver = recvfrom(client_sock, server_data->message,
+							sizeof(*(server_data->message)), 0,
 							(struct sockaddr *) &client, &client_addr_len);
 
 		if (receiver == -1) {
@@ -180,34 +188,34 @@ void *handler(void *input)
 
 		// client things issues
 		// TODO : fix
-		if (message->message->id == 0) {
+		if (server_data->message->id == 0) {
 			printf("recv : failed, it should have received a non-0 int\n");
 			printf("pthread_exit\n");
+			client_cnt--;
 			close(client_sock);
 			pthread_exit(NULL);
 		} else {
-			printf("Received: %d\t%s\n", message->message->id, message->message->message);
+			printf("Received: %d\t%s\n", server_data->message->id, server_data->message->key);
 		}
 
-		message->message->id += 1;
+		server_data->message->id += 1;
 
-		printf("server will send : %d\n", message->message->id);
+		printf("server will send : %d\n", server_data->message->id);
 
 		/* Send the int and string to the server */
-		sender = sendto(client_sock, message->message,
-						sizeof(*(message->message)), MSG_NOSIGNAL,
+		sender = sendto(client_sock, server_data->message,
+						sizeof(*(server_data->message)), MSG_NOSIGNAL,
 						(struct sockaddr *)&client, client_addr_len);
 
 		if (sender == -1 ) {
 			perror("sendto");
 			printf("pthread_exit\n");
+			client_cnt--;
 			close(client_sock);
 			pthread_exit(NULL);
 		}
-
-		sleep(1);
 	}
 
-	free(message);
+	free(server_data);
 	return (void *)input;
 }
