@@ -3,6 +3,7 @@
 #include <include/interface.h>
 #include <include/player.h>
 #include <include/bomb.h>
+#include <include/game.h>
 #include <include/bomberman.h>
 
 int status;
@@ -24,10 +25,11 @@ void draw_game(interface_t *interface, player_t *player, bomb_t *bomb)
 	SDL_RenderPresent(interface->Renderer);
 }
 
-int game_event(player_t *player, interface_t *interface, bomb_t *bomb)
+int game_event(player_t *player, interface_t *interface, bomb_t *bomb, client_t *client_struct)
 {
 	SDL_Event e;
 	status = 0;
+
 	if (SDL_PollEvent(&e)) {
 		if (e.type == SDL_QUIT) {
 			status = -1;
@@ -40,7 +42,7 @@ int game_event(player_t *player, interface_t *interface, bomb_t *bomb)
 				case SDLK_DOWN:
 				case SDLK_LEFT:
 				case SDLK_RIGHT:
-					movePlayer(player, interface, e.key.keysym.sym);
+					movePlayer(player, interface, e.key.keysym.sym, client_struct);
 					break;
 				case SDLK_d:
 					dropBomb(player, bomb);

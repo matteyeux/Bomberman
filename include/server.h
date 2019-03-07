@@ -2,10 +2,10 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 extern int sock;
-struct msg_struct
-{
+
+struct msg_struct {
 	int id;
-	char message[100];
+	char key[10];
 };
 
 

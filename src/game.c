@@ -51,11 +51,14 @@ void *game_loop(void *game_struct)
 {
 	int status = 0;
 	game_t *game = (game_t *)game_struct;
+	client_t *client_struct;
+
+	client_struct = init_client(IP, PORT);
 
 	while (status != -1) {
 		draw_game(game->interface, game->player, game->bomb);
 
-		status = game_event(game->player, game->interface, game->bomb);
+		status = game_event(game->player, game->interface, game->bomb, client_struct);
 		SDL_Delay(20);
 	}
 
@@ -68,6 +71,7 @@ void *game_loop(void *game_struct)
 	return (void *)game_struct;
 }
 
+
 /*
 * temp workaround, waiting for the menu
 * blame lepage_b
@@ -75,16 +79,12 @@ void *game_loop(void *game_struct)
 void *start_networking(void *input)
 {
 	char *type =  (char *)input;
-	client_t *client_struct = NULL;
 
 	if (!strcmp(type, "server")) {
 		init_server(PORT);
 	} else if (!strcmp(type, "client")) {
-		client_struct = init_client(IP, PORT);
+		printf("client\n");
 
-		if (client_struct != NULL) {
-			client(client_struct);
-		}
 	} else {
 		printf("no\n");
 		return NULL;
