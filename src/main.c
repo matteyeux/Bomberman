@@ -11,7 +11,7 @@
 #include <include/game.h>
 #include <include/server.h>
 #include <include/client.h>
-
+#include <include/menu.h>
 
 /*
 * CLI usage only.
@@ -23,15 +23,15 @@ void usage(char *arg)
 	printf("type : client or server\n");
 }
 
-int main(int argc, char *argv[])
+int main(void)
 {
 	game_t *game = NULL;
-	pthread_t thread_sdl, thread_net;
+	//pthread_t thread_sdl, thread_net;
 
-	if (argc != 2) {
-		usage(argv[0]);
-		return -1;
-	}
+	// if (argc != 2) {
+	// 	usage(argv[0]);
+	// 	return -1;
+	// }
 
 	game = init_game();
 
@@ -40,20 +40,21 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	if (pthread_create(&thread_sdl, NULL, game_loop, (void*) game) < 0) {
-		perror("pthread_create");
-		exit(EXIT_FAILURE);
-	}
+	menu_loop(game);
+	// if (pthread_create(&thread_sdl, NULL, menu_loop, (void*) game) < 0) {
+	// 	perror("pthread_create");
+	// 	exit(EXIT_FAILURE);
+	// }
 
-	if (pthread_create(&thread_net, NULL, start_networking, (void*) argv[1]) < 0) {
-		perror("pthread_create");
-		exit(EXIT_FAILURE);
-	}
+	// if (pthread_create(&thread_net, NULL, start_networking, (void*) argv[1]) < 0) {
+	// 	perror("pthread_create");
+	// 	exit(EXIT_FAILURE);
+	// }
 
-	if (pthread_join(thread_sdl, NULL) != 0) {
-		perror("pthread_join");
-		exit(EXIT_FAILURE);
-	}
+	// if (pthread_join(thread_sdl, NULL) != 0) {
+	// 	perror("pthread_join");
+	// 	exit(EXIT_FAILURE);
+	// }
 
 	destroy_game(game->interface, game->player, game->bomb);
 }

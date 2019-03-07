@@ -45,20 +45,20 @@ menu_t *init_menu(void)
 	return menu;
 }
 
-void menu_loop()
+void menu_loop(game_t *game)
 {
 	menu_t *menu = init_menu();
 
 	int continuer = 1; 
 
 	while (continuer) {
-		choice_menu(continuer, menu);
+		choice_menu(continuer, menu, (void*)game);
 	}
 
 	destroy_menu(menu);
 }
 
-int choice_menu(int continuer, menu_t *menu)
+int choice_menu(int continuer, menu_t *menu, void *game_struct)
 {
 	SDL_Event event;
 	SDL_WaitEvent(&event);
@@ -76,8 +76,7 @@ int choice_menu(int continuer, menu_t *menu)
 		            break;
 		        case SDLK_1:
 		        case SDLK_s:
-		            printf("Jeux Solo\n");
-		            // game_loop(game->interface, game->player, game->bomb);
+					game_loop(game_struct);
 		            break;
 		        case SDLK_2:
 		        case SDLK_c:
