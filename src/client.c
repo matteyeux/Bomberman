@@ -5,6 +5,7 @@
 
 #include <include/client.h>
 #include <include/server.h>
+
 client_t *init_client(char *ip_addr, unsigned short port)
 {
 	int sock;
@@ -33,7 +34,6 @@ client_t *init_client(char *ip_addr, unsigned short port)
 	// connect to server
 	if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
 		perror("connect");
-		printf("gang\n");
 		return NULL;
 	}
 
@@ -60,7 +60,7 @@ int send_data(client_t *client_data, char *key)
 
 		// set values
 		message->id = 12;
-		sprintf(message->key, key);
+		sprintf(message->key, "%s", key);
 
 		// copy mem of message struct into actul client_data->msg struct
 		memcpy(&(client_data->msg), &message, sizeof(struct msg_struct));
