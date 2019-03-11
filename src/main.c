@@ -13,16 +13,6 @@
 #include <include/client.h>
 #include <include/menu.h>
 
-/*
-* CLI usage only.
-* waiting for someone to implement GUI menu
-*/
-void usage(char *arg)
-{
-	printf("usage : %s <type>\n", arg);
-	printf("type : client or server\n");
-}
-
 int main(void)
 {
 	menu_t *menu = NULL;
@@ -34,5 +24,6 @@ int main(void)
 	if (choice != 0) {
 		clean_menu_and_setup_game(choice);
 	}
+
 	return 0;
 }
