@@ -6,6 +6,7 @@
 #include <include/game.h>
 #include <include/bomberman.h>
 
+// set to global so run_server can use it
 int status;
 
 void draw_game(interface_t *interface, player_t *player, bomb_t *bomb)
@@ -17,7 +18,6 @@ void draw_game(interface_t *interface, player_t *player, bomb_t *bomb)
 	// display player
 	if (bomb->exist == 1) {
 		SDL_RenderCopy(interface->Renderer, bomb->TexBomb, NULL, &bomb->bombPositionRect);
-		//printf("%s", "ahah");
 	}
 	SDL_RenderCopy(interface->Renderer, player->TexPlayer, NULL, &player->playerPositionRect);
 

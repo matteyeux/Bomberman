@@ -57,22 +57,22 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction,
 	if (direction == SDLK_UP) {
 		send_data(client_struct, "UP");
 		if (player->playerPositionRect.y > 0) {
-			player->playerPositionRect.y -= 10;
+			player->playerPositionRect.y -= 5;
 		}
 	} else if (direction == SDLK_DOWN) {
 		send_data(client_struct, "DOWN");
 		if (player->playerPositionRect.y < (interface->screenSize.y - player->playerPositionRect.h)) {
-			player->playerPositionRect.y += 10;
+			player->playerPositionRect.y += 5;
 		}
 	} else if (direction == SDLK_LEFT) {
 		send_data(client_struct, "LEFT");
 		if (player->playerPositionRect.x > 0) {
-			player->playerPositionRect.x -= 10;
+			player->playerPositionRect.x -= 5;
 		}
 	} else if (direction == SDLK_RIGHT) {
 		send_data(client_struct, "RIGHT");
 		if (player->playerPositionRect.x < (interface->screenSize.x - player->playerPositionRect.w)) {
-			player->playerPositionRect.x += 10;
+			player->playerPositionRect.x += 5;
 		}
 	} else {
 		fprintf(stderr, "unknown direction\n");
