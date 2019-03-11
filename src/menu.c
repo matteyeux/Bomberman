@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <pthread.h>
+
 #include <SDL2/SDL_image.h>
 
 #include <include/interface.h>
 #include <include/menu.h>
 #include <include/game.h>
 
-menu_t *init_menu(void) 
+menu_t *init_menu(void)
 {
 	menu_t *menu = NULL;
 
@@ -21,7 +23,7 @@ menu_t *init_menu(void)
 		return NULL;
 	}
 
-	fprintf(stdout, "Successfully initialized interface !\n");
+	fprintf(stdout, "Successfully initialized menu interface !\n");
 
 	// load menu texture
 	SDL_Surface *menuSurface = IMG_Load("images/menu.jpg");
@@ -45,81 +47,122 @@ menu_t *init_menu(void)
 	return menu;
 }
 
-void menu_loop(void)
+int menu_loop(menu_t *menu)
 {
-	menu_t *menu = init_menu();
+	int choice = -1;
 
-	int continuer = 1; 
-
-	game_t *game = NULL;
-	//game = init_game();
-
-	// if (game == NULL) {
-	// 	fprintf(stderr, "failed to to init game\n");
-	// 	exit(EXIT_FAILURE);
-	// }
-
-	while (continuer) {
-		choice_menu(continuer, menu, game);
+	while (choice == -1) {
+		choice = choice_menu(menu);
 	}
 
-	destroy_menu(menu);
+	if (menu) {
+		destroy_menu(menu);
+	}
+
+	return choice;
 }
 
-int choice_menu(int continuer, menu_t *menu, game_t *game)
+/*
+* This  function is used to call destroy_menu
+* and start threads for SDL and server
+*/
+void clean_menu_and_setup_game(int status)
+{
+	pthread_t thread_sdl, thread_net;
+	game_t *game = NULL;
+	char *arg = NULL;
+
+	switch (status) {
+		case 1:
+			break;
+		case 2:
+			arg = "server";
+			break;
+		case 3:
+			arg = "client";
+			break;
+		default:
+			break;
+	}
+
+	game = init_game();
+
+	if (game == NULL) {
+		fprintf(stderr, "failed to to init game\n");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pthread_create(&thread_sdl, NULL, game_loop, (void*) game) < 0) {
+		perror("pthread_create");
+		exit(EXIT_FAILURE);
+	}
+
+	/* if arg is not NULL, it means we have to start client or server */
+	if (arg) {
+		if (pthread_create(&thread_net, NULL, start_networking, (void*) arg) < 0) {
+			perror("pthread_create");
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	/* join SDL thead */
+	if (pthread_join(thread_sdl, NULL) != 0) {
+		perror("pthread_join");
+		exit(EXIT_FAILURE);
+	}
+}
+/*
+* function to set choice of user
+*/
+int choice_menu(menu_t *menu)
 {
 	SDL_Event event;
-
+	int choice = -1;
 	SDL_WaitEvent(&event);
 
 	switch(event.type)
 	{
 		case SDL_QUIT:
-			continuer = 0;
+			choice = 0;
 			break;
 		case SDL_KEYDOWN:
 			switch(event.key.keysym.sym)
 			{
 				case SDLK_ESCAPE:
-					continuer = 0;
+					choice = 0;
 					break;
 				case SDLK_1:
 				case SDLK_s:
-					destroy_menu(menu);
-					game = init_game();
-					printf("game_loop\n");
-					game_loop(game);
+					choice = 1;
 					break;
 				case SDLK_2:
 				case SDLK_c:
-					printf("Créer une partie Multi\n");
-					// game_loop(game->interface, game->player, game->bomb);
+					choice = 2;
 					break;
 				case SDLK_3:
 				case SDLK_r:
-					printf("Rejoindre une partie Multi\n");
-					// game_loop(game->interface, game->player, game->bomb);
-					break;
-				case SDLK_4:
-				case SDLK_e:
-					printf("Editeur de map\n");
-					// game_loop(game->interface, game->player, game->bomb);
+					choice = 3;
 					break;
 			}
 		break;
 	}
 
 	// display & show menu
-	SDL_RenderCopy(menu->interface->Renderer, menu->TexMenu, NULL, NULL);
-	SDL_RenderPresent(menu->interface->Renderer);
+	if (menu->interface->Renderer != NULL && menu->TexMenu != NULL) {
+		SDL_RenderCopy(menu->interface->Renderer, menu->TexMenu, NULL, NULL);
+		SDL_RenderPresent(menu->interface->Renderer);
+	}
 
-	return continuer;
+	return choice;
 }
 
 void destroy_menu(menu_t *menu)
 {
-	destroy_interface(menu->interface);
 	if (menu) {
+		if (menu->interface) {
+			destroy_interface(menu->interface);
+		}
+
 		if (menu->TexMenu) {
 			SDL_DestroyTexture(menu->TexMenu);
 		}

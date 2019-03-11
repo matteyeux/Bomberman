@@ -25,36 +25,14 @@ void usage(char *arg)
 
 int main(void)
 {
-	// game_t *game = NULL;
-	//pthread_t thread_sdl, thread_net;
+	menu_t *menu = NULL;
+	int choice = 0;
 
-	// if (argc != 2) {
-	// 	usage(argv[0]);
-	// 	return -1;
-	// }
+	menu = init_menu();
+	choice = menu_loop(menu);
 
-	// game = init_game();
-
-	// if (game == NULL) {
-	// 	fprintf(stderr, "failed to to init game\n");
-	// 	exit(EXIT_FAILURE);
-	// }
-
-	menu_loop();
-	// if (pthread_create(&thread_sdl, NULL, menu_loop, (void*) game) < 0) {
-	// 	perror("pthread_create");
-	// 	exit(EXIT_FAILURE);
-	// }
-
-	// if (pthread_create(&thread_net, NULL, start_networking, (void*) argv[1]) < 0) {
-	// 	perror("pthread_create");
-	// 	exit(EXIT_FAILURE);
-	// }
-
-	// if (pthread_join(thread_sdl, NULL) != 0) {
-	// 	perror("pthread_join");
-	// 	exit(EXIT_FAILURE);
-	// }
-
-	//destroy_game(game->interface, game->player, game->bomb);
+	if (choice != 0) {
+		clean_menu_and_setup_game(choice);
+	}
+	return 0;
 }

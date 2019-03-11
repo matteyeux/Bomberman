@@ -13,8 +13,8 @@ struct menu_s {
 };
 
 menu_t *init_menu(void);
-void menu_loop(void);
-int choice_menu(int continuer, menu_t *menu, game_t *game);
+int menu_loop(menu_t *menu);
+int choice_menu(menu_t *menu);
 void destroy_menu(menu_t *menu);
-
+void clean_menu_and_setup_game(int status);
 #endif
