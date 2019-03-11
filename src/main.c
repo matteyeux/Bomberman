@@ -25,7 +25,7 @@ void usage(char *arg)
 
 int main(void)
 {
-	game_t *game = NULL;
+	// game_t *game = NULL;
 	//pthread_t thread_sdl, thread_net;
 
 	// if (argc != 2) {
@@ -33,14 +33,14 @@ int main(void)
 	// 	return -1;
 	// }
 
-	game = init_game();
+	// game = init_game();
 
-	if (game == NULL) {
-		fprintf(stderr, "failed to to init game\n");
-		exit(EXIT_FAILURE);
-	}
+	// if (game == NULL) {
+	// 	fprintf(stderr, "failed to to init game\n");
+	// 	exit(EXIT_FAILURE);
+	// }
 
-	menu_loop(game);
+	menu_loop();
 	// if (pthread_create(&thread_sdl, NULL, menu_loop, (void*) game) < 0) {
 	// 	perror("pthread_create");
 	// 	exit(EXIT_FAILURE);
@@ -56,5 +56,5 @@ int main(void)
 	// 	exit(EXIT_FAILURE);
 	// }
 
-	destroy_game(game->interface, game->player, game->bomb);
+	//destroy_game(game->interface, game->player, game->bomb);
 }

@@ -45,55 +45,67 @@ menu_t *init_menu(void)
 	return menu;
 }
 
-void menu_loop(game_t *game)
+void menu_loop(void)
 {
 	menu_t *menu = init_menu();
 
 	int continuer = 1; 
 
+	game_t *game = NULL;
+	//game = init_game();
+
+	// if (game == NULL) {
+	// 	fprintf(stderr, "failed to to init game\n");
+	// 	exit(EXIT_FAILURE);
+	// }
+
 	while (continuer) {
-		choice_menu(continuer, menu, (void*)game);
+		choice_menu(continuer, menu, game);
 	}
 
 	destroy_menu(menu);
 }
 
-int choice_menu(int continuer, menu_t *menu, void *game_struct)
+int choice_menu(int continuer, menu_t *menu, game_t *game)
 {
 	SDL_Event event;
+
 	SDL_WaitEvent(&event);
 
 	switch(event.type)
 	{
 		case SDL_QUIT:
-		    continuer = 0;
-		    break;
+			continuer = 0;
+			break;
 		case SDL_KEYDOWN:
-		    switch(event.key.keysym.sym)
-		    {
-		        case SDLK_ESCAPE:
-		            continuer = 0;
-		            break;
-		        case SDLK_1:
-		        case SDLK_s:
-					game_loop(game_struct);
-		            break;
-		        case SDLK_2:
-		        case SDLK_c:
-		            printf("Créer une partie Multi\n");
-		            // game_loop(game->interface, game->player, game->bomb);
-		            break;
-		        case SDLK_3:
-		        case SDLK_r:
-		            printf("Rejoindre une partie Multi\n");
-		            // game_loop(game->interface, game->player, game->bomb);
-		            break;   
-		        case SDLK_4:
-		        case SDLK_e:
-		            printf("Editeur de map\n");
-		            // game_loop(game->interface, game->player, game->bomb);
-		            break;                               
-		    }
+			switch(event.key.keysym.sym)
+			{
+				case SDLK_ESCAPE:
+					continuer = 0;
+					break;
+				case SDLK_1:
+				case SDLK_s:
+					destroy_menu(menu);
+					game = init_game();
+					printf("game_loop\n");
+					game_loop(game);
+					break;
+				case SDLK_2:
+				case SDLK_c:
+					printf("Créer une partie Multi\n");
+					// game_loop(game->interface, game->player, game->bomb);
+					break;
+				case SDLK_3:
+				case SDLK_r:
+					printf("Rejoindre une partie Multi\n");
+					// game_loop(game->interface, game->player, game->bomb);
+					break;
+				case SDLK_4:
+				case SDLK_e:
+					printf("Editeur de map\n");
+					// game_loop(game->interface, game->player, game->bomb);
+					break;
+			}
 		break;
 	}
 
@@ -113,5 +125,5 @@ void destroy_menu(menu_t *menu)
 		}
 
 		free(menu);
-	}    
+	}
 }
