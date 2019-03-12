@@ -2,6 +2,10 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 
+
+#ifndef SERVER_H_
+#define SERVER_H_
+
 #define MAP_SIZE 12
 #define MAX_PLAYERS 4
 extern int sock;
@@ -48,3 +52,5 @@ struct s_game {
 
 int init_server(unsigned short port);
 void *handler(void *input);
+
+#endif

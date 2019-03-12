@@ -83,7 +83,7 @@ int send_client_data(client_t *client_data)
 	return 0;
 }
 
-t_game *receive_data(client_t *client_data)
+t_game *receive_server_data(client_t *client_data)
 {
 	ssize_t receiver;
 	unsigned int server_addr_len;

@@ -3,6 +3,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
+#include <include/server.h>
+
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
@@ -26,5 +28,5 @@ struct s_client_request {
 
 client_t *init_client(char *ip_addr, unsigned short port);
 int send_client_data(client_t *client_data);
-
+t_game *receive_server_data(client_t *client_data);
 #endif

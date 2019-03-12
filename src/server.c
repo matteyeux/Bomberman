@@ -22,6 +22,7 @@ int sock;
 */
 static int run_server(int sock, server_data_t *server_data);
 static t_client_request *receive_client_data(server_data_t *server_data);
+static int send_data_to_client(server_data_t *server_data, t_game *game);
 
 int init_server(unsigned short port)
 {
@@ -183,21 +184,7 @@ void *handler(void *input)
 			return NULL;
 		}
 
-
-		// printf("server will send : %d\n", server_data->message->id);
-
-		// /* Send the int and string to the server */
-		// sender = sendto(sock_fd, server_data->message,
-		// 				sizeof(*(server_data->message)), MSG_NOSIGNAL,
-		// 				(struct sockaddr *)&client, client_addr_len);
-
-		// if (sender == -1 ) {
-		// 	perror("sendto");
-		// 	printf("pthread_exit\n");
-		// 	client_cnt--;
-		// 	close(sock_fd);
-		// 	pthread_exit(NULL);
-		// }
+		send_data_to_client(server_data, game);
 	}
 
 	free(request);
@@ -259,8 +246,7 @@ int send_data_to_client(server_data_t *server_data, t_game *game)
 					(struct sockaddr *)&server_data->client,
 					server_data->client_addr_len);
 
-	if (sender == -1)
-	{
+	if (sender == -1) {
 		perror("sendto");
 		return -1;
 	}
