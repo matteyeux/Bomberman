@@ -83,6 +83,33 @@ int send_client_data(client_t *client_data)
 	return 0;
 }
 
+t_game *receive_data(client_t *client_data)
+{
+	ssize_t receiver;
+	unsigned int server_addr_len;
+	t_game *game;
+
+	game = malloc(sizeof(t_game));
+
+	if (game == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
+	}
+
+	server_addr_len = sizeof(client_data->server);
+
+	receiver = recvfrom(client_data->sock, game, sizeof(*game),
+						0, (struct sockaddr *) &client_data->server,
+						&server_addr_len);
+
+	if (receiver == -1 ) {
+		perror("sendto");
+		return NULL;
+	}
+
+	return game;
+}
+
 #if 0
 int send_data(client_t *client_data, char *key)
 {
@@ -117,11 +144,6 @@ int send_data(client_t *client_data, char *key)
 	return 0;
 }
 
-void receive_data(void)
-{
-	ssize_t receiver = -1;
-	// data to receive
-}
 
 /*
 * keep this code here
