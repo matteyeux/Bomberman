@@ -11,7 +11,6 @@ client_t *init_client(char *ip_addr, unsigned short port)
 	int sock;
 	client_t *client_struct;
 	struct sockaddr_in server;
-	//struct msg_struct *message;
 
 	client_struct = malloc(sizeof(client_t));
 
@@ -43,9 +42,48 @@ client_t *init_client(char *ip_addr, unsigned short port)
 	if (client_struct == NULL) {
 		printf("struct is null\n");
 	}
+
 	return client_struct;
 }
 
+/*
+* function used to send the t_client_request struct
+*/
+int send_client_data(client_t *client_data)
+{
+	ssize_t sender = -1;
+	t_client_request *request;
+
+	request = malloc(sizeof(t_client_request));
+
+	if (request == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return -1;
+	}
+
+	/* hardcoded values waiting someone else (not giving any name this time) */
+	request->magic = 0;
+	request->x_pos = 1;
+	request->y_pos = 2;
+	request->dir = 3;
+	request->command = 4;
+	request->speed = 5;
+	request->ckecksum = 6;
+
+	sender = sendto(client_data->sock, request,
+					sizeof(t_client_request), MSG_NOSIGNAL,
+					(struct sockaddr *)&client_data->server,
+					sizeof(client_data->server));
+
+	if (sender == -1 ) {
+		perror("sendto");
+		return -1;
+	}
+
+	return 0;
+}
+
+#if 0
 int send_data(client_t *client_data, char *key)
 {
 	ssize_t sender = -1;
@@ -81,6 +119,7 @@ int send_data(client_t *client_data, char *key)
 
 void receive_data(void)
 {
+	ssize_t receiver = -1;
 	// data to receive
 }
 
@@ -88,7 +127,6 @@ void receive_data(void)
 * keep this code here
 * until I set the receive_data function
 */
-#if 0
 int client(client_t *client_data)
 {
 	int receiver;
