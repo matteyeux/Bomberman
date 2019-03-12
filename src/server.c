@@ -149,6 +149,7 @@ void *handler(void *input)
 {
 	server_data_t *server_data;
 	t_client_request *request;
+	t_game *game;
 
 	server_data = malloc(sizeof(server_data_t));
 	if (server_data == NULL) {
@@ -174,6 +175,14 @@ void *handler(void *input)
 		printf("%d\n", request->command);
 		printf("%d\n", request->speed);
 		printf("%d\n", request->ckecksum);
+
+		game = malloc(sizeof(t_game));
+
+		if (game == NULL) {
+			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+			return NULL;
+		}
+
 
 		// printf("server will send : %d\n", server_data->message->id);
 
@@ -218,4 +227,43 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 	}
 
 	return request;
+}
+
+/*
+* temporary function to put data in struct
+*/
+static t_game *put_data_in_game(t_game *game)
+{
+	game->player_infos->connected = 'e';
+	game->player_infos->alive = 'e';
+	game->player_infos->x_pos = 12;
+	game->player_infos->y_pos = 12;
+	game->player_infos->current_dir = 12;
+	game->player_infos->current_speed = 12;
+	game->player_infos->max_speed = 12;
+	game->player_infos->bombs_left = 12;
+	game->player_infos->bombs_capacity = 12;
+	game->player_infos->frags = 12;
+
+	return game;
+}
+
+int send_data_to_client(server_data_t *server_data, t_game *game)
+{
+	ssize_t sender;
+
+	game = put_data_in_game(game);
+
+	sender = sendto(server_data->sock_fd, game,
+					sizeof(*(game)), MSG_NOSIGNAL,
+					(struct sockaddr *)&server_data->client,
+					server_data->client_addr_len);
+
+	if (sender == -1)
+	{
+		perror("sendto");
+		return -1;
+	}
+
+	return 0;
 }
