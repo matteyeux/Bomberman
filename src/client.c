@@ -11,7 +11,6 @@ client_t *init_client(char *ip_addr, unsigned short port)
 	int sock;
 	client_t *client_struct;
 	struct sockaddr_in server;
-	//struct msg_struct *message;
 
 	client_struct = malloc(sizeof(client_t));
 
@@ -43,110 +42,70 @@ client_t *init_client(char *ip_addr, unsigned short port)
 	if (client_struct == NULL) {
 		printf("struct is null\n");
 	}
+
 	return client_struct;
 }
 
-int send_data(client_t *client_data, char *key)
+/*
+* function used to send the t_client_request struct
+*/
+int send_client_data(client_t *client_data)
 {
 	ssize_t sender = -1;
-	struct msg_struct *message;
+	t_client_request *request;
 
-	if (client_data != NULL) {
-		message = malloc(sizeof(struct msg_struct));
+	request = malloc(sizeof(t_client_request));
 
-		if (message == NULL) {
-			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
-		}
+	if (request == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return -1;
+	}
 
-		// set values
-		message->id = 12;
-		sprintf(message->key, "%s", key);
+	/* hardcoded values waiting someone else (not giving any name this time) */
+	request->magic = 0;
+	request->x_pos = 1;
+	request->y_pos = 2;
+	request->dir = 3;
+	request->command = 4;
+	request->speed = 5;
+	request->ckecksum = 6;
 
-		// copy mem of message struct into actul client_data->msg struct
-		memcpy(&(client_data->msg), &message, sizeof(struct msg_struct));
+	sender = sendto(client_data->sock, request,
+					sizeof(t_client_request), MSG_NOSIGNAL,
+					(struct sockaddr *)&client_data->server,
+					sizeof(client_data->server));
 
-		sender = sendto(client_data->sock, client_data->msg,
-						sizeof(struct msg_struct), MSG_NOSIGNAL,
-						(struct sockaddr *)&client_data->server,
-						sizeof(client_data->server));
-
-		if (sender == -1 ) {
-			perror("sendto");
-			return -1;
-		}
+	if (sender == -1 ) {
+		perror("sendto");
+		return -1;
 	}
 
 	return 0;
 }
 
-void receive_data(void)
+t_game *receive_server_data(client_t *client_data)
 {
-	// data to receive
-}
-
-/*
-* keep this code here
-* until I set the receive_data function
-*/
-#if 0
-int client(client_t *client_data)
-{
-	int receiver;
+	ssize_t receiver;
 	unsigned int server_addr_len;
+	t_game *game;
 
-	struct msg_struct *my_message;
-	struct msg_struct *received_message;
+	game = malloc(sizeof(t_game));
 
-	//sock = client_data->sock;
-
-	printf("here\n");
-	my_message = malloc(sizeof(struct msg_struct));
-	if (my_message == NULL) {
-		printf("error malloc\n");
-		return -1;
+	if (game == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
 	}
-
-	received_message = malloc(sizeof(struct msg_struct));
-	if (received_message == NULL) {
-		printf("error malloc\n");
-		return -1;
-	}
-
-	my_message->id = 1234;
-	strcpy(my_message->message, "message");
 
 	server_addr_len = sizeof(client_data->server);
 
-	while (1) {
+	receiver = recvfrom(client_data->sock, game, sizeof(*game),
+						0, (struct sockaddr *) &client_data->server,
+						&server_addr_len);
 
-		printf("will send, id : %d\t message : %s\n", my_message->id, my_message->message);
-
-		// Send the int and string to the server
-		// sender = sendto(client_data->sock, my_message, sizeof(struct msg_struct), MSG_NOSIGNAL, (struct sockaddr *)&client_data->server, sizeof(client_data->server));
-
-		// if (sender == -1 ) {
-		// 	perror("sendto");
-		// 	return -1;
-		// }
-
-		receiver = recvfrom(client_data->sock, received_message, sizeof(*received_message), 0, (struct sockaddr *) &client_data->server, &server_addr_len);
-
-		if (receiver == -1 ) {
-			perror("recvfrom");
-			return -1;
-		}
-
-		// server should send id++ -> 667
-		// message should be the same for some lazy reasons
-		printf("received id : %d\n", received_message->id);
-		printf("received message : %s\n", received_message->message);
-
-		sleep(1);
+	if (receiver == -1 ) {
+		perror("sendto");
+		return NULL;
 	}
 
-	close(client_data->sock);
-	free(my_message);
-	return 0;
+	return game;
 }
-
-#endif

@@ -6,6 +6,7 @@
 #include <include/bomberman.h>
 #include <include/bomb.h>
 #include <include/client.h>
+#include <include/server.h>
 
 #define IP "127.0.0.1"
 #define PORT 12345
@@ -53,30 +54,39 @@ player_t *init_player(interface_t *interface)
 
 void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction, client_t *client_struct)
 {
+	t_game *game;
 
 	if (direction == SDLK_UP) {
-		send_data(client_struct, "UP");
+
+		printf("sending data\n");
+		send_client_data(client_struct);
+		printf("waiting for data\n");
+		game = receive_server_data(client_struct);
+		printf("%d\n", game->player_infos->x_pos); // prints 12
+
 		if (player->playerPositionRect.y > 0) {
 			player->playerPositionRect.y -= 5;
 		}
 	} else if (direction == SDLK_DOWN) {
-		send_data(client_struct, "DOWN");
+		send_client_data(client_struct);
 		if (player->playerPositionRect.y < (interface->screenSize.y - player->playerPositionRect.h)) {
 			player->playerPositionRect.y += 5;
 		}
 	} else if (direction == SDLK_LEFT) {
-		send_data(client_struct, "LEFT");
+		send_client_data(client_struct);
 		if (player->playerPositionRect.x > 0) {
 			player->playerPositionRect.x -= 5;
 		}
 	} else if (direction == SDLK_RIGHT) {
-		send_data(client_struct, "RIGHT");
+		send_client_data(client_struct);
 		if (player->playerPositionRect.x < (interface->screenSize.x - player->playerPositionRect.w)) {
 			player->playerPositionRect.x += 5;
 		}
 	} else {
 		fprintf(stderr, "unknown direction\n");
 	}
+
+	free(game);
 }
 
 bomb_t *dropBomb(player_t *player, bomb_t *bomb)
