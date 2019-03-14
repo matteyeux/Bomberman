@@ -169,15 +169,14 @@ void *handler(void *input)
 			printf("failed request\n");
 		}
 
-		/*
-		printf("%d\n", request->magic);
-		printf("%d\n", request->x_pos);
-		printf("%d\n", request->y_pos);
-		printf("%d\n", request->dir);
-		printf("%d\n", request->command);
-		printf("%d\n", request->speed);
-		printf("%d\n", request->checksum);
-        */
+		printf("Recept :\ndir  X   Y   comm speed checksum\n %d  %d %d   %d    %d      %d\n",
+				request->dir,
+				request->x_pos,
+				request->y_pos,
+				request->command,
+				request->speed,
+				request->checksum);
+
 
 		game = malloc(sizeof(t_game));
 
