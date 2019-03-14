@@ -12,6 +12,7 @@ struct player_s
 	int id;
 	int score;
 	int dir;
+	int command;
 
 	// player texture
 	SDL_Texture *TexPlayer;

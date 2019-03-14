@@ -25,6 +25,7 @@ player_t *init_player(interface_t *interface)
 	player->id = 0;
 	player->score = 0;
 	player->dir = 3;
+	player->command = 0;
 	player->playerPositionRect.x = interface->screenSize.x / 2;
 	player->playerPositionRect.y = interface->screenSize.y / 2;
 	player->playerPositionRect.w = 50;
@@ -56,9 +57,6 @@ player_t *init_player(interface_t *interface)
 void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction, client_t *client_struct)
 {
 	t_game *game = NULL;
-
-	// TODO Yop Clean : Debug pour affichage clean
-	printf("\n");
 
 	if (direction == SDLK_UP) {
 		player->dir = 0;
