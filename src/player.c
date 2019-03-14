@@ -54,7 +54,7 @@ player_t *init_player(interface_t *interface)
 
 void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction, client_t *client_struct)
 {
-	t_game *game;
+	t_game *game = NULL;
 
 	if (direction == SDLK_UP) {
 
@@ -88,7 +88,8 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction,
 		fprintf(stderr, "unknown direction\n");
 	}
 
-	free(game);
+	if (game)
+		free(game);
 }
 
 bomb_t *dropBomb(player_t *player, bomb_t *bomb)
