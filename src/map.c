@@ -29,6 +29,7 @@ map_t *init_map(const char *file)
 		destroy_map(map);
 		return (NULL);
 	}
+
 	// Association de la map en fichier vers le schema de la map
 	traitement_file(file, map);
 

@@ -44,6 +44,10 @@ game_t *init_game(void)
 
 	fprintf(stdout, "Successfully initialized bomb !\n");
 
+	game->map = init_map("map.txt");
+	if (game->map == NULL) {
+		return NULL;
+	}
 	return game;
 }
 
