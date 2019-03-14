@@ -19,6 +19,7 @@ interface_t *init_interface(void)
 
 	interface->Window = NULL;
 	interface->Renderer = NULL;
+	interface->destRect = NULL;
 
 	interface->Font = NULL;
 
@@ -33,6 +34,14 @@ interface_t *init_interface(void)
 		fprintf(stderr, "unable to init TTF : %s\n", TTF_GetError());
 		destroy_interface(interface);
 		return NULL;
+	}
+
+	// init destRect
+	interface->destRect = malloc(sizeof(SDL_Rect));
+	if (interface->destRect == NULL) {
+		fprintf(stderr, "Malloc destRect failed.\n");
+		destroy_interface(interface);
+		return (NULL);
 	}
 
 	// Load font
@@ -75,6 +84,9 @@ void destroy_interface(interface_t *interface)
 		if (interface->Window) {
 			SDL_DestroyWindow(interface->Window);
 		}
+
+		if (interface->destRect)
+			free(interface->destRect);
 
 		if (interface->Font) {
 			TTF_CloseFont(interface->Font);
