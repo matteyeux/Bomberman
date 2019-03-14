@@ -56,31 +56,34 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction,
 {
 	t_game *game = NULL;
 
+	// TODO Yop Clean : Debug pour affichage clean
+	printf("\n");
+
 	if (direction == SDLK_UP) {
 
 		if (client_struct != NULL) {
-			printf("sending data\n");
-			send_client_data(client_struct);
-			printf("waiting for data\n");
+			// TODO Yop printf("sending data\n");
+			send_client_data(client_struct, player);
+			// TODO Yop printf("waiting for data\n");
 			game = receive_server_data(client_struct);
-			printf("%d\n", game->player_infos->x_pos); // prints 12
+			// TODO Matt printf("%d\n", game->player_infos->x_pos); // prints 12
 		}
 
 		if (player->playerPositionRect.y > 0) {
 			player->playerPositionRect.y -= 5;
 		}
 	} else if (direction == SDLK_DOWN) {
-		send_client_data(client_struct);
+		send_client_data(client_struct, player);
 		if (player->playerPositionRect.y < (interface->screenSize.y - player->playerPositionRect.h)) {
 			player->playerPositionRect.y += 5;
 		}
 	} else if (direction == SDLK_LEFT) {
-		send_client_data(client_struct);
+		send_client_data(client_struct, player);
 		if (player->playerPositionRect.x > 0) {
 			player->playerPositionRect.x -= 5;
 		}
 	} else if (direction == SDLK_RIGHT) {
-		send_client_data(client_struct);
+		send_client_data(client_struct, player);
 		if (player->playerPositionRect.x < (interface->screenSize.x - player->playerPositionRect.w)) {
 			player->playerPositionRect.x += 5;
 		}

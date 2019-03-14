@@ -27,6 +27,9 @@ struct s_client_request {
 };
 
 client_t *init_client(char *ip_addr, unsigned short port);
-int send_client_data(client_t *client_data);
+
+#include <include/player.h>
+int send_client_data(client_t *client_data, player_t *player);
+
 t_game *receive_server_data(client_t *client_data);
 #endif

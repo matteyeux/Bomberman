@@ -45,7 +45,7 @@ int game_event(player_t *player, interface_t *interface, bomb_t *bomb, client_t 
 					movePlayer(player, interface, e.key.keysym.sym, client_struct);
 					break;
 				case SDLK_d:
-					send_client_data(client_struct);
+					send_client_data(client_struct, player);
 					dropBomb(player, bomb);
 					break;
 				default :

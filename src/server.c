@@ -169,6 +169,7 @@ void *handler(void *input)
 			printf("failed request\n");
 		}
 
+		/*
 		printf("%d\n", request->magic);
 		printf("%d\n", request->x_pos);
 		printf("%d\n", request->y_pos);
@@ -176,6 +177,7 @@ void *handler(void *input)
 		printf("%d\n", request->command);
 		printf("%d\n", request->speed);
 		printf("%d\n", request->checksum);
+        */
 
 		game = malloc(sizeof(t_game));
 
