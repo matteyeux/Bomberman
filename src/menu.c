@@ -92,11 +92,6 @@ void clean_menu_and_setup_game(int status)
 		exit(EXIT_FAILURE);
 	}
 
-	if (pthread_create(&thread_sdl, NULL, game_loop, (void*) game) < 0) {
-		perror("pthread_create");
-		exit(EXIT_FAILURE);
-	}
-
 	/* if arg is not NULL, it means we have to start client or server */
 	if (arg) {
 		if (pthread_create(&thread_net, NULL, start_networking, (void*) arg) < 0) {
@@ -104,6 +99,12 @@ void clean_menu_and_setup_game(int status)
 			exit(EXIT_FAILURE);
 		}
 	}
+
+	if (pthread_create(&thread_sdl, NULL, game_loop, (void*) game) < 0) {
+		perror("pthread_create");
+		exit(EXIT_FAILURE);
+	}
+
 
 	/* join SDL thead */
 	if (pthread_join(thread_sdl, NULL) != 0) {
