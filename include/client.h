@@ -23,7 +23,7 @@ struct s_client_request {
 	int dir;			/* direction desired by client */
 	int command;		/* client command. 0 : do nothing, 1 : drop bomb */
 	int speed;			/* speed player */
-	int ckecksum;		/* simple checksum */
+	int checksum;		/* simple checksum */
 };
 
 client_t *init_client(char *ip_addr, unsigned short port);

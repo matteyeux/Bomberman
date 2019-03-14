@@ -163,11 +163,11 @@ void *handler(void *input)
 		request = receive_client_data(server_data);
 
 		if (request == NULL) {
+			free(request);
+			free(server_data);
+			pthread_exit(NULL);
 			printf("failed request\n");
 		}
-
-		// client things issues
-		// TODO : fix
 
 		printf("%d\n", request->magic);
 		printf("%d\n", request->x_pos);
@@ -175,7 +175,7 @@ void *handler(void *input)
 		printf("%d\n", request->dir);
 		printf("%d\n", request->command);
 		printf("%d\n", request->speed);
-		printf("%d\n", request->ckecksum);
+		printf("%d\n", request->checksum);
 
 		game = malloc(sizeof(t_game));
 
@@ -248,7 +248,8 @@ int send_data_to_client(server_data_t *server_data, t_game *game)
 
 	if (sender == -1) {
 		perror("sendto");
-		return -1;
+		close(server_data->sock_fd);
+		pthread_exit(NULL);
 	}
 
 	return 0;

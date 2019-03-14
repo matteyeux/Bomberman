@@ -56,6 +56,10 @@ int send_client_data(client_t *client_data)
 
 	request = malloc(sizeof(t_client_request));
 
+	if (client_data == NULL) {
+		return -1;
+	}
+
 	if (request == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 		return -1;
@@ -68,7 +72,7 @@ int send_client_data(client_t *client_data)
 	request->dir = 3;
 	request->command = 4;
 	request->speed = 5;
-	request->ckecksum = 6;
+	request->checksum = 6;
 
 	sender = sendto(client_data->sock, request,
 					sizeof(t_client_request), MSG_NOSIGNAL,

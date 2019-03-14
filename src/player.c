@@ -58,11 +58,13 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction,
 
 	if (direction == SDLK_UP) {
 
-		printf("sending data\n");
-		send_client_data(client_struct);
-		printf("waiting for data\n");
-		game = receive_server_data(client_struct);
-		printf("%d\n", game->player_infos->x_pos); // prints 12
+		if (client_struct != NULL) {
+			printf("sending data\n");
+			send_client_data(client_struct);
+			printf("waiting for data\n");
+			game = receive_server_data(client_struct);
+			printf("%d\n", game->player_infos->x_pos); // prints 12
+		}
 
 		if (player->playerPositionRect.y > 0) {
 			player->playerPositionRect.y -= 5;
