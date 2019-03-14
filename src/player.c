@@ -22,7 +22,8 @@ player_t *init_player(interface_t *interface)
 		return NULL;
 	}
 
-	player->id = 0;
+	// TODO : changer la generation ID, doit être faite par le serveur
+	player->magic = rand();
 	player->score = 0;
 	player->speed = 10;
 	player->dir = 3;

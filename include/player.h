@@ -9,7 +9,7 @@ typedef struct player_s player_t;
 
 struct player_s
 {
-	int id;
+	int magic;
 	int score;
 	int speed;
 	int dir;
