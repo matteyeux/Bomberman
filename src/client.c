@@ -75,7 +75,7 @@ int send_client_data(client_t *client_data)
 	request->checksum = 6;
 
 	sender = sendto(client_data->sock, request,
-					sizeof(t_client_request), SO_NOSIGPIPE,
+					sizeof(t_client_request), MSG_NOSIGNAL,
 					(struct sockaddr *)&client_data->server,
 					sizeof(client_data->server));
 

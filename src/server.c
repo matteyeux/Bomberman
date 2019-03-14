@@ -242,7 +242,7 @@ int send_data_to_client(server_data_t *server_data, t_game *game)
 	game = put_data_in_game(game);
 
 	sender = sendto(server_data->sock_fd, game,
-					sizeof(*(game)), SO_NOSIGPIPE,
+					sizeof(*(game)), MSG_NOSIGNAL,
 					(struct sockaddr *)&server_data->client,
 					server_data->client_addr_len);
 
