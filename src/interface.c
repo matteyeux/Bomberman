@@ -21,6 +21,7 @@ interface_t *init_interface(void)
 	interface->Renderer = NULL;
 
 	interface->Font = NULL;
+	interface->map = NULL;
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		fprintf(stderr, "unable to init SDL : %s\n", SDL_GetError());
