@@ -21,7 +21,7 @@ void draw_game(game_t *game)
 	SDL_SetRenderDrawColor(interface->Renderer, 16, 120, 48, 255);
 	SDL_RenderClear(interface->Renderer);
 
-	map_t *map = interface->map;
+	map_t *map = game->map;
          
     for (int i = 0; i < map->nbTileY; i++) {
         for (int j = 0; j < map->nbTileX; j++) {
