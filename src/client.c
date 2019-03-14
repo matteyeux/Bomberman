@@ -72,12 +72,13 @@ int send_client_data(client_t *client_data, player_t *player)
 	request->magic = 0;
 	request->x_pos = player->playerPositionRect.x;
 	request->y_pos = player->playerPositionRect.y;
-	request->dir = 3;
+	request->dir = player->dir;
 	request->command = 4;
 	request->speed = 5;
 	request->checksum = 6;
 
-	printf("%d", request->y_pos);
+	// TODO Yop debug envoi direction, x, y
+	printf("%d : %d - %d", request->dir, request->x_pos, request->y_pos);
 
 	sender = sendto(client_data->sock, request,
 					sizeof(t_client_request), MSG_NOSIGNAL,
