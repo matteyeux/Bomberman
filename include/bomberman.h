@@ -1,6 +1,7 @@
 #include <include/interface.h>
 #include <include/player.h>
 #include <include/bomb.h>
+#include <include/game.h>
 
 extern int status;
 
