@@ -24,13 +24,13 @@ player_t *init_player(interface_t *interface)
 
 	player->id = 0;
 	player->score = 0;
+	player->speed = 10;
 	player->dir = 3;
 	player->command = 0;
 	player->playerPositionRect.x = interface->screenSize.x / 2;
 	player->playerPositionRect.y = interface->screenSize.y / 2;
 	player->playerPositionRect.w = 50;
 	player->playerPositionRect.h = 60;
-
 
 	// load player texture
 	SDL_Surface *playerSurface = IMG_Load("images/bomberman_front.png");
@@ -70,25 +70,25 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction,
 		}
 
 		if (player->playerPositionRect.y > 0) {
-			player->playerPositionRect.y -= 5;
+			player->playerPositionRect.y -= player->speed;
 		}
 	} else if (direction == SDLK_DOWN) {
 		player->dir = 2;
 		send_client_data(client_struct, player);
 		if (player->playerPositionRect.y < (interface->screenSize.y - player->playerPositionRect.h)) {
-			player->playerPositionRect.y += 5;
+			player->playerPositionRect.y += player->speed;
 		}
 	} else if (direction == SDLK_LEFT) {
 		player->dir = 3;
 		send_client_data(client_struct, player);
 		if (player->playerPositionRect.x > 0) {
-			player->playerPositionRect.x -= 5;
+			player->playerPositionRect.x -= player->speed;
 		}
 	} else if (direction == SDLK_RIGHT) {
 		player->dir = 1;
 		send_client_data(client_struct, player);
 		if (player->playerPositionRect.x < (interface->screenSize.x - player->playerPositionRect.w)) {
-			player->playerPositionRect.x += 5;
+			player->playerPositionRect.x += player->speed;
 		}
 	} else {
 		fprintf(stderr, "unknown direction\n");

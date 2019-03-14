@@ -11,6 +11,7 @@ struct player_s
 {
 	int id;
 	int score;
+	int speed;
 	int dir;
 	int command;
 
