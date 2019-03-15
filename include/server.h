@@ -2,6 +2,9 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 
+#ifdef __APPLE__
+#define MSG_NOSIGNAL SO_NOSIGPIPE
+#endif
 
 #ifndef SERVER_H_
 #define SERVER_H_

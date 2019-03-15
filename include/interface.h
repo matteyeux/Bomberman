@@ -12,6 +12,7 @@ struct interface_s
 	SDL_Point screenSize;
 	SDL_Window *Window;
 	SDL_Renderer *Renderer;
+	SDL_Rect *destRect;
 
 	// TTF font
 	TTF_Font *Font;
