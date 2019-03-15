@@ -9,11 +9,8 @@ typedef struct player_s player_t;
 
 struct player_s
 {
-	int magic;
+	int id;
 	int score;
-	int speed;
-	int dir;
-	int command;
 
 	// player texture
 	SDL_Texture *TexPlayer;
