@@ -33,6 +33,10 @@ game_t *init_game(void)
 	if (game->map == NULL)
 		return (NULL);
 
+	game->map->mapTexture = set_texture_map(game->interface->Renderer);
+	if (game->map->mapTexture == NULL)
+		return (NULL);
+
 	fprintf(stdout, "Successfully initialize map!\n");
 
 	game->player = init_player(game->interface);

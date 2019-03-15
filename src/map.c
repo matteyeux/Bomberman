@@ -30,6 +30,12 @@ map_t *init_map(const char *file)
 		return (NULL);
 	}
 
+	if (!set_tile_array(map)) {
+		printf("Error setting tileArray\n");
+		destroy_map(map);
+		return(NULL);
+	}
+
 	// Association de la map en fichier vers le schema de la map
 	traitement_file(file, map);
 

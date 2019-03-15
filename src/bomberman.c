@@ -28,7 +28,6 @@ void draw_game(game_t *game)
 
 			// index contient le code ascii du caractère
 			index = map->schema[j][i]-48;
-			printf("%d\n", index);
 			SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
 		}
 	}
