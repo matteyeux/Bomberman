@@ -3,13 +3,14 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#include <include/server.h>
-
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
 typedef struct client_s client_t;
 typedef struct s_client_request t_client_request;
+
+#include <include/server.h>
+#include <include/player.h>
 
 struct client_s {
 	int sock;
@@ -27,6 +28,8 @@ struct s_client_request {
 };
 
 client_t *init_client(char *ip_addr, unsigned short port);
-int send_client_data(client_t *client_data);
+
+int send_client_data(client_t *client_data, player_t *player);
+
 t_game *receive_server_data(client_t *client_data);
 #endif

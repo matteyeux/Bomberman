@@ -5,6 +5,7 @@
 
 #include <include/client.h>
 #include <include/server.h>
+#include <include/player.h>
 
 client_t *init_client(char *ip_addr, unsigned short port)
 {
@@ -49,7 +50,7 @@ client_t *init_client(char *ip_addr, unsigned short port)
 /*
 * function used to send the t_client_request struct
 */
-int send_client_data(client_t *client_data)
+int send_client_data(client_t *client_data, player_t *player)
 {
 	ssize_t sender = -1;
 	t_client_request *request;
@@ -66,13 +67,21 @@ int send_client_data(client_t *client_data)
 	}
 
 	/* hardcoded values waiting someone else (not giving any name this time) */
-	request->magic = 0;
-	request->x_pos = 1;
-	request->y_pos = 2;
-	request->dir = 3;
-	request->command = 4;
-	request->speed = 5;
-	request->checksum = 6;
+	request->magic = player->magic;
+	request->x_pos = player->playerPositionRect.x;
+	request->y_pos = player->playerPositionRect.y;
+	request->dir = player->dir;
+	request->command = player->command;
+	request->speed = player->speed;
+	request->checksum = request->magic /
+			(request->x_pos +
+			 request->y_pos +
+			 request->dir +
+			 request->command +
+			 request->speed);
+
+	// TODO Yop debug envoi direction, x, y, command, speed
+	printf("Emit :\n%d : %d - %d  c%d s%d cs%d\n", request->dir, request->x_pos, request->y_pos, request->command, request->speed, request->checksum);
 
 	sender = sendto(client_data->sock, request,
 					sizeof(t_client_request), MSG_NOSIGNAL,
