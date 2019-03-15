@@ -74,10 +74,10 @@ void destroy_map(map_t *map)
 
 void setRectangle(SDL_Rect *rectangle, int x, int y, int w, int h)
 {
-    rectangle->x = x;
-    rectangle->y = y;
-    rectangle->w = w;
-    rectangle->h = h;
+	rectangle->x = x;
+	rectangle->y = y;
+	rectangle->w = w;
+	rectangle->h = h;
 }
 
 void traitement_file(const char *file, map_t *map)
@@ -91,7 +91,7 @@ void traitement_file(const char *file, map_t *map)
 		printf("Error read File\n");
 
 	// Tant qu'on est pas à la fin du fichier, la ligne courante est insérée dans "buf"
-    while (fgets(buf, CACHE_SIZE, f) != NULL) {
+	while (fgets(buf, CACHE_SIZE, f) != NULL) {
 		map->schema[i] = strdup(buf);
 		i++;
 	}
@@ -110,20 +110,20 @@ SDL_Texture *set_texture_map(SDL_Renderer *pRenderer)
 	// Génération de la texture de la map
 	SDL_Surface *surf = IMG_Load("images/tiles_bomberman.png");
 
-    if (surf == NULL) {
-        fprintf(stderr, "surface KO \n %s \n", IMG_GetError());
-        return (NULL);
-    } else {
-        
-		texture = SDL_CreateTextureFromSurface(pRenderer, surf);
-        if (texture == NULL) {
-            printf("texture KO \n");
-            SDL_FreeSurface(surf);
-            return (NULL);
-        }
+	if (surf == NULL) {
+		fprintf(stderr, "surface KO \n %s \n", IMG_GetError());
+		return (NULL);
+	} else {
 
-        SDL_FreeSurface(surf);
-    }
+		texture = SDL_CreateTextureFromSurface(pRenderer, surf);
+		if (texture == NULL) {
+			printf("texture KO \n");
+			SDL_FreeSurface(surf);
+			return (NULL);
+		}
+
+		SDL_FreeSurface(surf);
+	}
 
 	return (texture);
 }
@@ -132,25 +132,25 @@ int set_tile_array(map_t *map)
 {
 	// Association d'un tableau de tile pour la map 
 	tileProp_t *tiles = NULL;
-    for (int i = 0; i < 5; i++) {
-        tiles = malloc(sizeof(tileProp_t));
-        if (tiles == NULL) {
-            printf("Error malloc UNE TILE pour la map\n");
+	for (int i = 0; i < 5; i++) {
+		tiles = malloc(sizeof(tileProp_t));
+		if (tiles == NULL) {
+			printf("Error malloc UNE TILE pour la map\n");
 			destroy_map(map);
-            return (0);
-        }
+			return (0);
+		}
 
-        tiles->plein = 0;
-        tiles->tile = malloc(sizeof(SDL_Rect));
-        if (!tiles->tile) {
-            printf("Error malloc rect pour la map\n");
+		tiles->plein = 0;
+		tiles->tile = malloc(sizeof(SDL_Rect));
+		if (!tiles->tile) {
+			printf("Error malloc rect pour la map\n");
 			destroy_map(map);
-            return (0);
-        }
+			return (0);
+		}
 
-        setRectangle(tiles->tile, 16*i, 0, 16, 16);
-        tiles->charTest = i+48;
-        map->tabTiles[i] = tiles;
-    }
+		setRectangle(tiles->tile, 16*i, 0, 16, 16);
+		tiles->charTest = i+48;
+		map->tabTiles[i] = tiles;
+	}
 	return (1);
 }

@@ -7,20 +7,20 @@
 typedef char tileIndex;
 
 typedef struct tileProp_s {
-    SDL_Rect    *tile;
-    SDL_Texture *textureTile;
-    int plein;
-    char charTest;
+	SDL_Rect	*tile;
+	SDL_Texture *textureTile;
+	int plein;
+	char charTest;
 } tileProp_t;
 
 typedef struct map_s {
-    int largeur_tile;
-    int hauteur_tile;
-    int nbTileX;
-    int nbTileY;
-    tileProp_t **tabTiles;
-    tileIndex **schema;
-    SDL_Texture *mapTexture;
+	int largeur_tile;
+	int hauteur_tile;
+	int nbTileX;
+	int nbTileY;
+	tileProp_t **tabTiles;
+	tileIndex **schema;
+	SDL_Texture *mapTexture;
 
 } map_t;
 

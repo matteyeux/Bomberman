@@ -16,21 +16,24 @@ void draw_game(game_t *game)
 	map_t *map = game->map;
 	bomb_t *bomb = game->bomb;
 	player_t *player = game->player;
+	int index;
 
 	// back screen
 	SDL_SetRenderDrawColor(interface->Renderer, 16, 120, 48, 255);
 	SDL_RenderClear(interface->Renderer);
 
-    for (int i = 0; i < map->nbTileY; i++) {
-        for (int j = 0; j < map->nbTileX; j++) {
-            setRectangle(interface->destRect, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
+	for (int i = 0; i < map->nbTileY; i++) {
+		for (int j = 0; j < map->nbTileX; j++) {
+			setRectangle(interface->destRect, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
 
-            // index contient le code ascii du caractère
-            int index = map->schema[j][i]-48;
-            SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
+			// index contient le code ascii du caractère
+			index = map->schema[j][i]-48;
+			printf("%d\n", index);
+			SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
+		}
+	}
 
-        }
-    }
+	//printf("index : %d\n", index);
 
 	// display player
 	if (bomb->exist == 1) {
