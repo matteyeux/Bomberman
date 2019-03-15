@@ -54,37 +54,19 @@ game_t *init_game(void)
 	return game;
 }
 
-int get_client_id(client_t *client_struct)
-{
-	int client_id;
-
-	recv(client_struct->sock, &client_id, sizeof(int), 0);
-
-	return client_id;
-}
-
-
 void *game_loop(void *game_struct)
 {
 	int status = 0;
 	game_t *game = (game_t *)game_struct;
 	client_t *client_struct;
-	int clientid = 0;
 
 	client_struct = init_client(IP, PORT);
 
-	clientid = get_client_id(client_struct);
+	while (status != -1) {
+		draw_game(game);
 
-	printf("received client ID : %d\n", clientid);
-	if (clientid != 0) {
-		while (status != -1) {
-			draw_game(game);
-
-			status = game_event(game->player, game->interface, game->bomb, client_struct);
-			SDL_Delay(20);
-		}
-	} else {
-		printf("out\n");
+		status = game_event(game->player, game->interface, game->bomb, client_struct);
+		SDL_Delay(20);
 	}
 
 	/*

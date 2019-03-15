@@ -62,17 +62,12 @@ int game_event(player_t *player, interface_t *interface, bomb_t *bomb, client_t 
 					movePlayer(player, interface, e.key.keysym.sym, client_struct);
 					break;
 				case SDLK_d:
-					player->command = 1;
-					send_client_data(client_struct, player);
+					send_client_data(client_struct);
 					dropBomb(player, bomb);
-					player->command = 0;
 					break;
 				default :
 				break;
 			}
-
-			// TODO Yop Clean : Debug pour affichage clean
-			printf("\n");
 		}
 	}
 
