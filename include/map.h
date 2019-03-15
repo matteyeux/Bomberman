@@ -5,15 +5,17 @@
 #define MAP_H_
 
 typedef char tileIndex;
+typedef struct map_s map_t;
+typedef struct tileProp_s tileProp_t;
 
-typedef struct tileProp_s {
+struct tileProp_s {
 	SDL_Rect	*tile;
 	SDL_Texture *textureTile;
 	int plein;
 	char charTest;
-} tileProp_t;
+};
 
-typedef struct map_s {
+struct map_s {
 	int largeur_tile;
 	int hauteur_tile;
 	int nbTileX;
@@ -21,8 +23,7 @@ typedef struct map_s {
 	tileProp_t **tabTiles;
 	tileIndex **schema;
 	SDL_Texture *mapTexture;
-
-} map_t;
+};
 
 
 void setRectangle(SDL_Rect *rectangle, int x, int y, int w, int h);

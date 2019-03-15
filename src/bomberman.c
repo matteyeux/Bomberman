@@ -11,7 +11,6 @@ int status;
 
 void draw_game(game_t *game)
 {
-	// Vars assignements
 	interface_t *interface = game->interface;
 	map_t *map = game->map;
 	bomb_t *bomb = game->bomb;
@@ -26,18 +25,17 @@ void draw_game(game_t *game)
 		for (int j = 0; j < map->nbTileX; j++) {
 			setRectangle(interface->destRect, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
 
-			// index contient le code ascii du caractère
+			// index is the ASCII code of the character
 			index = map->schema[j][i]-48;
 			SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
 		}
 	}
 
-	//printf("index : %d\n", index);
-
 	// display player
 	if (bomb->exist == 1) {
 		SDL_RenderCopy(interface->Renderer, bomb->TexBomb, NULL, &bomb->bombPositionRect);
 	}
+
 	SDL_RenderCopy(interface->Renderer, player->TexPlayer, NULL, &player->playerPositionRect);
 
 	// show renderer

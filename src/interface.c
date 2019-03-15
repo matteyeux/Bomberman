@@ -41,7 +41,7 @@ interface_t *init_interface(void)
 	if (interface->destRect == NULL) {
 		fprintf(stderr, "Malloc destRect failed.\n");
 		destroy_interface(interface);
-		return (NULL);
+		return NULL;
 	}
 
 	// Load font
