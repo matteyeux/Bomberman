@@ -10,6 +10,7 @@
 #include <pthread.h>
 
 #include <include/server.h>
+#include <include/client.h>
 #include <include/bomberman.h>
 
 int sock;
@@ -19,7 +20,9 @@ int sock;
 * each source file that included the header
 *  file to have its own private copy of the function
 */
-static int run_server(int sock, net_data_t *network_data);
+static int run_server(int sock, server_data_t *server_data);
+static t_client_request *receive_client_data(server_data_t *server_data);
+static int send_data_to_client(server_data_t *server_data, t_game *game);
 
 int init_server(unsigned short port)
 {
@@ -27,11 +30,11 @@ int init_server(unsigned short port)
 
 	int enable = 1;
 
-	net_data_t *network_data;
+	server_data_t *server_data;
 
-	network_data = malloc(sizeof(net_data_t));
+	server_data = malloc(sizeof(server_data_t));
 
-	if (network_data == NULL) {
+	if (server_data == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 		return -1;
 	}
@@ -67,71 +70,70 @@ int init_server(unsigned short port)
 		return -1;
 	}
 
-	run_server(sock, network_data);
-	free(network_data);
+	run_server(sock, server_data);
+	free(server_data);
 
 	return 0;
 }
 
-static int run_server(int sock, net_data_t *network_data)
+int client_cnt = 0;
+
+static int run_server(int sock, server_data_t *server_data)
 {
-	int client_sock = 1;
-	int client_cnt = 1;
+	int sock_fd = 1;
 	unsigned int client_addr_len;
 	pthread_t thread_id;
 
 	struct sockaddr_in client;
-	struct msg_struct *message;
 
-	message = malloc(sizeof(struct msg_struct));
+	client_addr_len = sizeof(struct sockaddr_in);
 
-	if (message == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
-	}
-
-	while (client_sock && status != -1) {
+	while (sock_fd && status != -1) {
 		/* Set the size of the in-out parameter */
-		client_addr_len = sizeof(struct sockaddr_in);
 
-		if (client_cnt > 3) {
-			printf("cannot accept more than 4 clients\n");
-			client_sock = -1;
+		/*
+		* if client count is >= 4
+		* set sock_fd to -1
+		* loop until client_cnt is decremented
+		*/
+		if (client_cnt >= 4) {
+			sock_fd = -1;
 		} else {
-			client_sock = accept(sock, (struct sockaddr *)&client, (socklen_t *)&client_addr_len);
+			sock_fd = accept(sock, (struct sockaddr *)&client, (socklen_t *)&client_addr_len);
 
 			/*
 			* when you press exit you'll get :
 			* accept: Invalid argument
 			*/
-			if (client_sock == -1) {
+			if (sock_fd == -1) {
+				client_cnt--;
 				perror("accept");
 				return -1;
 			}
 
 			client_cnt++;
 
-			network_data->client_sock = client_sock;
-			memcpy(&(network_data->client), &client, sizeof(struct sockaddr_in));
-			network_data->client_addr_len = client_addr_len;
-
-			network_data->message = message;
+			server_data->sock_fd = sock_fd;
+			memcpy(&(server_data->client), &client, sizeof(struct sockaddr_in));
+			server_data->client_addr_len = client_addr_len;
 
 			printf("connection accepted\n");
 
-			if (pthread_create(&thread_id, NULL, handler, (void*) network_data) < 0) {
+			if (pthread_create(&thread_id, NULL, handler, (void*) server_data) < 0) {
 				perror("pthread_create");
 				return -1;
 			}
 		}
 	}
 
-	if (client_sock < 0) {
+	if (sock_fd < 0) {
+		printf("here\n");
+		printf("%d\n", client_cnt );
 		perror("accept");
 		return 1;
 	}
 
-	free(message);
-	close(client_sock);
+	close(sock_fd);
 	close(sock);
 	pthread_exit(NULL);
 	return 0;
@@ -146,68 +148,109 @@ static int run_server(int sock, net_data_t *network_data)
 */
 void *handler(void *input)
 {
-	struct net_data_s *message;
+	server_data_t *server_data;
+	t_client_request *request;
+	t_game *game;
 
-	int client_sock, sender;
-	unsigned int client_addr_len;
-	struct sockaddr_in client;
-	ssize_t receiver;
-
-	message = malloc(sizeof(net_data_t));
-	if (message == NULL) {
+	server_data = malloc(sizeof(server_data_t));
+	if (server_data == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 	}
 
-	memcpy(message, (net_data_t *)input, sizeof(net_data_t));
+	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
 	while (status != -1) {
-		client_sock = message->client_sock;
+		request = receive_client_data(server_data);
 
-		client_addr_len = message->client_addr_len;
-		client = message->client;
+		if (request == NULL) {
+			free(request);
+			free(server_data);
+			pthread_exit(NULL);
+			printf("failed request\n");
+		}
 
-		message->message->id = 0;
-		bzero(message->message->message, 100);
+		printf("%d\n", request->magic);
+		printf("%d\n", request->x_pos);
+		printf("%d\n", request->y_pos);
+		printf("%d\n", request->dir);
+		printf("%d\n", request->command);
+		printf("%d\n", request->speed);
+		printf("%d\n", request->checksum);
 
-		receiver = recvfrom(client_sock, message->message,
-							sizeof(*(message->message)), 0,
-							(struct sockaddr *) &client, &client_addr_len);
+		game = malloc(sizeof(t_game));
 
-		if (receiver == -1) {
-			perror("recvfrom");
+		if (game == NULL) {
+			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 			return NULL;
 		}
 
-		// client things issues
-		// TODO : fix
-		if (message->message->id == 0) {
-			printf("recv : failed, it should have received a non-0 int\n");
-			printf("pthread_exit\n");
-			close(client_sock);
-			pthread_exit(NULL);
-		} else {
-			printf("Received: %d\t%s\n", message->message->id, message->message->message);
-		}
-
-		message->message->id += 1;
-
-		printf("server will send : %d\n", message->message->id);
-
-		/* Send the int and string to the server */
-		sender = sendto(client_sock, message->message,
-						sizeof(*(message->message)), MSG_NOSIGNAL,
-						(struct sockaddr *)&client, client_addr_len);
-
-		if (sender == -1 ) {
-			perror("sendto");
-			printf("pthread_exit\n");
-			close(client_sock);
-			pthread_exit(NULL);
-		}
-
-		sleep(1);
+		send_data_to_client(server_data, game);
 	}
 
-	free(message);
+	free(request);
+	free(server_data);
 	return (void *)input;
+}
+
+static t_client_request *receive_client_data(server_data_t *server_data)
+{
+	ssize_t receiver;
+
+	t_client_request *request;
+
+	request = malloc(sizeof(t_client_request));
+
+	if (request == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
+	}
+
+	receiver = recvfrom(server_data->sock_fd, request, sizeof(*(request)), 0,
+				(struct sockaddr *) &server_data->client, &server_data->client_addr_len);
+
+	if (receiver == -1) {
+		perror("recvfrom");
+		return NULL;
+	}
+
+	return request;
+}
+
+/*
+* temporary function to put data in struct
+*/
+static t_game *put_data_in_game(t_game *game)
+{
+	game->player_infos->connected = 'e';
+	game->player_infos->alive = 'e';
+	game->player_infos->x_pos = 12;
+	game->player_infos->y_pos = 12;
+	game->player_infos->current_dir = 12;
+	game->player_infos->current_speed = 12;
+	game->player_infos->max_speed = 12;
+	game->player_infos->bombs_left = 12;
+	game->player_infos->bombs_capacity = 12;
+	game->player_infos->frags = 12;
+
+	return game;
+}
+
+int send_data_to_client(server_data_t *server_data, t_game *game)
+{
+	ssize_t sender;
+
+	game = put_data_in_game(game);
+
+	sender = sendto(server_data->sock_fd, game,
+					sizeof(*(game)), MSG_NOSIGNAL,
+					(struct sockaddr *)&server_data->client,
+					server_data->client_addr_len);
+
+	if (sender == -1) {
+		perror("sendto");
+		close(server_data->sock_fd);
+		pthread_exit(NULL);
+	}
+
+	return 0;
 }

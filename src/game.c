@@ -24,23 +24,30 @@ game_t *init_game(void)
 	}
 
 	game->interface = init_interface();
-	if (game->interface == NULL) {
+	if (game->interface == NULL) 
 		return NULL;
-	}
 
 	fprintf(stdout, "Successfully initialized interface !\n");
 
-	game->player = init_player(game->interface);
-	if (game->player == NULL) {
+	game->map = init_map("map.txt");
+	if (game->map == NULL)
 		return NULL;
-	}
+
+	game->map->mapTexture = set_texture_map(game->interface->Renderer);
+	if (game->map->mapTexture == NULL)
+		return NULL;
+
+	fprintf(stdout, "Successfully initialize map!\n");
+
+	game->player = init_player(game->interface);
+	if (game->player == NULL)
+		return NULL;
 
 	fprintf(stdout, "Successfully initialized player !\n");
 
 	game->bomb = init_bomb(game->interface);
-	if (game->bomb == NULL) {
+	if (game->bomb == NULL) 
 		return NULL;
-	}
 
 	fprintf(stdout, "Successfully initialized bomb !\n");
 
@@ -51,11 +58,14 @@ void *game_loop(void *game_struct)
 {
 	int status = 0;
 	game_t *game = (game_t *)game_struct;
+	client_t *client_struct;
+
+	client_struct = init_client(IP, PORT);
 
 	while (status != -1) {
-		draw_game(game->interface, game->player, game->bomb);
+		draw_game(game);
 
-		status = game_event(game->player, game->interface, game->bomb);
+		status = game_event(game->player, game->interface, game->bomb, client_struct);
 		SDL_Delay(20);
 	}
 
@@ -68,6 +78,7 @@ void *game_loop(void *game_struct)
 	return (void *)game_struct;
 }
 
+
 /*
 * temp workaround, waiting for the menu
 * blame lepage_b
@@ -79,7 +90,8 @@ void *start_networking(void *input)
 	if (!strcmp(type, "server")) {
 		init_server(PORT);
 	} else if (!strcmp(type, "client")) {
-		client(IP, PORT);
+		printf("client\n");
+
 	} else {
 		printf("no\n");
 		return NULL;

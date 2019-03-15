@@ -2,84 +2,114 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <strings.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 
+#include <include/client.h>
 #include <include/server.h>
 
-int client(char *ip_addr, unsigned short port)
+client_t *init_client(char *ip_addr, unsigned short port)
 {
-	int sock, sender, receiver;
+	int sock;
+	client_t *client_struct;
 	struct sockaddr_in server;
-	unsigned int server_addr_len;
 
-	struct msg_struct *my_message;
-	struct msg_struct *received_message;
+	client_struct = malloc(sizeof(client_t));
 
-	my_message = malloc(sizeof(struct msg_struct));
-	if (my_message == NULL) {
-		printf("error malloc\n");
-		return -1;
+	if (client_struct == NULL) {
+		printf("[ERROR] : malloc for client_struct\n");
+		return NULL;
 	}
-
-	received_message = malloc(sizeof(struct msg_struct));
-	if (received_message == NULL) {
-		printf("error malloc\n");
-		return -1;
-	}
-
-	my_message->id = 1234;
-	strcpy(my_message->message, "message");
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock < 0) {
 		perror("socket");
-		return -1;
+		NULL;
 	}
 
 	// build server address struct
 	server.sin_family = AF_INET; // IPv4
 	server.sin_addr.s_addr = inet_addr(ip_addr); // serv IP to connect to
-	server.sin_port   = htons(port); // serv port
+	server.sin_port = htons(port); // serv port
 
 	// connect to server
 	if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
 		perror("connect");
-		return -2;
+		return NULL;
 	}
 
-	server_addr_len = sizeof(server);
+	client_struct->server = server;
+	client_struct->sock = sock;
 
-	while (1) {
-		printf("will send, id : %d\t message : %s\n", my_message->id, my_message->message);
-
-		// Send the int and string to the server
-		sender = sendto(sock, my_message, sizeof(struct msg_struct), MSG_NOSIGNAL, (struct sockaddr *)&server, sizeof(server));
-
-		if (sender == -1 ) {
-			perror("sendto");
-			return -1;
-		}
-
-		receiver = recvfrom(sock, received_message, sizeof(*received_message), 0, (struct sockaddr *) &server, &server_addr_len);
-
-		if (receiver == -1 ) {
-			perror("recvfrom");
-			return -1;
-		}
-
-		// server should send id++ -> 667
-		// message should be the same for some lazy reasons
-		printf("received id : %d\n", received_message->id);
-		printf("received message : %s\n", received_message->message);
-
-		sleep(1);
+	if (client_struct == NULL) {
+		printf("struct is null\n");
 	}
 
-	close(sock);
-	free(my_message);
+	return client_struct;
+}
+
+/*
+* function used to send the t_client_request struct
+*/
+int send_client_data(client_t *client_data)
+{
+	ssize_t sender = -1;
+	t_client_request *request;
+
+	request = malloc(sizeof(t_client_request));
+
+	if (client_data == NULL) {
+		return -1;
+	}
+
+	if (request == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return -1;
+	}
+
+	/* hardcoded values waiting someone else (not giving any name this time) */
+	request->magic = 0;
+	request->x_pos = 1;
+	request->y_pos = 2;
+	request->dir = 3;
+	request->command = 4;
+	request->speed = 5;
+	request->checksum = 6;
+
+	sender = sendto(client_data->sock, request,
+					sizeof(t_client_request), MSG_NOSIGNAL,
+					(struct sockaddr *)&client_data->server,
+					sizeof(client_data->server));
+
+	if (sender == -1 ) {
+		perror("sendto");
+		return -1;
+	}
+
 	return 0;
+}
+
+t_game *receive_server_data(client_t *client_data)
+{
+	ssize_t receiver;
+	unsigned int server_addr_len;
+	t_game *game;
+
+	game = malloc(sizeof(t_game));
+
+	if (game == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
+	}
+
+	server_addr_len = sizeof(client_data->server);
+
+	receiver = recvfrom(client_data->sock, game, sizeof(*game),
+						0, (struct sockaddr *) &client_data->server,
+						&server_addr_len);
+
+	if (receiver == -1 ) {
+		perror("sendto");
+		return NULL;
+	}
+
+	return game;
 }

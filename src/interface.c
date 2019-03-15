@@ -14,11 +14,12 @@ interface_t *init_interface(void)
 		return NULL;
 	}
 
-	interface->screenSize.x = 840;
-	interface->screenSize.y = 680;
+	interface->screenSize.x = 900;
+	interface->screenSize.y = 780;
 
 	interface->Window = NULL;
 	interface->Renderer = NULL;
+	interface->destRect = NULL;
 
 	interface->Font = NULL;
 
@@ -31,6 +32,14 @@ interface_t *init_interface(void)
 	// init TTF font
 	if (TTF_Init() != 0) {
 		fprintf(stderr, "unable to init TTF : %s\n", TTF_GetError());
+		destroy_interface(interface);
+		return NULL;
+	}
+
+	// init destRect
+	interface->destRect = malloc(sizeof(SDL_Rect));
+	if (interface->destRect == NULL) {
+		fprintf(stderr, "Malloc destRect failed.\n");
 		destroy_interface(interface);
 		return NULL;
 	}
@@ -75,6 +84,9 @@ void destroy_interface(interface_t *interface)
 		if (interface->Window) {
 			SDL_DestroyWindow(interface->Window);
 		}
+
+		if (interface->destRect)
+			free(interface->destRect);
 
 		if (interface->Font) {
 			TTF_CloseFont(interface->Font);

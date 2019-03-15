@@ -11,49 +11,19 @@
 #include <include/game.h>
 #include <include/server.h>
 #include <include/client.h>
+#include <include/menu.h>
 
-
-/*
-* CLI usage only.
-* waiting for someone to implement GUI menu
-*/
-void usage(char *arg)
+int main(void)
 {
-	printf("usage : %s <type>\n", arg);
-	printf("type : client or server\n");
-}
+	menu_t *menu = NULL;
+	int choice = 0;
 
-int main(int argc, char *argv[])
-{
-	game_t *game = NULL;
-	pthread_t thread_sdl, thread_net;
+	menu = init_menu();
+	choice = menu_loop(menu);
 
-	if (argc != 2) {
-		usage(argv[0]);
-		return -1;
+	if (choice != 0) {
+		clean_menu_and_setup_game(choice);
 	}
 
-	game = init_game();
-
-	if (game == NULL) {
-		fprintf(stderr, "failed to to init game\n");
-		exit(EXIT_FAILURE);
-	}
-
-	if (pthread_create(&thread_sdl, NULL, game_loop, (void*) game) < 0) {
-		perror("pthread_create");
-		exit(EXIT_FAILURE);
-	}
-
-	if (pthread_create(&thread_net, NULL, start_networking, (void*) argv[1]) < 0) {
-		perror("pthread_create");
-		exit(EXIT_FAILURE);
-	}
-
-	if (pthread_join(thread_sdl, NULL) != 0) {
-		perror("pthread_join");
-		exit(EXIT_FAILURE);
-	}
-
-	destroy_game(game->interface, game->player, game->bomb);
+	return 0;
 }
