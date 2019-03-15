@@ -73,13 +73,12 @@ void *game_loop(void *game_struct)
 
 	client_struct = init_client(IP, PORT);
 
+	clientid = get_client_id(client_struct);
 
-	while (status != -1) {
-		draw_game(game);
-
+	printf("received client ID : %d\n", clientid);
 	if (clientid != 0) {
 		while (status != -1) {
-			draw_game(game->interface, game->player, game->bomb);
+			draw_game(game);
 
 			status = game_event(game->player, game->interface, game->bomb, client_struct);
 			SDL_Delay(20);
