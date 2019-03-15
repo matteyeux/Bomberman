@@ -76,10 +76,10 @@ int init_server(unsigned short port)
 	return 0;
 }
 
-int client_cnt = 0;
 
 static int run_server(int sock, server_data_t *server_data)
 {
+	int client_cnt = 0;
 	int sock_fd = 1;
 	unsigned int client_addr_len;
 	pthread_t thread_id;
@@ -100,7 +100,6 @@ static int run_server(int sock, server_data_t *server_data)
 			sock_fd = -1;
 		} else {
 			sock_fd = accept(sock, (struct sockaddr *)&client, (socklen_t *)&client_addr_len);
-
 			/*
 			* when you press exit you'll get :
 			* accept: Invalid argument
@@ -112,6 +111,7 @@ static int run_server(int sock, server_data_t *server_data)
 			}
 
 			client_cnt++;
+			send(sock_fd, &client_cnt, sizeof(int), 0);
 
 			server_data->sock_fd = sock_fd;
 			memcpy(&(server_data->client), &client, sizeof(struct sockaddr_in));
