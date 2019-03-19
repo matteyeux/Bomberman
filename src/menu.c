@@ -69,7 +69,7 @@ int menu_loop(menu_t *menu)
 void clean_menu_and_setup_game(int status)
 {
 	pthread_t thread_sdl, thread_net;
-	game_t *game = NULL;
+	global_game_t *game = NULL;
 	char *arg = NULL;
 
 	switch (status) {

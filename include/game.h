@@ -6,16 +6,16 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-typedef struct game_s game_t;
+typedef struct global_game_s global_game_t;
 
-struct game_s {
+struct global_game_s {
 	interface_t *interface;
 	player_t *player;
 	bomb_t *bomb;
 	map_t *map;
 };
 
-game_t *init_game(void);
+global_game_t *init_game(void);
 void *game_loop(void *game_struct);
 void *start_networking(void *type);
 

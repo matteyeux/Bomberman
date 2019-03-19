@@ -12,11 +12,11 @@
 #define IP "127.0.0.1"
 #define PORT 12345
 
-game_t *init_game(void)
+global_game_t *init_game(void)
 {
-	game_t *game = NULL;
+	global_game_t *game = NULL;
 
-	game = malloc(sizeof(game_t));
+	game = malloc(sizeof(global_game_t));
 
 	if (game == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
@@ -67,7 +67,7 @@ int get_client_id(client_t *client_struct)
 void *game_loop(void *game_struct)
 {
 	int status = 0;
-	game_t *game = (game_t *)game_struct;
+	global_game_t *game = (global_game_t *)game_struct;
 	client_t *client_struct;
 	int clientid = 0;
 
