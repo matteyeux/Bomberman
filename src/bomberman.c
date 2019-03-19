@@ -9,7 +9,7 @@
 // set to global so run_server can use it
 int status;
 
-void draw_game(game_t *game)
+void draw_game(global_game_t *game)
 {
 	interface_t *interface = game->interface;
 	map_t *map = game->map;
