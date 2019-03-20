@@ -63,28 +63,27 @@ int get_client_id(client_t *client_struct)
 	return client_id;
 }
 
-
 void *game_loop(void *game_struct)
 {
 	int status = 0;
 	global_game_t *game = (global_game_t *)game_struct;
 	client_t *client_struct;
-	int clientid = 0;
+	pthread_t thread_client;
 
 	client_struct = init_client(IP, PORT);
 
-	clientid = get_client_id(client_struct);
-
-	printf("received client ID : %d\n", clientid);
-	if (clientid != 0) {
-		while (status != -1) {
-			draw_game(game);
-
-			status = game_event(game->player, game->interface, game->bomb, client_struct);
-			SDL_Delay(20);
+	if (client_struct != NULL) {
+		if (pthread_create(&thread_client, NULL, client_listening, (void*) client_struct) < 0) {
+			perror("pthread_create");
+			exit(EXIT_FAILURE);
 		}
-	} else {
-		printf("out\n");
+	}
+
+	while (status != -1) {
+		draw_game(game);
+
+		status = game_event(game->player, game->interface, game->bomb, client_struct);
+		SDL_Delay(20);
 	}
 
 	/*

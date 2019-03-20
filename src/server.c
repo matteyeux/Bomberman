@@ -111,7 +111,6 @@ static int run_server(int sock, server_data_t *server_data)
 			}
 
 			client_cnt++;
-			send(sock_fd, &client_cnt, sizeof(int), 0);
 
 			server_data->sock_fd = sock_fd;
 			memcpy(&(server_data->client), &client, sizeof(struct sockaddr_in));
