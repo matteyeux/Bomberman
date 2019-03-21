@@ -125,12 +125,7 @@ t_game *receive_server_data(client_t *client_data)
 
 void *client_listening(void *client_data)
 {
-	global_game = malloc(sizeof(t_game));
-
-	if (global_game == NULL) {
-		printf("MALLOC CERROR\n");
-	}
-
+	// those printfs can be removed
 	while (1) {
 		printf("client_listening\n");
 		global_game = receive_server_data((client_t *)client_data);
