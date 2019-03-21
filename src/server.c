@@ -79,38 +79,48 @@ int init_server(unsigned short port)
 
 static int run_server(int sock, server_data_t *server_data)
 {
-	int client_cnt = 0;
 	int sock_fd = 1;
 	unsigned int client_addr_len;
 	pthread_t thread_id;
-
+	int magic_array[5];
 	struct sockaddr_in client;
 
+	server_data->client_cnt = 0;
 	client_addr_len = sizeof(struct sockaddr_in);
 
 	while (sock_fd && status != -1) {
-		/* Set the size of the in-out parameter */
+		memset(&magic_array, 0, sizeof(magic_array));
 
 		/*
 		* if client count is >= 4
 		* set sock_fd to -1
 		* loop until client_cnt is decremented
 		*/
-		if (client_cnt >= 4) {
+		if (server_data->client_cnt >= 4) {
 			sock_fd = -1;
 		} else {
 			sock_fd = accept(sock, (struct sockaddr *)&client, (socklen_t *)&client_addr_len);
+
 			/*
 			* when you press exit you'll get :
 			* accept: Invalid argument
 			*/
 			if (sock_fd == -1) {
-				client_cnt--;
+				//server_data->client_cnt--;
 				perror("accept");
 				return -1;
 			}
 
-			client_cnt++;
+			server_data->client_cnt++;
+
+			// set magic and send it here
+			magic_array[server_data->client_cnt] = rand();
+			printf("magic_array : %d\n", magic_array[server_data->client_cnt]);
+
+			// TODO : send magic
+			// just send a simple int : magic_array[server_data->client_cnt]
+			// which is set with a random value.
+			// send(server_data->sock_fd, magic_array[server_data->client_cnt], sizeof(int), 0);
 
 			server_data->sock_fd = sock_fd;
 			memcpy(&(server_data->client), &client, sizeof(struct sockaddr_in));
@@ -126,8 +136,7 @@ static int run_server(int sock, server_data_t *server_data)
 	}
 
 	if (sock_fd < 0) {
-		printf("here\n");
-		printf("%d\n", client_cnt );
+		printf("%d\n", server_data->client_cnt );
 		perror("accept");
 		return 1;
 	}
@@ -221,16 +230,16 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 */
 static t_game *put_data_in_game(t_game *game)
 {
-	game->player_infos->connected = 'e';
-	game->player_infos->alive = 'e';
-	game->player_infos->x_pos = 12;
-	game->player_infos->y_pos = 12;
-	game->player_infos->current_dir = 12;
-	game->player_infos->current_speed = 12;
-	game->player_infos->max_speed = 12;
-	game->player_infos->bombs_left = 12;
-	game->player_infos->bombs_capacity = 12;
-	game->player_infos->frags = 12;
+	game->player1->connected = 'e';
+	game->player1->alive = 'e';
+	game->player1->x_pos = 12;
+	game->player1->y_pos = 12;
+	game->player1->current_dir = 12;
+	game->player1->current_speed = 12;
+	game->player1->max_speed = 12;
+	game->player1->bombs_left = 12;
+	game->player1->bombs_capacity = 12;
+	game->player1->frags = 12;
 
 	return game;
 }

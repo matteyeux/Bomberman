@@ -85,11 +85,11 @@ void *game_loop(void *game_struct)
 		}
 	}
 
-
 	while (status != -1) {
 		// should be 0 the first time, then 12
 		if (global_game != NULL) {
-			printf("global_game->player_infos->x_pos : %d\n", global_game->player_infos->x_pos);
+			// comment cuz not finished yet
+			printf("global_game->player_infos->x_pos : %d\n", 12); // global_game->player_infos->x_pos);
 		}
 		draw_game(game);
 
