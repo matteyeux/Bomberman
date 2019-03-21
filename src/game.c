@@ -71,15 +71,26 @@ void *game_loop(void *game_struct)
 	pthread_t thread_client;
 
 	client_struct = init_client(IP, PORT);
-
 	if (client_struct != NULL) {
+		global_game = malloc(sizeof(t_game));
+
+		if (global_game == NULL) {
+			fprintf(stderr, "MALLOC ERROR\n");
+			return NULL;
+		}
+
 		if (pthread_create(&thread_client, NULL, client_listening, (void*) client_struct) < 0) {
 			perror("pthread_create");
 			exit(EXIT_FAILURE);
 		}
 	}
 
+
 	while (status != -1) {
+		// should be 0 the first time, then 12
+		if (global_game != NULL) {
+			printf("global_game->player_infos->x_pos : %d\n", global_game->player_infos->x_pos);
+		}
 		draw_game(game);
 
 		status = game_event(game->player, game->interface, game->bomb, client_struct);
