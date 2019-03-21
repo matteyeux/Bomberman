@@ -66,7 +66,7 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction,
 			// TODO Yop printf("sending data\n");
 			send_client_data(client_struct, player);
 			// TODO Yop printf("waiting for data\n");
-			game = receive_server_data(client_struct);
+			//game = receive_server_data(client_struct);
 			// TODO Matt printf("%d\n", game->player_infos->x_pos); // prints 12
 		}
 
