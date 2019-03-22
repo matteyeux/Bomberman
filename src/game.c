@@ -79,7 +79,7 @@ void *game_loop(void *game_struct)
 
 		printf("magic : %d\n", magic);
 
-		global_game = malloc(sizeof(t_game));
+		global_game = malloc(sizeof(t_server_game));
 
 		if (global_game == NULL) {
 			fprintf(stderr, "MALLOC ERROR\n");

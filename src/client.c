@@ -96,22 +96,22 @@ int send_client_data(client_t *client_data, player_t *player)
 	return 0;
 }
 
-t_game *receive_server_data(client_t *client_data)
+t_server_game *receive_server_data(client_t *client_data)
 {
 	ssize_t receiver;
 	unsigned int server_addr_len;
-	t_game *game;
+	t_server_game *server_game;
 
-	game = malloc(sizeof(t_game));
+	server_game = malloc(sizeof(t_server_game));
 
-	if (game == NULL) {
+	if (server_game == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 		return NULL;
 	}
 
 	server_addr_len = sizeof(client_data->server);
 
-	receiver = recvfrom(client_data->sock, game, sizeof(*game),
+	receiver = recvfrom(client_data->sock, server_game, sizeof(*server_game),
 						0, (struct sockaddr *) &client_data->server,
 						&server_addr_len);
 
@@ -120,7 +120,7 @@ t_game *receive_server_data(client_t *client_data)
 		return NULL;
 	}
 
-	return game;
+	return server_game;
 }
 
 int get_magic(client_t *client_struct)

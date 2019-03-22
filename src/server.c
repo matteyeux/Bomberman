@@ -23,7 +23,7 @@ int sock_fd_array[4];
 */
 static int run_server(int sock, server_data_t *server_data);
 static t_client_request *receive_client_data(server_data_t *server_data);
-static int send_data_to_client(server_data_t *server_data, t_game *game);
+static int send_data_to_client(server_data_t *server_data, t_server_game *server_game);
 
 int init_server(unsigned short port)
 {
@@ -158,7 +158,7 @@ void *handler(void *input)
 {
 	server_data_t *server_data;
 	t_client_request *request;
-	t_game *game;
+	t_server_game *server_game;
 
 	server_data = malloc(sizeof(server_data_t));
 	if (server_data == NULL) {
@@ -168,9 +168,9 @@ void *handler(void *input)
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
 	while (status != -1) {
-		game = malloc(sizeof(t_game));
+		server_game = malloc(sizeof(t_server_game));
 
-		if (game == NULL) {
+		if (server_game == NULL) {
 			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 			return NULL;
 		}
@@ -194,7 +194,7 @@ void *handler(void *input)
 				request->magic);
 
 
-		send_data_to_client(server_data, game);
+		send_data_to_client(server_data, server_game);
 	}
 
 	free(request);
@@ -231,37 +231,37 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 /*
 * temporary function to put data in struct
 */
-static t_game *put_data_in_game(t_game *game)
+static t_server_game *put_data_in_game(t_server_game *server_game)
 {
-	game->player1.connected = 'e';
-	game->player1.alive = 'e';
-	game->player1.x_pos = 12;
-	game->player1.y_pos = 12;
-	game->player1.current_dir = 12;
-	game->player1.current_speed = 12;
-	game->player1.max_speed = 12;
-	game->player1.bombs_left = 12;
-	game->player1.bombs_capacity = 12;
-	game->player1.frags = 12;
+	server_game->player1.connected = 'e';
+	server_game->player1.alive = 'e';
+	server_game->player1.x_pos = 12;
+	server_game->player1.y_pos = 12;
+	server_game->player1.current_dir = 12;
+	server_game->player1.current_speed = 12;
+	server_game->player1.max_speed = 12;
+	server_game->player1.bombs_left = 12;
+	server_game->player1.bombs_capacity = 12;
+	server_game->player1.frags = 12;
 
 
-	game->player2.x_pos = 13;
-	game->player3.x_pos = 14;
-	game->player4.x_pos = 15;
-	return game;
+	server_game->player2.x_pos = 13;
+	server_game->player3.x_pos = 14;
+	server_game->player4.x_pos = 15;
+	return server_game;
 }
 
-int send_data_to_client(server_data_t *server_data, t_game *game)
+int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 {
 	ssize_t sender;
 	int i;
-	game = put_data_in_game(game);
+	server_game = put_data_in_game(server_game);
 
 	for (i = 0; i < MAX_PLAYERS; ++i) {
 		printf("sending to sock %d\n", i);
 		if (sock_fd_array[i] != -1){
-			sender = sendto(sock_fd_array[i], game,
-					sizeof(*(game)), MSG_NOSIGNAL,
+			sender = sendto(sock_fd_array[i], server_game,
+					sizeof(*(server_game)), MSG_NOSIGNAL,
 					(struct sockaddr *)&server_data->client,
 					server_data->client_addr_len);
 		}

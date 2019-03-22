@@ -27,13 +27,13 @@ struct s_client_request {
 	int checksum;		/* simple checksum */
 };
 
-t_game *global_game;
+t_server_game *global_game;
 
 client_t *init_client(char *ip_addr, unsigned short port);
 
 int send_client_data(client_t *client_data, player_t *player);
 
-t_game *receive_server_data(client_t *client_data);
+t_server_game *receive_server_data(client_t *client_data);
 
 int get_magic(client_t *client_struct);
 
