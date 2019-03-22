@@ -245,9 +245,9 @@ static t_game *put_data_in_game(t_game *game)
 	game->player1.frags = 12;
 
 
-	game->player2.x_pos = 12;
-	game->player3.x_pos = 12;
-	game->player4.x_pos = 12;
+	game->player2.x_pos = 13;
+	game->player3.x_pos = 14;
+	game->player4.x_pos = 15;
 	return game;
 }
 

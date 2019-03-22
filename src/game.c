@@ -109,17 +109,17 @@ void *game_loop(void *game_struct)
 				printf("global_game->player1.x_pos : %d\n", global_game->player1.x_pos);
 			}
 
-			if (global_game->player2.x_pos == 12 && b == 0) {
+			if (global_game->player2.x_pos == 13 && b == 0) {
 				b = 1;
 				printf("global_game->player2.x_pos : %d\n", global_game->player2.x_pos);
 			}
 
-			if (global_game->player3.x_pos == 12 && c == 0) {
+			if (global_game->player3.x_pos == 14 && c == 0) {
 				c = 1;
 				printf("global_game->player3.x_pos : %d\n", global_game->player3.x_pos);
 			}
 
-			if (global_game->player4.x_pos == 12 && d == 0) {
+			if (global_game->player4.x_pos == 15 && d == 0) {
 				d = 1;
 				printf("global_game->player4.x_pos : %d\n", global_game->player4.x_pos);
 			}
