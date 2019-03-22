@@ -123,13 +123,20 @@ t_game *receive_server_data(client_t *client_data)
 	return game;
 }
 
+int get_magic(client_t *client_struct)
+{
+	int magic = -1;
+	if (client_struct != NULL)
+		recv(client_struct->sock, &magic, sizeof(int), 0);
+	else
+		magic = -1;
+	return magic;
+}
+
 void *client_listening(void *client_data)
 {
-	// those printfs can be removed
 	while (1) {
-		printf("client_listening\n");
 		global_game = receive_server_data((client_t *)client_data);
-		printf("received\n");
 	}
 
 	return (void *)global_game;

@@ -25,8 +25,8 @@ typedef struct s_other t_other;
 typedef char t_map[MAP_SIZE];
 
 struct server_data_s {
-	int sock_fd;
-	int client_cnt;
+	int sock_fd[MAX_PLAYERS];
+	int sock_id;
 	struct sockaddr_in client;
 	unsigned int client_addr_len;
 };
@@ -54,10 +54,10 @@ t_player_infos *player3;
 t_player_infos *player4;
 
 struct s_game {
-	t_player_infos *player1;
-	t_player_infos *player2;
-	t_player_infos *player3;
-	t_player_infos *player4;
+	t_player_infos player1;
+	t_player_infos player2;
+	t_player_infos player3;
+	t_player_infos player4;
 	t_map map;
 	t_other infos;
 };
