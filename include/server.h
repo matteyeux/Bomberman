@@ -19,13 +19,14 @@ struct msg_struct {
 };
 
 typedef struct server_data_s server_data_t;
-typedef struct s_game t_game;
+typedef struct s_server_game t_server_game;
 typedef struct s_player_infos t_player_infos;
 typedef struct s_other t_other;
 typedef char t_map[MAP_SIZE];
 
 struct server_data_s {
-	int sock_fd;
+	int sock_fd[MAX_PLAYERS];
+	int sock_id;
 	struct sockaddr_in client;
 	unsigned int client_addr_len;
 };
@@ -47,8 +48,16 @@ struct s_other {
 	int a;
 };
 
-struct s_game {
-	t_player_infos player_infos[MAX_PLAYERS];
+t_player_infos *player1;
+t_player_infos *player2;
+t_player_infos *player3;
+t_player_infos *player4;
+
+struct s_server_game {
+	t_player_infos player1;
+	t_player_infos player2;
+	t_player_infos player3;
+	t_player_infos player4;
 	t_map map;
 	t_other infos;
 };

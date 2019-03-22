@@ -14,6 +14,7 @@
 #include <include/bomberman.h>
 
 int sock;
+int sock_fd_array[4];
 
 /*
 * function defined else it would cause
@@ -22,14 +23,14 @@ int sock;
 */
 static int run_server(int sock, server_data_t *server_data);
 static t_client_request *receive_client_data(server_data_t *server_data);
-static int send_data_to_client(server_data_t *server_data, t_game *game);
+static int send_data_to_client(server_data_t *server_data, t_server_game *server_game);
 
 int init_server(unsigned short port)
 {
 	struct sockaddr_in server; /* Local address */
 
 	int enable = 1;
-
+	memset(&sock_fd_array, -1, sizeof(sock_fd_array));
 	server_data_t *server_data;
 
 	server_data = malloc(sizeof(server_data_t));
@@ -79,17 +80,18 @@ int init_server(unsigned short port)
 
 static int run_server(int sock, server_data_t *server_data)
 {
-	int client_cnt = 0;
 	int sock_fd = 1;
+	int client_cnt = 0;
 	unsigned int client_addr_len;
 	pthread_t thread_id;
-
+	int magic_array[5];
 	struct sockaddr_in client;
 
+	client_cnt = 0;
 	client_addr_len = sizeof(struct sockaddr_in);
 
 	while (sock_fd && status != -1) {
-		/* Set the size of the in-out parameter */
+		memset(&magic_array, 0, sizeof(magic_array));
 
 		/*
 		* if client count is >= 4
@@ -105,19 +107,26 @@ static int run_server(int sock, server_data_t *server_data)
 			* accept: Invalid argument
 			*/
 			if (sock_fd == -1) {
-				client_cnt--;
 				perror("accept");
 				return -1;
 			}
 
-			client_cnt++;
-			send(sock_fd, &client_cnt, sizeof(int), 0);
+			sock_fd_array[client_cnt] = sock_fd;
 
-			server_data->sock_fd = sock_fd;
+			client_cnt++;
+			server_data->sock_id = client_cnt - 1;
+
+			// set magic and send it here
+			magic_array[server_data->sock_id] = rand();
+
+			server_data->sock_fd[client_cnt - 1] = sock_fd;
+
 			memcpy(&(server_data->client), &client, sizeof(struct sockaddr_in));
 			server_data->client_addr_len = client_addr_len;
 
 			printf("connection accepted\n");
+
+			send(server_data->sock_fd[client_cnt - 1], &magic_array[server_data->sock_id], sizeof(int), 0);
 
 			if (pthread_create(&thread_id, NULL, handler, (void*) server_data) < 0) {
 				perror("pthread_create");
@@ -127,8 +136,7 @@ static int run_server(int sock, server_data_t *server_data)
 	}
 
 	if (sock_fd < 0) {
-		printf("here\n");
-		printf("%d\n", client_cnt );
+		printf("%d\n", server_data->sock_id);
 		perror("accept");
 		return 1;
 	}
@@ -150,7 +158,7 @@ void *handler(void *input)
 {
 	server_data_t *server_data;
 	t_client_request *request;
-	t_game *game;
+	t_server_game *server_game;
 
 	server_data = malloc(sizeof(server_data_t));
 	if (server_data == NULL) {
@@ -160,6 +168,13 @@ void *handler(void *input)
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
 	while (status != -1) {
+		server_game = malloc(sizeof(t_server_game));
+
+		if (server_game == NULL) {
+			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+			return NULL;
+		}
+
 		request = receive_client_data(server_data);
 
 		if (request == NULL) {
@@ -178,14 +193,8 @@ void *handler(void *input)
 				request->checksum,
 				request->magic);
 
-		game = malloc(sizeof(t_game));
 
-		if (game == NULL) {
-			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
-			return NULL;
-		}
-
-		send_data_to_client(server_data, game);
+		send_data_to_client(server_data, server_game);
 	}
 
 	free(request);
@@ -206,8 +215,10 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 		return NULL;
 	}
 
-	receiver = recvfrom(server_data->sock_fd, request, sizeof(*(request)), 0,
-				(struct sockaddr *) &server_data->client, &server_data->client_addr_len);
+	receiver = recvfrom(server_data->sock_fd[server_data->sock_id],
+						request, sizeof(*(request)), 0,
+						(struct sockaddr *) &server_data->client,
+						&server_data->client_addr_len);
 
 	if (receiver == -1) {
 		perror("recvfrom");
@@ -220,38 +231,48 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 /*
 * temporary function to put data in struct
 */
-static t_game *put_data_in_game(t_game *game)
+static t_server_game *put_data_in_game(t_server_game *server_game)
 {
-	game->player_infos->connected = 'e';
-	game->player_infos->alive = 'e';
-	game->player_infos->x_pos = 12;
-	game->player_infos->y_pos = 12;
-	game->player_infos->current_dir = 12;
-	game->player_infos->current_speed = 12;
-	game->player_infos->max_speed = 12;
-	game->player_infos->bombs_left = 12;
-	game->player_infos->bombs_capacity = 12;
-	game->player_infos->frags = 12;
+	server_game->player1.connected = 'e';
+	server_game->player1.alive = 'e';
+	server_game->player1.x_pos = 12;
+	server_game->player1.y_pos = 12;
+	server_game->player1.current_dir = 12;
+	server_game->player1.current_speed = 12;
+	server_game->player1.max_speed = 12;
+	server_game->player1.bombs_left = 12;
+	server_game->player1.bombs_capacity = 12;
+	server_game->player1.frags = 12;
 
-	return game;
+
+	server_game->player2.x_pos = 13;
+	server_game->player3.x_pos = 14;
+	server_game->player4.x_pos = 15;
+	return server_game;
 }
 
-int send_data_to_client(server_data_t *server_data, t_game *game)
+int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 {
 	ssize_t sender;
+	int i;
+	server_game = put_data_in_game(server_game);
 
-	game = put_data_in_game(game);
-
-	sender = sendto(server_data->sock_fd, game,
-					sizeof(*(game)), MSG_NOSIGNAL,
+	for (i = 0; i < MAX_PLAYERS; ++i) {
+		printf("sending to sock %d\n", i);
+		if (sock_fd_array[i] != -1){
+			sender = sendto(sock_fd_array[i], server_game,
+					sizeof(*(server_game)), MSG_NOSIGNAL,
 					(struct sockaddr *)&server_data->client,
 					server_data->client_addr_len);
+		}
 
-	if (sender == -1) {
-		perror("sendto");
-		close(server_data->sock_fd);
-		pthread_exit(NULL);
+		if (sender == -1) {
+			perror("sendto");
+			close(server_data->sock_fd[i]);
+			pthread_exit(NULL);
+		}
 	}
+
 
 	return 0;
 }

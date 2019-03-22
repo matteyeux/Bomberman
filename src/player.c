@@ -23,7 +23,7 @@ player_t *init_player(interface_t *interface)
 	}
 
 	// TODO : changer la generation ID, doit être faite par le serveur
-	player->magic = rand();
+	player->magic = 0;
 	player->score = 0;
 	player->speed = 10;
 	player->dir = 3;
@@ -57,7 +57,7 @@ player_t *init_player(interface_t *interface)
 
 void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction, client_t *client_struct)
 {
-	t_game *game = NULL;
+	t_server_game *game = NULL;
 
 	if (direction == SDLK_UP) {
 		player->dir = 0;
@@ -66,7 +66,7 @@ void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction,
 			// TODO Yop printf("sending data\n");
 			send_client_data(client_struct, player);
 			// TODO Yop printf("waiting for data\n");
-			game = receive_server_data(client_struct);
+			//game = receive_server_data(client_struct);
 			// TODO Matt printf("%d\n", game->player_infos->x_pos); // prints 12
 		}
 

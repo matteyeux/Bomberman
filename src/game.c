@@ -1,5 +1,7 @@
 #include <pthread.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 #include <include/interface.h>
 #include <include/player.h>
@@ -63,34 +65,77 @@ int get_client_id(client_t *client_struct)
 	return client_id;
 }
 
-
 void *game_loop(void *game_struct)
 {
-	int status = 0;
+	int status = 0, magic;
 	global_game_t *game = (global_game_t *)game_struct;
 	client_t *client_struct;
-	int clientid = 0;
+	pthread_t thread_client;
+
+	int a = 0, b = 0, c = 0, d = 0;
 
 	client_struct = init_client(IP, PORT);
+	if (client_struct != NULL) {
+		magic = get_magic(client_struct);
 
-	clientid = get_client_id(client_struct);
+		printf("magic : %d\n", magic);
+		game->player->magic = magic;
 
-	printf("received client ID : %d\n", clientid);
-	if (clientid != 0) {
-		while (status != -1) {
-			draw_game(game);
+		global_game = malloc(sizeof(t_server_game));
 
-			status = game_event(game->player, game->interface, game->bomb, client_struct);
-			SDL_Delay(20);
+		if (global_game == NULL) {
+			fprintf(stderr, "MALLOC ERROR\n");
+			return NULL;
 		}
-	} else {
-		printf("out\n");
+
+		if (pthread_create(&thread_client, NULL, client_listening, (void*) client_struct) < 0) {
+			perror("pthread_create");
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	while (status != -1) {
+
+		draw_game(game);
+
+		status = game_event(game->player, game->interface, game->bomb, client_struct);
+
+		/*
+		* YOP : this is for you
+		* to not get flooded by all this crap I made a simple condition when it's printed once
+		* it will not be printed anymore
+		*/
+		if (global_game != NULL) {
+			if (global_game->player1.x_pos == 12 && a == 0) {
+				a = 1;
+				printf("global_game->player1.x_pos : %d\n", global_game->player1.x_pos);
+			}
+
+			if (global_game->player2.x_pos == 13 && b == 0) {
+				b = 1;
+				printf("global_game->player2.x_pos : %d\n", global_game->player2.x_pos);
+			}
+
+			if (global_game->player3.x_pos == 14 && c == 0) {
+				c = 1;
+				printf("global_game->player3.x_pos : %d\n", global_game->player3.x_pos);
+			}
+
+			if (global_game->player4.x_pos == 15 && d == 0) {
+				d = 1;
+				printf("global_game->player4.x_pos : %d\n", global_game->player4.x_pos);
+			}
+
+		}
+
+		SDL_Delay(20);
 	}
 
 	/*
 	* SHUT_RDWR is used to disable further
 	* receptions and transmissions
 	*/
+	free(global_game);
 	shutdown(sock, SHUT_RDWR);
 	close(sock);
 	return (void *)game_struct;
