@@ -71,6 +71,7 @@ void *game_loop(void *game_struct)
 	global_game_t *game = (global_game_t *)game_struct;
 	client_t *client_struct;
 	pthread_t thread_client;
+
 	int a = 0, b = 0, c = 0, d = 0;
 
 	client_struct = init_client(IP, PORT);
@@ -78,6 +79,7 @@ void *game_loop(void *game_struct)
 		magic = get_magic(client_struct);
 
 		printf("magic : %d\n", magic);
+		game->player->magic = magic;
 
 		global_game = malloc(sizeof(t_server_game));
 
