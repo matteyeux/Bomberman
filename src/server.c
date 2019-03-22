@@ -120,13 +120,15 @@ static int run_server(int sock, server_data_t *server_data)
 			// TODO : send magic
 			// just send a simple int : magic_array[server_data->client_cnt]
 			// which is set with a random value.
-			// send(server_data->sock_fd, magic_array[server_data->client_cnt], sizeof(int), 0);
+
 
 			server_data->sock_fd = sock_fd;
 			memcpy(&(server_data->client), &client, sizeof(struct sockaddr_in));
 			server_data->client_addr_len = client_addr_len;
 
 			printf("connection accepted\n");
+			printf("sending magic\n");
+			send(server_data->sock_fd, &magic_array[server_data->client_cnt], sizeof(int), 0);
 
 			if (pthread_create(&thread_id, NULL, handler, (void*) server_data) < 0) {
 				perror("pthread_create");

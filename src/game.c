@@ -1,5 +1,7 @@
 #include <pthread.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 #include <include/interface.h>
 #include <include/player.h>
@@ -69,7 +71,7 @@ void *game_loop(void *game_struct)
 	global_game_t *game = (global_game_t *)game_struct;
 	client_t *client_struct;
 	pthread_t thread_client;
-
+	int magic;
 	client_struct = init_client(IP, PORT);
 	if (client_struct != NULL) {
 		global_game = malloc(sizeof(t_game));
@@ -85,12 +87,17 @@ void *game_loop(void *game_struct)
 		}
 	}
 
+	printf("waiting for magic\n");
+	recv(client_struct->sock, &magic, sizeof(int), 0);
+	printf("recv magic : %d\n", magic);
+
 	while (status != -1) {
-		// should be 0 the first time, then 12
+
 		if (global_game != NULL) {
-			// comment cuz not finished yet
-			printf("global_game->player_infos->x_pos : %d\n", 12); // global_game->player_infos->x_pos);
+			printf("global_game->player_infos->x_pos : %d\n",
+					global_game->player1->x_pos);
 		}
+
 		draw_game(game);
 
 		status = game_event(game->player, game->interface, game->bomb, client_struct);
@@ -101,6 +108,8 @@ void *game_loop(void *game_struct)
 	* SHUT_RDWR is used to disable further
 	* receptions and transmissions
 	*/
+
+	free(global_game);
 	shutdown(sock, SHUT_RDWR);
 	close(sock);
 	return (void *)game_struct;
