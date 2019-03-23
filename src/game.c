@@ -106,25 +106,33 @@ void *game_loop(void *game_struct)
 		* it will not be printed anymore
 		*/
 		if (global_game != NULL) {
-			if (global_game->player1.x_pos == 12 && a == 0) {
-				a = 1;
-				printf("global_game->player1.x_pos : %d\n", global_game->player1.x_pos);
-			}
 
-			if (global_game->player2.x_pos == 13 && b == 0) {
-				b = 1;
-				printf("global_game->player2.x_pos : %d\n", global_game->player2.x_pos);
-			}
+			// Debug Yop (Non modéré, en mode flood, j'affiche non stop positions)
+			printf("P1 X:%d Y:%d\n", global_game->player1.x_pos, global_game->player1.y_pos, global_game->player1.current_dir);
+			printf("P2 X:%d Y:%d\n", global_game->player2.x_pos, global_game->player2.y_pos, global_game->player2.current_dir);
+			printf("P3 X:%d Y:%d\n", global_game->player3.x_pos, global_game->player3.y_pos, global_game->player3.current_dir);
+			printf("P4 X:%d Y:%d\n", global_game->player4.x_pos, global_game->player4.y_pos, global_game->player4.current_dir);
 
-			if (global_game->player3.x_pos == 14 && c == 0) {
-				c = 1;
-				printf("global_game->player3.x_pos : %d\n", global_game->player3.x_pos);
-			}
+			// Debug Matthieu (Modéré)
+			//if (global_game->player1.x_pos == 12 && a == 0) {
+			//	a = 1;
+			//	printf("global_game->player1.x_pos : %d\n", global_game->player1.x_pos);
+			//}
 
-			if (global_game->player4.x_pos == 15 && d == 0) {
-				d = 1;
-				printf("global_game->player4.x_pos : %d\n", global_game->player4.x_pos);
-			}
+			//if (global_game->player2.x_pos == 13 && b == 0) {
+			//	b = 1;
+			//	printf("global_game->player2.x_pos : %d\n", global_game->player2.x_pos);
+			//}
+
+			//if (global_game->player3.x_pos == 14 && c == 0) {
+			//	c = 1;
+			//	printf("global_game->player3.x_pos : %d\n", global_game->player3.x_pos);
+			//}
+
+			//if (global_game->player4.x_pos == 15 && d == 0) {
+			//	d = 1;
+			//	printf("global_game->player4.x_pos : %d\n", global_game->player4.x_pos);
+			//}
 
 		}
 

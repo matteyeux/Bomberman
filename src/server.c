@@ -235,9 +235,9 @@ static t_server_game *put_data_in_game(t_server_game *server_game)
 {
 	server_game->player1.connected = 'e';
 	server_game->player1.alive = 'e';
-	server_game->player1.x_pos = 12;
-	server_game->player1.y_pos = 12;
-	server_game->player1.current_dir = 12;
+	server_game->player1.x_pos = 100;
+	server_game->player1.y_pos = 100;
+	server_game->player1.current_dir = 2;
 	server_game->player1.current_speed = 12;
 	server_game->player1.max_speed = 12;
 	server_game->player1.bombs_left = 12;
@@ -245,9 +245,18 @@ static t_server_game *put_data_in_game(t_server_game *server_game)
 	server_game->player1.frags = 12;
 
 
-	server_game->player2.x_pos = 13;
-	server_game->player3.x_pos = 14;
-	server_game->player4.x_pos = 15;
+	server_game->player2.x_pos = 100;
+	server_game->player2.y_pos = 730;
+	server_game->player2.current_dir = 2;
+
+	server_game->player3.x_pos = 600;
+	server_game->player3.y_pos = 100;
+	server_game->player3.current_dir = 2;
+
+	server_game->player4.x_pos = 600;
+	server_game->player4.y_pos = 730;
+	server_game->player4.current_dir = 2;
+
 	return server_game;
 }
 
