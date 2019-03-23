@@ -72,8 +72,6 @@ void *game_loop(void *game_struct)
 	client_t *client_struct;
 	pthread_t thread_client;
 
-	int a = 0, b = 0, c = 0, d = 0;
-
 	client_struct = init_client(IP, PORT);
 	if (client_struct != NULL) {
 		magic = get_magic(client_struct);
@@ -100,41 +98,37 @@ void *game_loop(void *game_struct)
 
 		status = game_event(game->player, game->interface, game->bomb, client_struct);
 
-		/*
-		* YOP : this is for you
-		* to not get flooded by all this crap I made a simple condition when it's printed once
-		* it will not be printed anymore
-		*/
-		if (global_game != NULL) {
 
-			// Debug Yop (Non modéré, en mode flood, j'affiche non stop positions)
-			printf("P1 X:%d Y:%d\n", global_game->player1.x_pos, global_game->player1.y_pos, global_game->player1.current_dir);
-			printf("P2 X:%d Y:%d\n", global_game->player2.x_pos, global_game->player2.y_pos, global_game->player2.current_dir);
-			printf("P3 X:%d Y:%d\n", global_game->player3.x_pos, global_game->player3.y_pos, global_game->player3.current_dir);
-			printf("P4 X:%d Y:%d\n", global_game->player4.x_pos, global_game->player4.y_pos, global_game->player4.current_dir);
+		// Debug Yop
+		printf("P2 X:%d Y:%d Dir:%d\n", global_game->player1.x_pos, global_game->player1.y_pos, global_game->player1.current_dir);
+		printf("P2 X:%d Y:%d Dir:%d\n", global_game->player2.x_pos, global_game->player2.y_pos, global_game->player2.current_dir);
+		printf("P2 X:%d Y:%d Dir:%d\n", global_game->player3.x_pos, global_game->player3.y_pos, global_game->player3.current_dir);
+		printf("P2 X:%d Y:%d Dir:%d\n", global_game->player4.x_pos, global_game->player4.y_pos, global_game->player4.current_dir);
 
-			// Debug Matthieu (Modéré)
-			//if (global_game->player1.x_pos == 12 && a == 0) {
-			//	a = 1;
-			//	printf("global_game->player1.x_pos : %d\n", global_game->player1.x_pos);
-			//}
+		// Debug Matthieu
+		//int a = 0, b = 0, c = 0, d = 0;
+		//if (global_game != NULL) {
+		//	if (global_game->player1.x_pos == 12 && a == 0) {
+		//		a = 1;
+		//		printf("global_game->player1.x_pos : %d\n", global_game->player1.x_pos);
+		//	}
 
-			//if (global_game->player2.x_pos == 13 && b == 0) {
-			//	b = 1;
-			//	printf("global_game->player2.x_pos : %d\n", global_game->player2.x_pos);
-			//}
+		//	if (global_game->player2.x_pos == 13 && b == 0) {
+		//		b = 1;
+		//		printf("global_game->player2.x_pos : %d\n", global_game->player2.x_pos);
+		//	}
 
-			//if (global_game->player3.x_pos == 14 && c == 0) {
-			//	c = 1;
-			//	printf("global_game->player3.x_pos : %d\n", global_game->player3.x_pos);
-			//}
+		//	if (global_game->player3.x_pos == 14 && c == 0) {
+		//		c = 1;
+		//		printf("global_game->player3.x_pos : %d\n", global_game->player3.x_pos);
+		//	}
 
-			//if (global_game->player4.x_pos == 15 && d == 0) {
-			//	d = 1;
-			//	printf("global_game->player4.x_pos : %d\n", global_game->player4.x_pos);
-			//}
+		//	if (global_game->player4.x_pos == 15 && d == 0) {
+		//		d = 1;
+		//		printf("global_game->player4.x_pos : %d\n", global_game->player4.x_pos);
+		//	}
 
-		}
+		//}
 
 		SDL_Delay(20);
 	}
