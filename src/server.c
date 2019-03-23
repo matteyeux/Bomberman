@@ -185,15 +185,9 @@ void *handler(void *input)
 			printf("failed request\n");
 		}
 
-		printf("Recept :\ndir  X   Y   comm speed checksum    ID\n%d   %d  %d %d   %d    %d   %d\n",
-				request->dir,
-				request->x_pos,
-				request->y_pos,
-				request->command,
-				request->speed,
-				request->checksum,
-				request->magic);
 
+
+		// TODO clean Yop
 		printf("Magic=%d\n", server_data->magic[0]);
 		printf("Magic=%d\n", server_data->magic[1]);
 		printf("Magic=%d\n", server_data->magic[2]);
@@ -201,6 +195,28 @@ void *handler(void *input)
 		printf("Magic=%d\n", server_data->magic[4]);
 
 		send_data_to_client(server_data, server_game);
+
+		int m;
+		int num_player = 0;
+		for (int i = 1; i < 4; i++)
+		{
+			m = request->magic;
+			if (m == server_data->magic[i])
+			{
+				num_player = i;
+				break;
+			}
+		}
+
+		printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %d   %d    %d   %d\n",
+			   num_player,
+			   request->dir,
+			   request->x_pos,
+			   request->y_pos,
+			   request->command,
+			   request->speed,
+			   request->checksum,
+			   request->magic);
 	}
 
 	free(request);
