@@ -25,6 +25,7 @@ typedef struct s_other t_other;
 typedef char t_map[MAP_SIZE];
 
 struct server_data_s {
+	int magic[5];
 	int sock_fd[MAX_PLAYERS];
 	int sock_id;
 	struct sockaddr_in client;

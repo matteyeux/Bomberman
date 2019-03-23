@@ -118,6 +118,7 @@ static int run_server(int sock, server_data_t *server_data)
 
 			// set magic and send it here
 			magic_array[server_data->sock_id] = rand();
+			server_data->magic[(server_data->sock_id + 1)] = magic_array[server_data->sock_id];
 
 			server_data->sock_fd[client_cnt - 1] = sock_fd;
 
@@ -193,6 +194,11 @@ void *handler(void *input)
 				request->checksum,
 				request->magic);
 
+		printf("Magic=%d\n", server_data->magic[0]);
+		printf("Magic=%d\n", server_data->magic[1]);
+		printf("Magic=%d\n", server_data->magic[2]);
+		printf("Magic=%d\n", server_data->magic[3]);
+		printf("Magic=%d\n", server_data->magic[4]);
 
 		send_data_to_client(server_data, server_game);
 	}
