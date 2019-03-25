@@ -100,12 +100,14 @@ void *game_loop(void *game_struct)
 
 
 		// Debug Yop
+		// DON'T FORGET TO CHECK IF global_game != NULL or it will segfault
 		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player1.x_pos, global_game->player1.y_pos, global_game->player1.current_dir);
 		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player2.x_pos, global_game->player2.y_pos, global_game->player2.current_dir);
 		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player3.x_pos, global_game->player3.y_pos, global_game->player3.current_dir);
 		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player4.x_pos, global_game->player4.y_pos, global_game->player4.current_dir);
+		//printf("SCHEMA RECV  : %c\n", global_game->schema[3][3]);
 
-		// Debug Matthieu
+		// Debug Mathieu
 		//int a = 0, b = 0, c = 0, d = 0;
 		//if (global_game != NULL) {
 		//	if (global_game->player1.x_pos == 12 && a == 0) {

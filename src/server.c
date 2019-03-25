@@ -12,6 +12,7 @@
 #include <include/server.h>
 #include <include/client.h>
 #include <include/bomberman.h>
+#include <include/map.h>
 
 int sock;
 int sock_fd_array[4];
@@ -160,6 +161,7 @@ void *handler(void *input)
 	server_data_t *server_data;
 	t_client_request *request;
 	t_server_game *server_game;
+	char **schema;
 
 	server_data = malloc(sizeof(server_data_t));
 	if (server_data == NULL) {
@@ -185,8 +187,6 @@ void *handler(void *input)
 			printf("failed request\n");
 		}
 
-
-
 		// TODO clean Yop
 		printf("Magic=%d\n", server_data->magic[0]);
 		printf("Magic=%d\n", server_data->magic[1]);
@@ -194,12 +194,22 @@ void *handler(void *input)
 		printf("Magic=%d\n", server_data->magic[3]);
 		printf("Magic=%d\n", server_data->magic[4]);
 
+		schema = malloc(sizeof(char) * 13 * 15);
+
+		schema = handle_file("map.txt");
+
+		// copy content of schema in server_game->schema
+		for (int i = 0; i < 13; ++i) {
+			memcpy(server_game->schema[i], schema[i], sizeof(char) * 13 * 15);
+		}
+
+		free(schema);
+
 		send_data_to_client(server_data, server_game);
 
 		int m;
 		int num_player = 0;
-		for (int i = 1; i < 4; i++)
-		{
+		for (int i = 1; i < 4; i++) {
 			m = request->magic;
 			if (m == server_data->magic[i])
 			{
@@ -209,14 +219,14 @@ void *handler(void *input)
 		}
 
 		printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %d   %d    %d   %d\n",
-			   num_player,
-			   request->dir,
-			   request->x_pos,
-			   request->y_pos,
-			   request->command,
-			   request->speed,
-			   request->checksum,
-			   request->magic);
+				num_player,
+				request->dir,
+				request->x_pos,
+				request->y_pos,
+				request->command,
+				request->speed,
+				request->checksum,
+				request->magic);
 	}
 
 	free(request);

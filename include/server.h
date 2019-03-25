@@ -59,7 +59,9 @@ struct s_server_game {
 	t_player_infos player2;
 	t_player_infos player3;
 	t_player_infos player4;
-	t_map map;
+
+	char schema[13][15];
+
 	t_other infos;
 };
 
