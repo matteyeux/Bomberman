@@ -194,16 +194,15 @@ void *handler(void *input)
 		printf("Magic=%d\n", server_data->magic[3]);
 		printf("Magic=%d\n", server_data->magic[4]);
 
-		schema = malloc(sizeof(char) * 13 * 15);
+		schema = malloc(13 * sizeof(char*));
 
 		schema = handle_file("map.txt");
-
+		//printf("%s\n", );
 		// copy content of schema in server_game->schema
-		for (int i = 0; i < 13; ++i) {
-			memcpy(server_game->schema[i], schema[i], sizeof(char) * 13 * 15);
-		}
 
-		free(schema);
+		for (int i = 0; i < 13; ++i) {
+			memcpy(server_game->schema[i], schema[i], sizeof(char) * 13);
+		}
 
 		send_data_to_client(server_data, server_game);
 
@@ -229,6 +228,7 @@ void *handler(void *input)
 				request->magic);
 	}
 
+	free(schema);
 	free(request);
 	free(server_data);
 	return (void *)input;

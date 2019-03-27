@@ -105,7 +105,9 @@ void *game_loop(void *game_struct)
 		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player2.x_pos, global_game->player2.y_pos, global_game->player2.current_dir);
 		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player3.x_pos, global_game->player3.y_pos, global_game->player3.current_dir);
 		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player4.x_pos, global_game->player4.y_pos, global_game->player4.current_dir);
-		//printf("SCHEMA RECV  : %c\n", global_game->schema[3][3]);
+		// if (global_game != NULL) {
+		// 	printf("SCHEMA RECV  : %c\n", global_game->schema[3][3]);
+		// }
 
 		// Debug Mathieu
 		//int a = 0, b = 0, c = 0, d = 0;

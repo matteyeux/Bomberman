@@ -5,8 +5,6 @@
 
 map_t *init_map(const char *file)
 {
-	char **file_handler;
-
 	// Malloc de la Map
 	map_t *map = malloc(sizeof(map_t));
 	if (map == NULL) {
@@ -40,12 +38,10 @@ map_t *init_map(const char *file)
 	}
 
 	// Association de la map en fichier vers le schema de la map
-	file_handler = handle_file(file);
-	if (file_handler == NULL) {
+	map->schema = handle_file(file);
+	if (map->schema == NULL) {
 		return NULL;
 	}
-
-	memcpy(map->schema, file_handler, sizeof(char) * 13 * 15);
 
 	map->nbTileX = 13;
 	map->nbTileY = 15;
