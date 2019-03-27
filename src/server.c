@@ -204,6 +204,8 @@ void *handler(void *input)
 			memcpy(server_game->schema[i], schema[i], sizeof(char) * 15);
 		}
 
+		server_game->schema[2][2] = '6';
+
 		send_data_to_client(server_data, server_game);
 
 		int m;
