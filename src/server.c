@@ -201,7 +201,7 @@ void *handler(void *input)
 		// copy content of schema in server_game->schema
 
 		for (int i = 0; i < 13; ++i) {
-			memcpy(server_game->schema[i], schema[i], sizeof(char) * 13);
+			memcpy(server_game->schema[i], schema[i], sizeof(char) * 15);
 		}
 
 		send_data_to_client(server_data, server_game);
