@@ -204,7 +204,17 @@ void *handler(void *input)
 			memcpy(server_game->schema[i], schema[i], sizeof(char) * 15);
 		}
 
+		// TODO Yop : Bouchnnage des players ici
 		server_game->schema[2][2] = '6';
+		server_game->schema[2][12] = '7';
+		server_game->schema[10][2] = '8';
+		server_game->schema[10][12] = '9';
+
+		// TODO Yop : Bouchonnage des bombes ici
+		server_game->schema[2][3] = 'A';
+		server_game->schema[2][4] = 'A';
+		server_game->schema[3][2] = 'A';
+		server_game->schema[5][2] = 'A';
 
 		send_data_to_client(server_data, server_game);
 
