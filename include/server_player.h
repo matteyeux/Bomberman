@@ -3,7 +3,7 @@
 
 #include <include/server.h>
 
-void player_move(t_server_game *server_game);
+void player_move(t_server_game *server_game, int player, char command);
 
 /*
 typedef struct server_player_s server_player_t;
