@@ -171,9 +171,9 @@ void *handler(void *input)
 
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
-
 	server_game = malloc(sizeof(t_server_game));
-	server_game->player1.x_pos = 6;
+	server_game->player1.x_pos = 2;
+	server_game->player1.y_pos = 2;
 
 	while (status != -1) {
 
@@ -232,6 +232,7 @@ void *handler(void *input)
 		}
 
 		player_move(server_game, num_player, request->command);
+
 
 		send_data_to_client(server_data, server_game);
 

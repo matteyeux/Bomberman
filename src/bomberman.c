@@ -58,22 +58,22 @@ int game_event(global_game_t *game, client_t *client_struct)
 				case SDLK_UP:
                     game->player->command = 'U';
                     send_client_data(client_struct, game->player);
-                    movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
+                    //movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
 					break;
 				case SDLK_DOWN:
                     game->player->command = 'D';
                     send_client_data(client_struct, game->player);
-					movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
+					//movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
                     break;
 				case SDLK_LEFT:
                     game->player->command = 'L';
                     send_client_data(client_struct, game->player);
-					movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
+					//movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
                     break;
                 case SDLK_RIGHT:
                     game->player->command = 'R';
                     send_client_data(client_struct, game->player);
-					movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
+					//movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
 					break;
 				case SDLK_SPACE:
 					game->player->command = 'B';
