@@ -57,19 +57,27 @@ int game_event(player_t *player, interface_t *interface, bomb_t *bomb, client_t 
 					break;
 				case SDLK_UP:
                     player->command = 'U';
+                    send_client_data(client_struct, player);
+                    movePlayer(player, interface, e.key.keysym.sym, client_struct);
+                    break;
 				case SDLK_DOWN:
                     player->command = 'D';
+                    send_client_data(client_struct, player);
+                    movePlayer(player, interface, e.key.keysym.sym, client_struct);
+                    break;
 				case SDLK_LEFT:
                     player->command = 'L';
-				case SDLK_RIGHT:
+                    send_client_data(client_struct, player);
+                    movePlayer(player, interface, e.key.keysym.sym, client_struct);
+                    break;
+                case SDLK_RIGHT:
                     player->command = 'R';
+                    send_client_data(client_struct, player);
 					movePlayer(player, interface, e.key.keysym.sym, client_struct);
 					break;
-				case SDLK_d:
+				case SDLK_SPACE:
 					player->command = 'B';
 					send_client_data(client_struct, player);
-					dropBomb(player, bomb);
-					player->command = 0;
 					break;
 				default :
 				break;

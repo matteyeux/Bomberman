@@ -228,7 +228,7 @@ void *handler(void *input)
 			}
 		}
 
-		/*printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %d   %d    %d   %d\n",
+		printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %c   %d    %d   %d\n",
 				num_player,
 				request->dir,
 				request->x_pos,
@@ -237,7 +237,6 @@ void *handler(void *input)
 				request->speed,
 				request->checksum,
 				request->magic);
-		*/
 	}
 
 	free(schema);
