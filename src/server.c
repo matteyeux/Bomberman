@@ -10,6 +10,7 @@
 #include <pthread.h>
 
 #include <include/server.h>
+#include <include/server_player.h>
 #include <include/client.h>
 #include <include/bomberman.h>
 #include <include/map.h>
@@ -188,11 +189,11 @@ void *handler(void *input)
 		}
 
 		// TODO clean Yop
-		printf("Magic=%d\n", server_data->magic[0]);
-		printf("Magic=%d\n", server_data->magic[1]);
-		printf("Magic=%d\n", server_data->magic[2]);
-		printf("Magic=%d\n", server_data->magic[3]);
-		printf("Magic=%d\n", server_data->magic[4]);
+		printf("req=%d\n", server_data->magic[0]);
+		//printf("Magic=%d\n", server_data->magic[1]);
+		//printf("Magic=%d\n", server_data->magic[2]);
+		//printf("Magic=%d\n", server_data->magic[3]);
+		//printf("Magic=%d\n", server_data->magic[4]);
 
 		schema = malloc(13 * sizeof(char*));
 
@@ -204,17 +205,15 @@ void *handler(void *input)
 			memcpy(server_game->schema[i], schema[i], sizeof(char) * 15);
 		}
 
-		// TODO Yop : Bouchnnage des players ici
-		server_game->schema[2][2] = '6';
-		server_game->schema[2][12] = '7';
-		server_game->schema[10][2] = '8';
-		server_game->schema[10][12] = '9';
-
 		// TODO Yop : Bouchonnage des bombes ici
 		server_game->schema[2][3] = 'A';
 		server_game->schema[2][4] = 'A';
 		server_game->schema[3][2] = 'A';
 		server_game->schema[5][2] = 'A';
+
+		printf("Magic=%d\n", server_data->magic[1]);
+
+		player_move(server_game);
 
 		send_data_to_client(server_data, server_game);
 
@@ -229,7 +228,7 @@ void *handler(void *input)
 			}
 		}
 
-		printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %d   %d    %d   %d\n",
+		/*printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %d   %d    %d   %d\n",
 				num_player,
 				request->dir,
 				request->x_pos,
@@ -238,6 +237,7 @@ void *handler(void *input)
 				request->speed,
 				request->checksum,
 				request->magic);
+		*/
 	}
 
 	free(schema);
@@ -311,7 +311,8 @@ int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 	server_game = put_data_in_game(server_game);
 
 	for (i = 0; i < MAX_PLAYERS; ++i) {
-		printf("sending to sock %d\n", i);
+		// Debug check sending to ckect number
+		// printf("sending to sock %d\n", i);
 		if (sock_fd_array[i] != -1){
 			sender = sendto(sock_fd_array[i], server_game,
 					sizeof(*(server_game)), MSG_NOSIGNAL,
