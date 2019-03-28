@@ -4,6 +4,21 @@
 #include <include/server_player.h>
 #include <include/server.h>
 
+void player_action(t_server_game *server_game, int player, char command) {
+    switch (command)
+    {
+        case 'U' :
+        case 'D' :
+        case 'L' :
+        case 'R' :
+            player_move(server_game, player, command);
+            break;
+        case 'B' :
+            bomb_drop();
+            break;
+    }
+}
+
 void player_move(t_server_game *server_game, int player, char command) {
 
     printf("\n\n\n__ %d _ %c\n", player, command);
@@ -48,6 +63,11 @@ bool place_is_free(t_server_game *server_game, int x, int y)
     }
 
     return true;
+}
+
+void bomb_drop()
+{
+    printf("DROP THE BOMB !!!\n");
 }
 
 /*
