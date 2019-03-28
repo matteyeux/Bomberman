@@ -11,6 +11,7 @@
 
 #include <include/server.h>
 #include <include/server_player.h>
+#include <include/server_map.h>
 #include <include/client.h>
 #include <include/bomberman.h>
 #include <include/map.h>
@@ -172,8 +173,15 @@ void *handler(void *input)
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
 	server_game = malloc(sizeof(t_server_game));
+
 	server_game->player1.x_pos = 2;
 	server_game->player1.y_pos = 2;
+	server_game->player2.x_pos = 12;
+	server_game->player2.y_pos = 2;
+	server_game->player3.x_pos = 2;
+	server_game->player3.y_pos = 10;
+	server_game->player4.x_pos = 12;
+	server_game->player4.y_pos = 10;
 
 	while (status != -1) {
 
@@ -233,6 +241,8 @@ void *handler(void *input)
 
 		player_move(server_game, num_player, request->command);
 
+		// Sending players and bombs into map
+		implement_map(server_game);
 
 		send_data_to_client(server_data, server_game);
 
@@ -297,16 +307,16 @@ static t_server_game *put_data_in_game(t_server_game *server_game)
 	server_game->player1.frags = 12;
 
 
-	server_game->player2.x_pos = 100;
-	server_game->player2.y_pos = 730;
+	//server_game->player2.x_pos = 100;
+	//server_game->player2.y_pos = 730;
 	server_game->player2.current_dir = 2;
 
-	server_game->player3.x_pos = 600;
-	server_game->player3.y_pos = 100;
+	//server_game->player3.x_pos = 600;
+	//server_game->player3.y_pos = 100;
 	server_game->player3.current_dir = 2;
 
-	server_game->player4.x_pos = 600;
-	server_game->player4.y_pos = 730;
+	//server_game->player4.x_pos = 600;
+	//server_game->player4.y_pos = 730;
 	server_game->player4.current_dir = 2;
 
 	return server_game;
