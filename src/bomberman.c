@@ -42,7 +42,7 @@ void draw_game(global_game_t *game)
 	SDL_RenderPresent(interface->Renderer);
 }
 
-int game_event(player_t *player, interface_t *interface, bomb_t *bomb, client_t *client_struct)
+int game_event(global_game_t *game, client_t *client_struct)
 {
 	SDL_Event e;
 	status = 0;
@@ -56,16 +56,28 @@ int game_event(player_t *player, interface_t *interface, bomb_t *bomb, client_t 
 					status = -1;
 					break;
 				case SDLK_UP:
-				case SDLK_DOWN:
-				case SDLK_LEFT:
-				case SDLK_RIGHT:
-					movePlayer(player, interface, e.key.keysym.sym, client_struct);
+                    game->player->command = 'U';
+                    send_client_data(client_struct, game->player);
+                    //movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
 					break;
-				case SDLK_d:
-					player->command = 1;
-					send_client_data(client_struct, player);
-					dropBomb(player, bomb);
-					player->command = 0;
+				case SDLK_DOWN:
+                    game->player->command = 'D';
+                    send_client_data(client_struct, game->player);
+					//movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
+                    break;
+				case SDLK_LEFT:
+                    game->player->command = 'L';
+                    send_client_data(client_struct, game->player);
+					//movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
+                    break;
+                case SDLK_RIGHT:
+                    game->player->command = 'R';
+                    send_client_data(client_struct, game->player);
+					//movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
+					break;
+				case SDLK_SPACE:
+					game->player->command = 'B';
+					send_client_data(client_struct, game->player);
 					break;
 				default :
 				break;

@@ -72,11 +72,11 @@ void *game_loop(void *game_struct)
 	client_t *client_struct;
 	pthread_t thread_client;
 
-	int a = 0, b = 0, c = 0, d = 0;
-
 	client_struct = init_client(IP, PORT);
+
 	if (client_struct != NULL) {
 		magic = get_magic(client_struct);
+		client_struct->server_game = init_server_game();
 
 		printf("magic : %d\n", magic);
 		game->player->magic = magic;
@@ -92,41 +92,64 @@ void *game_loop(void *game_struct)
 			perror("pthread_create");
 			exit(EXIT_FAILURE);
 		}
+	} else {
+		// if client cannot connect to server
+		// then destroy game and kill everything else
+		destroy_game(game->interface, game->player, game->bomb);
+		exit(-1);
 	}
 
 	while (status != -1) {
 
 		draw_game(game);
 
-		status = game_event(game->player, game->interface, game->bomb, client_struct);
+		status = game_event(game, client_struct);
 
-		/*
-		* YOP : this is for you
-		* to not get flooded by all this crap I made a simple condition when it's printed once
-		* it will not be printed anymore
-		*/
+		// Debug Yop
+		// DON'T FORGET TO CHECK IF global_game != NULL or it will segfault
+		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->schema[1][1], global_game->player1.y_pos, global_game->player1.current_dir);
+		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player1.x_pos, global_game->player1.y_pos, global_game->player1.current_dir);
+		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player2.x_pos, global_game->player2.y_pos, global_game->player2.current_dir);
+		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player3.x_pos, global_game->player3.y_pos, global_game->player3.current_dir);
+		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player4.x_pos, global_game->player4.y_pos, global_game->player4.current_dir);
+
+
+		printf("Debug Map\n");
 		if (global_game != NULL) {
-			if (global_game->player1.x_pos == 12 && a == 0) {
-				a = 1;
-				printf("global_game->player1.x_pos : %d\n", global_game->player1.x_pos);
+			for (int y = 0; y < 13; y++) {
+				for (int x = 0; x < 15; x++) {
+					printf("%c", global_game->schema[y][x]);
+				}
+				printf("\n");
 			}
-
-			if (global_game->player2.x_pos == 13 && b == 0) {
-				b = 1;
-				printf("global_game->player2.x_pos : %d\n", global_game->player2.x_pos);
-			}
-
-			if (global_game->player3.x_pos == 14 && c == 0) {
-				c = 1;
-				printf("global_game->player3.x_pos : %d\n", global_game->player3.x_pos);
-			}
-
-			if (global_game->player4.x_pos == 15 && d == 0) {
-				d = 1;
-				printf("global_game->player4.x_pos : %d\n", global_game->player4.x_pos);
-			}
-
+			printf("\n");
 		}
+
+
+		// Debug Mathieu
+		//int a = 0, b = 0, c = 0, d = 0;
+		//if (global_game != NULL) {
+		//	if (global_game->player1.x_pos == 12 && a == 0) {
+		//		a = 1;
+		//		printf("global_game->player1.x_pos : %d\n", global_game->player1.x_pos);
+		//	}
+
+		//	if (global_game->player2.x_pos == 13 && b == 0) {
+		//		b = 1;
+		//		printf("global_game->player2.x_pos : %d\n", global_game->player2.x_pos);
+		//	}
+
+		//	if (global_game->player3.x_pos == 14 && c == 0) {
+		//		c = 1;
+		//		printf("global_game->player3.x_pos : %d\n", global_game->player3.x_pos);
+		//	}
+
+		//	if (global_game->player4.x_pos == 15 && d == 0) {
+		//		d = 1;
+		//		printf("global_game->player4.x_pos : %d\n", global_game->player4.x_pos);
+		//	}
+
+		//}
 
 		SDL_Delay(20);
 	}
@@ -136,6 +159,7 @@ void *game_loop(void *game_struct)
 	* receptions and transmissions
 	*/
 	free(global_game);
+	free(client_struct);
 	shutdown(sock, SHUT_RDWR);
 	close(sock);
 	return (void *)game_struct;

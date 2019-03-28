@@ -10,8 +10,11 @@
 #include <pthread.h>
 
 #include <include/server.h>
+#include <include/server_player.h>
+#include <include/server_map.h>
 #include <include/client.h>
 #include <include/bomberman.h>
+#include <include/map.h>
 
 int sock;
 int sock_fd_array[4];
@@ -64,12 +67,15 @@ int init_server(unsigned short port)
 		return -1;
 	}
 
+	printf("Successfully initialized server !\n");
+
 	if (listen(sock, 4) == 0) {
 		printf("waiting for incomming connections...\n");
 	} else {
 		perror("listen");
 		return -1;
 	}
+
 
 	run_server(sock, server_data);
 	free(server_data);
@@ -118,6 +124,7 @@ static int run_server(int sock, server_data_t *server_data)
 
 			// set magic and send it here
 			magic_array[server_data->sock_id] = rand();
+			server_data->magic[(server_data->sock_id + 1)] = magic_array[server_data->sock_id];
 
 			server_data->sock_fd[client_cnt - 1] = sock_fd;
 
@@ -159,6 +166,7 @@ void *handler(void *input)
 	server_data_t *server_data;
 	t_client_request *request;
 	t_server_game *server_game;
+	char **schema;
 
 	server_data = malloc(sizeof(server_data_t));
 	if (server_data == NULL) {
@@ -167,8 +175,18 @@ void *handler(void *input)
 
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
+	server_game = malloc(sizeof(t_server_game));
+
+	server_game->player1.x_pos = 2;
+	server_game->player1.y_pos = 2;
+	server_game->player2.x_pos = 12;
+	server_game->player2.y_pos = 2;
+	server_game->player3.x_pos = 2;
+	server_game->player3.y_pos = 10;
+	server_game->player4.x_pos = 12;
+	server_game->player4.y_pos = 10;
+
 	while (status != -1) {
-		server_game = malloc(sizeof(t_server_game));
 
 		if (server_game == NULL) {
 			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
@@ -181,10 +199,57 @@ void *handler(void *input)
 			free(request);
 			free(server_data);
 			pthread_exit(NULL);
-			printf("failed request\n");
 		}
 
-		printf("Recept :\ndir  X   Y   comm speed checksum    ID\n%d   %d  %d %d   %d    %d   %d\n",
+		// TODO clean Yop
+		//printf("Magic=%d\n", server_data->magic[1]);
+		//printf("Magic=%d\n", server_data->magic[2]);
+		//printf("Magic=%d\n", server_data->magic[3]);
+		//printf("Magic=%d\n", server_data->magic[4]);
+
+		schema = malloc(13 * sizeof(char*));
+
+		schema = handle_file("map.txt");
+		//printf("%s\n", );
+		// copy content of schema in server_game->schema
+
+		for (int i = 0; i < 13; ++i) {
+			memcpy(server_game->schema[i], schema[i], sizeof(char) * 15);
+		}
+
+		// TODO Yop : Bouchonnage des bombes ici
+		server_game->schema[2][3] = 'A';
+		server_game->schema[2][4] = 'A';
+		server_game->schema[3][2] = 'A';
+		server_game->schema[5][2] = 'A';
+
+		printf("Magic=%d\n", server_data->magic[1]);
+
+		server_game->schema[2][2] = '6';
+		server_game->schema[2][12] = '7';
+		server_game->schema[10][2] = '8';
+		server_game->schema[10][12] = '9';
+
+		int m;
+		int num_player = 0;
+		for (int i = 1; i < 4; i++) {
+			m = request->magic;
+			if (m == server_data->magic[i])
+			{
+				num_player = i;
+				break;
+			}
+		}
+
+		player_action(server_game, num_player, request->command);
+
+		// Sending players and bombs into map
+		implement_map(server_game);
+
+		send_data_to_client(server_data, server_game);
+
+		printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %c   %d    %d   %d\n",
+				num_player,
 				request->dir,
 				request->x_pos,
 				request->y_pos,
@@ -193,11 +258,10 @@ void *handler(void *input)
 				request->checksum,
 				request->magic);
 
-
-		send_data_to_client(server_data, server_game);
+		free(request);
+		free(schema);
 	}
 
-	free(request);
 	free(server_data);
 	return (void *)input;
 }
@@ -221,7 +285,6 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 						&server_data->client_addr_len);
 
 	if (receiver == -1) {
-		perror("recvfrom");
 		return NULL;
 	}
 
@@ -233,11 +296,12 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 */
 static t_server_game *put_data_in_game(t_server_game *server_game)
 {
+	// TODO Yop : Bouchonnage ici pour le send
 	server_game->player1.connected = 'e';
 	server_game->player1.alive = 'e';
-	server_game->player1.x_pos = 12;
-	server_game->player1.y_pos = 12;
-	server_game->player1.current_dir = 12;
+	//server_game->player1.x_pos = 2;
+	//server_game->player1.y_pos = 2;
+	server_game->player1.current_dir = 2;
 	server_game->player1.current_speed = 12;
 	server_game->player1.max_speed = 12;
 	server_game->player1.bombs_left = 12;
@@ -245,9 +309,18 @@ static t_server_game *put_data_in_game(t_server_game *server_game)
 	server_game->player1.frags = 12;
 
 
-	server_game->player2.x_pos = 13;
-	server_game->player3.x_pos = 14;
-	server_game->player4.x_pos = 15;
+	//server_game->player2.x_pos = 100;
+	//server_game->player2.y_pos = 730;
+	server_game->player2.current_dir = 2;
+
+	//server_game->player3.x_pos = 600;
+	//server_game->player3.y_pos = 100;
+	server_game->player3.current_dir = 2;
+
+	//server_game->player4.x_pos = 600;
+	//server_game->player4.y_pos = 730;
+	server_game->player4.current_dir = 2;
+
 	return server_game;
 }
 
@@ -258,7 +331,8 @@ int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 	server_game = put_data_in_game(server_game);
 
 	for (i = 0; i < MAX_PLAYERS; ++i) {
-		printf("sending to sock %d\n", i);
+		// Debug check sending to ckect number
+		// printf("sending to sock %d\n", i);
 		if (sock_fd_array[i] != -1){
 			sender = sendto(sock_fd_array[i], server_game,
 					sizeof(*(server_game)), MSG_NOSIGNAL,
@@ -267,9 +341,9 @@ int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 		}
 
 		if (sender == -1) {
+			printf("faile here\n");
 			perror("sendto");
 			close(server_data->sock_fd[i]);
-			pthread_exit(NULL);
 		}
 	}
 

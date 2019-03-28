@@ -13,7 +13,7 @@ struct player_s
 	int score;
 	int speed;
 	int dir;
-	int command;
+	char command;
 
 	// player texture
 	SDL_Texture *TexPlayer;

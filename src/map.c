@@ -1,4 +1,5 @@
 #include <include/map.h>
+#include <include/game.h>
 
 #define CACHE_SIZE 64
 
@@ -37,7 +38,13 @@ map_t *init_map(const char *file)
 	}
 
 	// Association de la map en fichier vers le schema de la map
-	traitement_file(file, map);
+	map->schema = handle_file(file);
+	if (map->schema == NULL) {
+		return NULL;
+	}
+
+	map->nbTileX = 13;
+	map->nbTileY = 15;
 
 	return map;
 }
@@ -86,27 +93,38 @@ void setRectangle(SDL_Rect *rectangle, int x, int y, int w, int h)
 	rectangle->h = h;
 }
 
-void traitement_file(const char *file, map_t *map)
+char **handle_file(const char *file)
 {
 	FILE *f;
+	char **schema;
 	int i = 0;
 	char buf[CACHE_SIZE];
 
 	f = fopen(file, "r");
-	if (!f)
-		printf("Error read File\n");
+	if (!f) {
+		printf("ERROR CANNOT READ FILE\n");
+		return NULL;
+	}
+
+	schema = malloc(sizeof(char) * 15 * 13);
+
+	if (schema == NULL) {
+		printf("malloc error\n");
+		return NULL;
+	}
 
 	// parse file
 	while (fgets(buf, CACHE_SIZE, f) != NULL) {
-		map->schema[i] = strdup(buf);
+		schema[i] = strdup(buf);
 		i++;
 	}
-
+	printf("%d\n", i);
 	// i = line number, strlen(buf) = column number
-	map->nbTileX = i;
-	map->nbTileY = strlen(buf);
+	// map->nbTileX = i;
+	// map->nbTileY = strlen(buf);
 
 	fclose(f);
+	return schema;
 }
 
 SDL_Texture *set_texture_map(SDL_Renderer *pRenderer)
@@ -158,5 +176,7 @@ int set_tile_array(map_t *map)
 		tiles->charTest = i+48;
 		map->tabTiles[i] = tiles;
 	}
+
+	free(tiles);
 	return 1;
 }

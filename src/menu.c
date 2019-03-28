@@ -49,7 +49,9 @@ menu_t *init_menu(void)
 
 int menu_loop(menu_t *menu)
 {
-	int choice = -1;
+	// TODO : change it
+	//int choice = -1;
+	int choice = 2;
 
 	while (choice == -1) {
 		choice = choice_menu(menu);

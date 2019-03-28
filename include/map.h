@@ -29,7 +29,7 @@ struct map_s {
 void setRectangle(SDL_Rect *rectangle, int x, int y, int w, int h);
 
 map_t *init_map(const char *file);
-void traitement_file(const char *f, map_t *map);
+char **handle_file(const char *file);
 SDL_Texture *set_texture_map(SDL_Renderer *pRenderer);
 int set_tile_array(map_t *map);
 
