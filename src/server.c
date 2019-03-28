@@ -67,12 +67,15 @@ int init_server(unsigned short port)
 		return -1;
 	}
 
+	printf("Successfully initialized server !\n");
+
 	if (listen(sock, 4) == 0) {
 		printf("waiting for incomming connections...\n");
 	} else {
 		perror("listen");
 		return -1;
 	}
+
 
 	run_server(sock, server_data);
 	free(server_data);
@@ -196,7 +199,6 @@ void *handler(void *input)
 			free(request);
 			free(server_data);
 			pthread_exit(NULL);
-			printf("failed request\n");
 		}
 
 		// TODO clean Yop
@@ -255,10 +257,11 @@ void *handler(void *input)
 				request->speed,
 				request->checksum,
 				request->magic);
+
+		free(request);
+		free(schema);
 	}
 
-	free(schema);
-	free(request);
 	free(server_data);
 	return (void *)input;
 }
@@ -282,7 +285,6 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 						&server_data->client_addr_len);
 
 	if (receiver == -1) {
-		perror("recvfrom");
 		return NULL;
 	}
 
@@ -339,9 +341,9 @@ int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 		}
 
 		if (sender == -1) {
+			printf("faile here\n");
 			perror("sendto");
 			close(server_data->sock_fd[i]);
-			pthread_exit(NULL);
 		}
 	}
 

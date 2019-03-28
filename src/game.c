@@ -75,6 +75,7 @@ void *game_loop(void *game_struct)
 	client_struct = init_client(IP, PORT);
 	if (client_struct != NULL) {
 		magic = get_magic(client_struct);
+		client_struct->server_game = init_server_game();
 
 		printf("magic : %d\n", magic);
 		game->player->magic = magic;
@@ -152,6 +153,7 @@ void *game_loop(void *game_struct)
 	* receptions and transmissions
 	*/
 	free(global_game);
+	free(client_struct);
 	shutdown(sock, SHUT_RDWR);
 	close(sock);
 	return (void *)game_struct;

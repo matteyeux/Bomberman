@@ -176,5 +176,7 @@ int set_tile_array(map_t *map)
 		tiles->charTest = i+48;
 		map->tabTiles[i] = tiles;
 	}
+
+	free(tiles);
 	return 1;
 }

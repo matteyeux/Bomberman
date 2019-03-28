@@ -89,17 +89,17 @@ int send_client_data(client_t *client_data, player_t *player)
 					sizeof(client_data->server));
 
 	if (sender == -1 ) {
+		printf("bla\n");
 		perror("sendto");
 		return -1;
 	}
 
+	free(request);
 	return 0;
 }
 
-t_server_game *receive_server_data(client_t *client_data)
+t_server_game *init_server_game(void)
 {
-	ssize_t receiver;
-	unsigned int server_addr_len;
 	t_server_game *server_game;
 
 	server_game = malloc(sizeof(t_server_game));
@@ -109,18 +109,26 @@ t_server_game *receive_server_data(client_t *client_data)
 		return NULL;
 	}
 
+	return server_game;
+}
+
+t_server_game *receive_server_data(client_t *client_data)
+{
+	ssize_t receiver;
+	unsigned int server_addr_len;
+
 	server_addr_len = sizeof(client_data->server);
 
-	receiver = recvfrom(client_data->sock, server_game, sizeof(*server_game),
+	receiver = recvfrom(client_data->sock, client_data->server_game, sizeof(*client_data->server_game),
 						0, (struct sockaddr *) &client_data->server,
 						&server_addr_len);
 
 	if (receiver == -1 ) {
-		perror("sendto");
+		perror("recvfrom");
 		return NULL;
 	}
 
-	return server_game;
+	return client_data->server_game;
 }
 
 int get_magic(client_t *client_struct)
