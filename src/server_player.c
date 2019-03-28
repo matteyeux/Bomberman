@@ -5,7 +5,25 @@
 
 void player_move(t_server_game *server_game, int player, char command) {
 
-    printf("__ %d _ %c", player, command);
+    printf("\n\n\n------------__ %d _ %c\n", player, command);
+
+    switch (command)
+    {
+        case 'U' :
+            server_game->player1.y_pos = server_game->player1.y_pos-1;
+            break;
+        case 'D' :
+            server_game->player1.y_pos = server_game->player1.y_pos+1;
+            break;
+        case 'L' :
+            server_game->player1.x_pos = server_game->player1.x_pos-1;
+            break;
+        case 'R' :
+            server_game->player1.x_pos = server_game->player1.x_pos+1;
+            break;
+    }
+    printf("P1-> X : %d\n", server_game->player1.x_pos);
+    printf("P1-> Y : %d\n", server_game->player1.y_pos);
 
     if (1 == 1) {
         server_game->schema[2][2] = 'Z';

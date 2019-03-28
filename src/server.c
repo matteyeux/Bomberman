@@ -171,8 +171,11 @@ void *handler(void *input)
 
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
+
+	server_game = malloc(sizeof(t_server_game));
+	server_game->player1.x_pos = 6;
+
 	while (status != -1) {
-		server_game = malloc(sizeof(t_server_game));
 
 		if (server_game == NULL) {
 			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
@@ -211,6 +214,11 @@ void *handler(void *input)
 		server_game->schema[5][2] = 'A';
 
 		printf("Magic=%d\n", server_data->magic[1]);
+
+		server_game->schema[2][2] = '6';
+		server_game->schema[2][12] = '7';
+		server_game->schema[10][2] = '8';
+		server_game->schema[10][12] = '9';
 
 		int m;
 		int num_player = 0;
@@ -275,10 +283,11 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 */
 static t_server_game *put_data_in_game(t_server_game *server_game)
 {
+	// TODO Yop : Bouchonnage ici pour le send
 	server_game->player1.connected = 'e';
 	server_game->player1.alive = 'e';
-	server_game->player1.x_pos = 100;
-	server_game->player1.y_pos = 100;
+	//server_game->player1.x_pos = 2;
+	//server_game->player1.y_pos = 2;
 	server_game->player1.current_dir = 2;
 	server_game->player1.current_speed = 12;
 	server_game->player1.max_speed = 12;
