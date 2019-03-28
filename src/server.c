@@ -189,7 +189,6 @@ void *handler(void *input)
 		}
 
 		// TODO clean Yop
-		printf("req=%d\n", server_data->magic[0]);
 		//printf("Magic=%d\n", server_data->magic[1]);
 		//printf("Magic=%d\n", server_data->magic[2]);
 		//printf("Magic=%d\n", server_data->magic[3]);
@@ -213,10 +212,6 @@ void *handler(void *input)
 
 		printf("Magic=%d\n", server_data->magic[1]);
 
-		player_move(server_game);
-
-		send_data_to_client(server_data, server_game);
-
 		int m;
 		int num_player = 0;
 		for (int i = 1; i < 4; i++) {
@@ -227,6 +222,10 @@ void *handler(void *input)
 				break;
 			}
 		}
+
+		player_move(server_game, num_player, request->command);
+
+		send_data_to_client(server_data, server_game);
 
 		printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %c   %d    %d   %d\n",
 				num_player,

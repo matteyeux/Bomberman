@@ -3,10 +3,12 @@
 #include <include/server_player.h>
 #include <include/server.h>
 
-void player_move(t_server_game *server_game) {
+void player_move(t_server_game *server_game, int player, char command) {
+
+    printf("__ %d _ %c", player, command);
+
     if (1 == 1) {
         server_game->schema[2][2] = 'Z';
-
     }
 }
 
