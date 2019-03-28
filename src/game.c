@@ -96,7 +96,7 @@ void *game_loop(void *game_struct)
 
 		draw_game(game);
 
-		status = game_event(game->player, game->interface, game->bomb, client_struct);
+		status = game_event(game->player, game->interface, client_struct);
 
 		// Debug Yop
 		// DON'T FORGET TO CHECK IF global_game != NULL or it will segfault

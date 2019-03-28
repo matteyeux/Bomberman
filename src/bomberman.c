@@ -42,7 +42,7 @@ void draw_game(global_game_t *game)
 	SDL_RenderPresent(interface->Renderer);
 }
 
-int game_event(player_t *player, interface_t *interface, bomb_t *bomb, client_t *client_struct)
+int game_event(player_t *player, interface_t *interface, client_t *client_struct)
 {
 	SDL_Event e;
 	status = 0;
