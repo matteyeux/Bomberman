@@ -42,7 +42,7 @@ void draw_game(global_game_t *game)
 	SDL_RenderPresent(interface->Renderer);
 }
 
-int game_event(player_t *player, interface_t *interface, client_t *client_struct)
+int game_event(global_game_t *game, client_t *client_struct)
 {
 	SDL_Event e;
 	status = 0;
@@ -56,28 +56,28 @@ int game_event(player_t *player, interface_t *interface, client_t *client_struct
 					status = -1;
 					break;
 				case SDLK_UP:
-                    player->command = 'U';
-                    send_client_data(client_struct, player);
-                    movePlayer(player, interface, e.key.keysym.sym, client_struct);
-                    break;
+                    game->player->command = 'U';
+                    send_client_data(client_struct, game->player);
+                    movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
+					break;
 				case SDLK_DOWN:
-                    player->command = 'D';
-                    send_client_data(client_struct, player);
-                    movePlayer(player, interface, e.key.keysym.sym, client_struct);
+                    game->player->command = 'D';
+                    send_client_data(client_struct, game->player);
+					movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
                     break;
 				case SDLK_LEFT:
-                    player->command = 'L';
-                    send_client_data(client_struct, player);
-                    movePlayer(player, interface, e.key.keysym.sym, client_struct);
+                    game->player->command = 'L';
+                    send_client_data(client_struct, game->player);
+					movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
                     break;
                 case SDLK_RIGHT:
-                    player->command = 'R';
-                    send_client_data(client_struct, player);
-					movePlayer(player, interface, e.key.keysym.sym, client_struct);
+                    game->player->command = 'R';
+                    send_client_data(client_struct, game->player);
+					movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
 					break;
 				case SDLK_SPACE:
-					player->command = 'B';
-					send_client_data(client_struct, player);
+					game->player->command = 'B';
+					send_client_data(client_struct, game->player);
 					break;
 				default :
 				break;
