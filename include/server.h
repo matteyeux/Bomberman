@@ -60,6 +60,8 @@ struct s_server_game {
 	t_player_infos player3;
 	t_player_infos player4;
 
+	t_player_infos player[3];
+
 	char schema[13][15];
 
 	t_other infos;

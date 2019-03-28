@@ -73,6 +73,7 @@ void *game_loop(void *game_struct)
 	pthread_t thread_client;
 
 	client_struct = init_client(IP, PORT);
+
 	if (client_struct != NULL) {
 		magic = get_magic(client_struct);
 		client_struct->server_game = init_server_game();
@@ -91,6 +92,11 @@ void *game_loop(void *game_struct)
 			perror("pthread_create");
 			exit(EXIT_FAILURE);
 		}
+	} else {
+		// if client cannot connect to server
+		// then destroy game and kill everything else
+		destroy_game(game->interface, game->player, game->bomb);
+		exit(-1);
 	}
 
 	while (status != -1) {
