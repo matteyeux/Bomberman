@@ -1,7 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <include/server_player.h>
+#include <include/server.h>
 
+void player_move(t_server_game *server_game) {
+    if (1 == 1) {
+        server_game->schema[2][2] = 'Z';
+
+    }
+}
+
+/*
 server_player_t *init_server_player(int num_player)
 {
     server_player_t *server_player = NULL;
@@ -44,3 +53,4 @@ server_player_t *init_server_player(int num_player)
 
     return server_player;
 }
+*/
