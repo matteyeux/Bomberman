@@ -23,30 +23,54 @@ void player_move(t_server_game *server_game, int player, char command) {
 
     printf("\n\n\n__ %d _ %c\n", player, command);
 
+    t_player_infos *the_player;
+
+    switch (player)
+    {
+        case 1 :
+            the_player = &server_game->player1;
+            break;
+        case 2 :
+            the_player = &server_game->player2;
+            break;
+        case 3 :
+            the_player = &server_game->player3;
+            break;
+        case 4 :
+            the_player = &server_game->player4;
+            break;
+    }
+
+    //t_player_infos *the_player = &server_game->player1;
+
+    //the_player->x_pos++;
+    //printf("***%d***", the_player->x_pos);
+
     switch (command)
     {
         case 'U' :
-            if (place_is_free(server_game, server_game->player1.x_pos, server_game->player1.y_pos-1)) {
-                server_game->player1.y_pos--;
+            if (place_is_free(server_game, the_player->x_pos, the_player->y_pos-1)) {
+                the_player->y_pos--;
             }
             break;
         case 'D' :
-            if (place_is_free(server_game, server_game->player1.x_pos, server_game->player1.y_pos+1)) {
-                server_game->player1.y_pos++;
+            if (place_is_free(server_game, the_player->x_pos, the_player->y_pos+1)) {
+                the_player->y_pos++;
             }
             break;
         case 'L' :
-            if (place_is_free(server_game, server_game->player1.x_pos-1, server_game->player1.y_pos)) {
-                server_game->player1.x_pos--;
+            if (place_is_free(server_game, the_player->x_pos-1, the_player->y_pos)) {
+                the_player->x_pos--;
             }
             break;
         case 'R' :
-            if (place_is_free(server_game, server_game->player1.x_pos+1, server_game->player1.y_pos)) {
-                server_game->player1.x_pos++;
+            if (place_is_free(server_game, the_player->x_pos+1, the_player->y_pos)) {
+                the_player->x_pos++;
             }
 
             break;
     }
+
 
     // TODO Yop : Debug a virer
     //if (1 == 1) {

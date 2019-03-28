@@ -239,7 +239,7 @@ void *handler(void *input)
 			}
 		}
 
-		player_move(server_game, num_player, request->command);
+		player_action(server_game, num_player, request->command);
 
 		// Sending players and bombs into map
 		implement_map(server_game);
