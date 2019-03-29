@@ -52,8 +52,8 @@ void player_move(t_server_game *server_game, int player, char command, int x, in
     //the_player->x_pos++;
     //printf("***%d***", the_player->x_pos);
     if (place_is_free(server_game, the_player->x_pos+x, the_player->y_pos+y)) {
-        the_player->y_pos += y;
-        the_player->x_pos += x;
+        the_player->y_pos = the_player->y_pos + y;
+        the_player->x_pos = the_player->x_pos + x;
     }
     // switch (command)
     // {
