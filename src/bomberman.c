@@ -34,6 +34,7 @@ void draw_game(global_game_t *game)
 
 			// index is the ASCII code of the character
 			index = map->schema[j][i]-48;
+			printf("Index : %d \t", index);
 			if (index == 6 || index == 7 || index == 8 || index == 9) {
                 player->posX = j;
                 player->posY = i;
