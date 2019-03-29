@@ -5,7 +5,7 @@
 #include <include/server.h>
 
 void player_action(t_server_game *server_game, int player, char command);
-void player_move(t_server_game *server_game, int player, char command);
+void player_move(t_server_game *server_game, int player, char command, int x, int y);
 bool place_is_free(t_server_game *server_game, int x, int y);
 
 void bomb_drop();
