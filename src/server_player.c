@@ -8,10 +8,16 @@ void player_action(t_server_game *server_game, int player, char command) {
     switch (command)
     {
         case 'U' :
+            player_move(server_game, player, command, 0, -1);
+            break;
         case 'D' :
+            player_move(server_game, player, command, 0, +1);
+            break;
         case 'L' :
+            player_move(server_game, player, command, -1, 0);
+            break;
         case 'R' :
-            player_move(server_game, player, command);
+            player_move(server_game, player, command, +1, 0);
             break;
         case 'B' :
             bomb_drop();
@@ -19,7 +25,7 @@ void player_action(t_server_game *server_game, int player, char command) {
     }
 }
 
-void player_move(t_server_game *server_game, int player, char command) {
+void player_move(t_server_game *server_game, int player, char command, int x, int y) {
 
     printf("\n\n\n__ %d _ %c\n", player, command);
 
@@ -45,31 +51,34 @@ void player_move(t_server_game *server_game, int player, char command) {
 
     //the_player->x_pos++;
     //printf("***%d***", the_player->x_pos);
-
-    switch (command)
-    {
-        case 'U' :
-            if (place_is_free(server_game, the_player->x_pos, the_player->y_pos-1)) {
-                the_player->y_pos--;
-            }
-            break;
-        case 'D' :
-            if (place_is_free(server_game, the_player->x_pos, the_player->y_pos+1)) {
-                the_player->y_pos++;
-            }
-            break;
-        case 'L' :
-            if (place_is_free(server_game, the_player->x_pos-1, the_player->y_pos)) {
-                the_player->x_pos--;
-            }
-            break;
-        case 'R' :
-            if (place_is_free(server_game, the_player->x_pos+1, the_player->y_pos)) {
-                the_player->x_pos++;
-            }
-
-            break;
+    if (place_is_free(server_game, the_player->x_pos+x, the_player->y_pos+y)) {
+        the_player->y_pos += y;
+        the_player->x_pos += x;
     }
+    // switch (command)
+    // {
+    //     case 'U' :
+    //         if (place_is_free(server_game, the_player->x_pos, the_player->y_pos-1)) {
+    //             the_player->y_pos--;
+    //         }
+    //         break;
+    //     case 'D' :
+    //         if (place_is_free(server_game, the_player->x_pos, the_player->y_pos+1)) {
+    //             the_player->y_pos++;
+    //         }
+    //         break;
+    //     case 'L' :
+    //         if (place_is_free(server_game, the_player->x_pos-1, the_player->y_pos)) {
+    //             the_player->x_pos--;
+    //         }
+    //         break;
+    //     case 'R' :
+    //         if (place_is_free(server_game, the_player->x_pos+1, the_player->y_pos)) {
+    //             the_player->x_pos++;
+    //         }
+
+    //         break;
+    // }
 
 
     // TODO Yop : Debug a virer

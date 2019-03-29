@@ -15,11 +15,10 @@ struct player_s
 	int dir;
 	char command;
 
-	// player texture
-	SDL_Texture *TexPlayer;
-
-	// position of player
-	SDL_Rect playerPositionRect;
+	SDL_Texture *playerTexture;
+    SDL_Rect    *srcRectPlayer;
+    SDL_Rect    *destRectPlayer;
+    int         posX, posY;
 };
 
 player_t *init_player(interface_t *interface);
