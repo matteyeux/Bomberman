@@ -44,6 +44,8 @@ void draw_game(global_game_t *game)
 		}
 	}
 
+	printf("DEBUG PLAYER -> %d %d\n", player->posX, player->posY);
+
 	// display player
 	if (bomb->exist == 1) {
 		SDL_RenderCopy(interface->Renderer, bomb->TexBomb, NULL, &bomb->bombPositionRect);
