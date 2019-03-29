@@ -68,8 +68,8 @@ int send_client_data(client_t *client_data, player_t *player)
 
 	/* hardcoded values waiting someone else (not giving any name this time) */
 	request->magic = player->magic;
-	request->x_pos = player->destRectPlayer->x;
-	request->y_pos = player->destRectPlayer->y;
+	request->x_pos = player->posX;
+	request->y_pos = player->posY;
 	request->dir = player->dir;
 	request->command = player->command;
 	request->speed = player->speed;
