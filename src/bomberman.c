@@ -21,11 +21,15 @@ void draw_game(global_game_t *game)
 	SDL_SetRenderDrawColor(interface->Renderer, 16, 120, 48, 255);
 	SDL_RenderClear(interface->Renderer);
 
-	SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
+	//SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 
 	for (int i = 0; i < map->nbTileY; i++) {
 		for (int j = 0; j < map->nbTileX; j++) {
 			setRectangle(interface->destRect, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
+
+			// SET SOURCE RECT PLAYER AND DEST RECT PLAYER
+            setRectangle(player->srcRectPlayer, 4*16, 0, 16, 16);
+            setRectangle(player->destRectPlayer, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
 
 			// index is the ASCII code of the character
 			index = map->schema[j][i]-48;
@@ -44,7 +48,7 @@ void draw_game(global_game_t *game)
 		SDL_RenderCopy(interface->Renderer, bomb->TexBomb, NULL, &bomb->bombPositionRect);
 	}
 
-	//SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
+	SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 
 	// show renderer
 	SDL_RenderPresent(interface->Renderer);
