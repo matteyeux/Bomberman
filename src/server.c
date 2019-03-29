@@ -12,6 +12,7 @@
 #include <include/server.h>
 #include <include/server_player.h>
 #include <include/server_map.h>
+#include <include/server_bomb.h>
 #include <include/client.h>
 #include <include/bomberman.h>
 #include <include/map.h>
@@ -166,6 +167,8 @@ void *handler(void *input)
 	server_data_t *server_data;
 	t_client_request *request;
 	t_server_game *server_game;
+    bomb_server_t *server_bomb;
+
 	char **schema;
 
 	server_data = malloc(sizeof(server_data_t));
@@ -176,6 +179,7 @@ void *handler(void *input)
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
 	server_game = malloc(sizeof(t_server_game));
+	server_bomb = malloc(sizeof(bomb_server_t));
 
 	server_game->player1.x_pos = 2;
 	server_game->player1.y_pos = 2;
@@ -244,7 +248,7 @@ void *handler(void *input)
 			}
 		}
 
-		player_action(server_game, num_player, request->command);
+		player_action(server_game, server_bomb, num_player, request->command);
 
 		// Sending players and bombs into map
 		implement_map(server_game);
