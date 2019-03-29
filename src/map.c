@@ -118,10 +118,6 @@ char **handle_file(const char *file)
 		schema[i] = strdup(buf);
 		i++;
 	}
-	printf("%d\n", i);
-	// i = line number, strlen(buf) = column number
-	// map->nbTileX = i;
-	// map->nbTileY = strlen(buf);
 
 	fclose(f);
 	return schema;
