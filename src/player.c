@@ -29,8 +29,8 @@ player_t *init_player(void)
 	player->dir = 3;
 	player->command = 0;
 
-	player->posX = 0;
-    player->posY = 0;
+	player->posX = 2;
+    player->posY = 2;
 
     player->playerTexture = NULL;
     player->srcRectPlayer = malloc(sizeof(SDL_Rect));
