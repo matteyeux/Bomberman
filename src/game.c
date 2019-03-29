@@ -41,7 +41,7 @@ global_game_t *init_game(void)
 
 	fprintf(stdout, "Successfully initialize map!\n");
 
-	game->player = init_player(game->interface);
+	game->player = init_player();
 	if (game->player == NULL)
 		return NULL;
 
