@@ -46,8 +46,8 @@ bomb_t *init_bomb(interface_t *interface)
 void placeBomb(bomb_t *bomb, player_t *player)
 {
 	bomb->exist= 1;
-	bomb->bombPositionRect.x = player->playerPositionRect.x + 5;
-	bomb->bombPositionRect.y = player->playerPositionRect.y + 20;
+	bomb->bombPositionRect.x = player->destRectPlayer->x + 5;
+	bomb->bombPositionRect.y = player->destRectPlayer->y + 20;
 }
 
 void destroy_bomb(bomb_t *bomb)

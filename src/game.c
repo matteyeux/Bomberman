@@ -45,6 +45,10 @@ global_game_t *init_game(void)
 	if (game->player == NULL)
 		return NULL;
 
+	game->player->playerTexture = set_texture_player(game->interface->Renderer);
+	if (game->player->playerTexture == NULL)
+		return NULL;
+
 	fprintf(stdout, "Successfully initialized player !\n");
 
 	game->bomb = init_bomb(game->interface);
