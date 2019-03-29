@@ -29,13 +29,13 @@ void draw_game(global_game_t *game)
 
 			// SET SOURCE RECT PLAYER AND DEST RECT PLAYER
             setRectangle(player->srcRectPlayer, 4*16, 0, 16, 16);
-            setRectangle(player->destRectPlayer, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
 
 			// index is the ASCII code of the character
 			index = map->schema[j][i]-48;
 			if (index == 6 || index == 7 || index == 8 || index == 9) {
                 player->posX = j;
                 player->posY = i;
+            	setRectangle(player->destRectPlayer, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
 
 				SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 			} else 
