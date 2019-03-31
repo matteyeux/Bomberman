@@ -45,12 +45,10 @@ struct s_player_infos {
 	int bombs_capacity;
 	int frags;
 
-	SDL_Rect	*dest;
-	SDL_Rect	*src;
+	SDL_Rect	dest;
+	SDL_Rect	src;
 
-	SDL_Texture	*texture;
-
-	//player_t *testPlayer;
+	//SDL_Texture	texture;
 };
 
 struct s_other {

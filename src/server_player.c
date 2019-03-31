@@ -18,6 +18,7 @@ void player_action(t_server_game *server_game, int player, char command) {
             break;
         case 'R' :
             player_move(server_game, player, command, +1, 0);
+            //player_move(server_game, player, command);
             break;
         case 'B' :
             bomb_drop();
@@ -51,10 +52,12 @@ void player_move(t_server_game *server_game, int player, char command, int x, in
 
     //the_player->x_pos++;
     //printf("***%d***", the_player->x_pos);
+    
     if (place_is_free(server_game, the_player->x_pos+x, the_player->y_pos+y)) {
         the_player->y_pos = the_player->y_pos + y;
         the_player->x_pos = the_player->x_pos + x;
     }
+    
     // switch (command)
     // {
     //     case 'U' :
@@ -90,12 +93,14 @@ void player_move(t_server_game *server_game, int player, char command, int x, in
 bool place_is_free(t_server_game *server_game, int x, int y)
 {
     // TODO Yop printf("=== %c en x%d y%d\n", server_game->schema[y][x], x, y);
-    if (server_game->schema[y][x] == '0' || server_game->schema[y][x] == '1'|| server_game->schema[y][x] == '2') {
-        printf("NOOOOO\n");
-        return false;
-    }
-
-    return true;
+    
+    // if (server_game->schema[y][x] == '0' || server_game->schema[y][x] == '1'|| server_game->schema[y][x] == '2') {
+    //     printf("NOOOOO\n");
+    //     return false;
+    // }
+    if(server_game->schema[y][x] == '3' || server_game->schema[y][x] == 'A')
+        return true;
+    return false;
 }
 
 void bomb_drop()

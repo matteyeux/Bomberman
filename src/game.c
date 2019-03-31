@@ -92,24 +92,35 @@ void *game_loop(void *game_struct)
 			return NULL;
 		}
 
-		global_game->player1.dest = malloc(sizeof(SDL_Rect));
-		global_game->player1.src = malloc(sizeof(SDL_Rect));
-		setRectangle(global_game->player1.src, 5*16, 0, 16, 16);
+		// global_game->player1->dest = malloc(sizeof(SDL_Rect));
+		// if (global_game->player1->dest == NULL) {
+		// 	fprintf(stderr, "Error malloc destination rect from player 1 you noob\n");
+		// 	destroy_game(game);
+		// 	return NULL;
+		// }
+		// global_game->player1.src = malloc(sizeof(SDL_Rect));
 
-		global_game->player1.texture = set_texture_player(game->interface->Renderer);
+		// if (global_game->player1.dest == NULL) {
+		// 	fprintf(stderr, "Error malloc source rect from player 1 you PLOW\n");
+		// 	destroy_game(game);
+		// 	return NULL;
+		// }
+		// setRectangle(global_game->player1.src, 5*16, 0, 16, 16);
 
-		global_game->player2.dest = NULL;//malloc(sizeof(SDL_Rect));
-		global_game->player2.src = NULL;//malloc(sizeof(SDL_Rect));
+		// global_game->player1->texture = set_texture_player(game->interface->Renderer);
 
-		global_game->player2.texture = NULL;//set_texture_player(game->interface->Renderer);
-		global_game->player3.dest = NULL;//malloc(sizeof(SDL_Rect));
-		global_game->player3.src = NULL;//malloc(sizeof(SDL_Rect));
+		// global_game->player2.dest = malloc(sizeof(SDL_Rect));
+		// global_game->player2.src = malloc(sizeof(SDL_Rect));
+		// global_game->player2.texture = set_texture_player(game->interface->Renderer);
 
-		global_game->player3.texture = NULL;//set_texture_player(game->interface->Renderer);
-		global_game->player4.dest = NULL;//malloc(sizeof(SDL_Rect));
-		global_game->player4.src = NULL;//malloc(sizeof(SDL_Rect));
+		// global_game->player3.dest = NULL;//malloc(sizeof(SDL_Rect));
+		// global_game->player3.src = NULL;//malloc(sizeof(SDL_Rect));
 
-		global_game->player4.texture = set_texture_player(game->interface->Renderer);
+		// global_game->player3.texture = NULL;//set_texture_player(game->interface->Renderer);
+		// global_game->player4.dest = NULL;//malloc(sizeof(SDL_Rect));
+		// global_game->player4.src = NULL;//malloc(sizeof(SDL_Rect));
+
+		// global_game->player4.texture = NULL;//set_texture_player(game->interface->Renderer);
 		printf("STATE PLAYER OK PUTAIN 2 FOIS FFS\n");
 
 		if (pthread_create(&thread_client, NULL, client_listening, (void*) client_struct) < 0) {
