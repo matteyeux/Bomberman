@@ -5,6 +5,6 @@
 
 extern int status;
 
-void draw_game(global_game_t *game);
+void draw_game(global_game_t *game, t_server_game *sg);
 int game_event(global_game_t *game, client_t *client_struct);
-void destroy_game(interface_t *interface, player_t *player, bomb_t *bomb);
+void destroy_game(global_game_t *game);

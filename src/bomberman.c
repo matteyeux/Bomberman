@@ -9,7 +9,7 @@
 // set to global so run_server can use it
 int status;
 
-void draw_game(global_game_t *game)
+void draw_game(global_game_t *game, t_server_game *sg)
 {
 	interface_t *interface = game->interface;
 	map_t *map = game->map;
@@ -18,42 +18,56 @@ void draw_game(global_game_t *game)
 	int index;
 
 	// back screen
-	SDL_SetRenderDrawColor(interface->Renderer, 16, 120, 48, 255);
+	SDL_SetRenderDrawColor(interface->Renderer, 128, 20, 0, 255);
 	SDL_RenderClear(interface->Renderer);
 
-    setRectangle(player->destRectPlayer, map->largeur_tile*2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
-	SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
+    //setRectangle(player->destRectPlayer, map->largeur_tile*2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
+	//SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
+	
+	//setRectangle(sg->player1.dest, 120, 120, map->largeur_tile, map->hauteur_tile);
+
+	//printf("DRAW GAME SEGFAULT SOMEWHERE\n");
+    //setRectangle(player->destRectPlayer, map->largeur_tile*2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
+	//SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 
 	for (int i = 0; i < map->nbTileY; i++) {
 		for (int j = 0; j < map->nbTileX; j++) {
-			setRectangle(interface->destRect, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
 
+			setRectangle(interface->destRect, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
+	
 			// SET SOURCE RECT PLAYER AND DEST RECT PLAYER
-            setRectangle(player->srcRectPlayer, 4*16, 0, 16, 16);
-        	setRectangle(player->destRectPlayer, map->largeur_tile*2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
+            //setRectangle(player->srcRectPlayer, 4*16, 0, 16, 16);
+        	//setRectangle(player->destRectPlayer, map->largeur_tile * 2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
+
+			//setRectangle(sg->player1.src, 4*16, 0, 16, 16);
+			//setRectangle(sg->player1.dest,  map->largeur_tile * sg->player1.x_pos, map->hauteur_tile * sg->player1.y_pos, map->largeur_tile, map->hauteur_tile);
 
 			// index is the ASCII code of the character
-			index = map->schema[j][i]-48;
-			printf("Index : %d \t", index);
-			if (index == 6 || index == 7 || index == 8 || index == 9) {
-                player->posX = j;
-                player->posY = i;
+			index = sg->schema[j][i]-48;
 
-				SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
-			} else 
+			if (index == 6 || index == 7 || index == 8 || index == 9) {
+                //player->posX = j;
+                //player->posY = i;
+
+			//	SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
+			} else if (index == 0 || index == 1 || index == 2 || index == 3) {
 				SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
+			}
+
 		}
+
+		//printf("\n");
 	}
 
-	printf("DEBUG PLAYER -> %d %d\n", player->posX, player->posY);
+	//printf("DEBUG PLAYER -> %d %d\n", player->posX, player->posY);
 
 	// display player
-	if (bomb->exist == 1) {
-		SDL_RenderCopy(interface->Renderer, bomb->TexBomb, NULL, &bomb->bombPositionRect);
-	}
+	//if (bomb->exist == 1) {
+	//	SDL_RenderCopy(interface->Renderer, bomb->TexBomb, NULL, &bomb->bombPositionRect);
+	//}
 
-	//SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
-
+	SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
+	
 	// show renderer
 	SDL_RenderPresent(interface->Renderer);
 }
@@ -99,6 +113,29 @@ int game_event(global_game_t *game, client_t *client_struct)
 				break;
 			}
 
+
+		printf("Debugging player1: \t %d %d \n",global_game->player1.x_pos, global_game->player1.y_pos);
+		//printf("Debugging : \t %d %d \n",global_game->player1.testPlayer->magic, global_game->player1.testPlayer->magic);
+			// printf("GAME I USED SINCED THE FUCKING BEGINNING\n");
+
+			// for (int y = 0; y < 13; y++) {
+			// 	for (int x = 0; x < 15; x++) {
+		 	// 		printf("%c", game->map->schema[y][x]);
+
+		 	// 	}
+		 	// 	printf("\n");
+		 	// }
+			// printf("\nGAME USED BY SERVEUR \n");
+
+			for (int y = 0; y < 13; y++) {
+				for (int x = 0; x < 15; x++) {
+		 			printf("%c", global_game->schema[y][x]);
+
+		 		}
+		 		printf("\n");
+		 	}
+			printf("\n");
+
 			// TODO Yop Clean : Debug pour affichage clean
 			printf("\n");
 		}
@@ -107,9 +144,11 @@ int game_event(global_game_t *game, client_t *client_struct)
 	return status;
 }
 
-void destroy_game(interface_t *interface, player_t *player, bomb_t *bomb)
+void destroy_game(global_game_t *game)
 {
-	destroy_bomb(bomb);
-	destroy_player(player);
-	destroy_interface(interface);
+	destroy_bomb(game->bomb);
+	destroy_player(game->player);
+	destroy_map(game->map);
+	destroy_interface(game->interface);
+	//free(game);
 }

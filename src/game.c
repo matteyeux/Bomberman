@@ -92,6 +92,26 @@ void *game_loop(void *game_struct)
 			return NULL;
 		}
 
+		global_game->player1.dest = malloc(sizeof(SDL_Rect));
+		global_game->player1.src = malloc(sizeof(SDL_Rect));
+		setRectangle(global_game->player1.src, 5*16, 0, 16, 16);
+
+		global_game->player1.texture = set_texture_player(game->interface->Renderer);
+
+		global_game->player2.dest = NULL;//malloc(sizeof(SDL_Rect));
+		global_game->player2.src = NULL;//malloc(sizeof(SDL_Rect));
+
+		global_game->player2.texture = NULL;//set_texture_player(game->interface->Renderer);
+		global_game->player3.dest = NULL;//malloc(sizeof(SDL_Rect));
+		global_game->player3.src = NULL;//malloc(sizeof(SDL_Rect));
+
+		global_game->player3.texture = NULL;//set_texture_player(game->interface->Renderer);
+		global_game->player4.dest = NULL;//malloc(sizeof(SDL_Rect));
+		global_game->player4.src = NULL;//malloc(sizeof(SDL_Rect));
+
+		global_game->player4.texture = set_texture_player(game->interface->Renderer);
+		printf("STATE PLAYER OK PUTAIN 2 FOIS FFS\n");
+
 		if (pthread_create(&thread_client, NULL, client_listening, (void*) client_struct) < 0) {
 			perror("pthread_create");
 			exit(EXIT_FAILURE);
@@ -99,13 +119,31 @@ void *game_loop(void *game_struct)
 	} else {
 		// if client cannot connect to server
 		// then destroy game and kill everything else
-		destroy_game(game->interface, game->player, game->bomb);
+		destroy_game(game);
 		exit(-1);
 	}
 
 	while (status != -1) {
 
-		draw_game(game);
+		//game->map->schema = global_game->schema;
+
+		// for (int i = 0; i < 13; i++) {
+		// 	memcpy(game->map->schema[i], global_game->schema[i], sizeof(char) * 15);
+		// }
+
+
+		//printf("TEST ID SEGFAULT\n");
+
+		// TODO ALEX
+		//printf("Debugging : \t %d %d \n",global_game->player1.x_pos, global_game->player1.y_pos);
+
+		//destroy_game(game);
+		//exit(-1);
+
+		draw_game(game, global_game);
+
+
+		//printf("second TEST ID\n");
 
 		status = game_event(game, client_struct);
 

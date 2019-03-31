@@ -1,6 +1,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
+#include <include/player.h>
 
 #ifdef __APPLE__
 #define MSG_NOSIGNAL SO_NOSIGPIPE
@@ -43,6 +44,13 @@ struct s_player_infos {
 	int bombs_left;
 	int bombs_capacity;
 	int frags;
+
+	SDL_Rect	*dest;
+	SDL_Rect	*src;
+
+	SDL_Texture	*texture;
+
+	//player_t *testPlayer;
 };
 
 struct s_other {
@@ -62,7 +70,8 @@ struct s_server_game {
 
 	t_player_infos player[3];
 
-	char schema[13][15];
+	char schema[15][13];
+	//char **schema;
 
 	t_other infos;
 };
