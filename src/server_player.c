@@ -9,15 +9,19 @@ void player_action(t_server_game *server_game, int player, char command) {
     {
         case 'U' :
             player_move(server_game, player, command, 0, -1);
+            //setRectangle(server_game->player->src, 4*16, 1*16, 16, 16);
             break;
         case 'D' :
             player_move(server_game, player, command, 0, +1);
+            //setRectangle(server_game->player->src, 4*16, 0*16, 16, 16);
             break;
         case 'L' :
             player_move(server_game, player, command, -1, 0);
+            //setRectangle(server_game->player->src, 1*16, 0*16, 16, 16);
             break;
         case 'R' :
             player_move(server_game, player, command, +1, 0);
+            // setRectangle(server_game->player->src, 1*16, 1*16, 16, 16);
             //player_move(server_game, player, command);
             break;
         case 'B' :
@@ -94,13 +98,13 @@ bool place_is_free(t_server_game *server_game, int x, int y)
 {
     // TODO Yop printf("=== %c en x%d y%d\n", server_game->schema[y][x], x, y);
     
-    // if (server_game->schema[y][x] == '0' || server_game->schema[y][x] == '1'|| server_game->schema[y][x] == '2') {
-    //     printf("NOOOOO\n");
-    //     return false;
-    // }
-    if(server_game->schema[y][x] == '3' || server_game->schema[y][x] == 'A')
-        return true;
-    return false;
+    if (server_game->schema[y][x] == '0' || server_game->schema[y][x] == '1'|| server_game->schema[y][x] == '2') {
+        printf("NOOOOO\n");
+        return false;
+    }
+    // if(server_game->schema[y][x] == '3' || server_game->schema[y][x] == 'A')
+    //     return true;
+    // return false;
 }
 
 void bomb_drop()
