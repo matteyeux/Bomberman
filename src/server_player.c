@@ -102,7 +102,7 @@ bool place_is_free(t_server_game *server_game, int x, int y)
         printf("NOOOOO\n");
         return false;
     }
-    return true
+    return true;
     // if(server_game->schema[y][x] == '3' || server_game->schema[y][x] == 'A')
     //     return true;
     // return false;
