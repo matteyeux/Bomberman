@@ -51,7 +51,7 @@ global_game_t *init_game(void)
 
 	fprintf(stdout, "Successfully initialized player !\n");
 
-	game->bomb = init_bomb(game->interface);
+	game->bomb = init_bomb(game->interface->Renderer);
 	if (game->bomb == NULL) 
 		return NULL;
 

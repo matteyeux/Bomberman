@@ -30,11 +30,18 @@ void draw_game(global_game_t *game, t_server_game *sg)
     //setRectangle(player->destRectPlayer, map->largeur_tile*2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
 	//SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 
+	// for (int i = 0; i < map->nbTileY; i++) {
+	// 	for (int j = 0; j < map->nbTileX; j++) {
+	// 		SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[map->schema[j][i]-48]->tile, interface->destRect);
+	// 	}
+	// } 
+
 	setRectangle(&sg->player1.src, 4*16, 0, 16, 16);
 	setRectangle(&sg->player2.src, 4*16, 0, 16, 16);
 	setRectangle(&sg->player3.src, 4*16, 0, 16, 16);
 	setRectangle(&sg->player4.src, 4*16, 0, 16, 16);
 
+	if (sg != NULL) {
 	for (int i = 0; i < map->nbTileY; i++) {
 		for (int j = 0; j < map->nbTileX; j++) {
 
@@ -48,12 +55,18 @@ void draw_game(global_game_t *game, t_server_game *sg)
 			setRectangle(&sg->player2.dest,  map->largeur_tile * sg->player2.x_pos, map->hauteur_tile * sg->player2.y_pos, map->largeur_tile, map->hauteur_tile);
 			setRectangle(&sg->player3.dest,  map->largeur_tile * sg->player3.x_pos, map->hauteur_tile * sg->player3.y_pos, map->largeur_tile, map->hauteur_tile);
 			setRectangle(&sg->player4.dest,  map->largeur_tile * sg->player4.x_pos, map->hauteur_tile * sg->player4.y_pos, map->largeur_tile, map->hauteur_tile);
-					//printf("Setting dest ok \n");
+
 
 			// index is the ASCII code of the character
 			index = sg->schema[j][i]-48;
 
 			switch (index) {
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+					SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
+					break;
 				case 6:
 					SDL_RenderCopy(interface->Renderer, player->playerTexture, &sg->player1.src, &sg->player1.dest);
 					break;
@@ -66,11 +79,11 @@ void draw_game(global_game_t *game, t_server_game *sg)
 				case 9:
 					SDL_RenderCopy(interface->Renderer, player->playerTexture, &sg->player4.src, &sg->player4.dest);
 					break;
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-					SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
+				case 17:
+					//printf("\n\nTESTING BOMB \n");
+					setRectangle(&bomb->destRect, 3*map->largeur_tile, 2*map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+					//	if (!bomb->exist)
+						SDL_RenderCopy(interface->Renderer, bomb->TexBomb, &bomb->srcRect, &bomb->destRect);
 					break;
 			}
 			//if (index == 6 || index == 7 || index == 8 || index == 9) {
@@ -86,6 +99,7 @@ void draw_game(global_game_t *game, t_server_game *sg)
 
 		//printf("\n");
 	}
+	}
 
 	//printf("DEBUG PLAYER -> %d %d\n", player->posX, player->posY);
 
@@ -94,7 +108,7 @@ void draw_game(global_game_t *game, t_server_game *sg)
 	//	SDL_RenderCopy(interface->Renderer, bomb->TexBomb, NULL, &bomb->bombPositionRect);
 	//}
 
-	SDL_RenderCopy(interface->Renderer, player->playerTexture, &sg->player1.src, &sg->player1.dest);
+	//SDL_RenderCopy(interface->Renderer, player->playerTexture, &sg->player1.src, &sg->player1.dest);
 	
 	// show renderer
 	SDL_RenderPresent(interface->Renderer);
@@ -146,18 +160,18 @@ int game_event(global_game_t *game, client_t *client_struct)
 		//printf("Debugging : \t %d %d \n",global_game->player1.testPlayer->magic, global_game->player1.testPlayer->magic);
 			// printf("GAME I USED SINCED THE FUCKING BEGINNING\n");
 
-			// for (int y = 0; y < 13; y++) {
-			// 	for (int x = 0; x < 15; x++) {
-		 	// 		printf("%c", game->map->schema[y][x]);
+			for (int y = 0; y < 13; y++) {
+				for (int x = 0; x < 15; x++) {
+		 			printf("%c", game->map->schema[y][x]);
 
-		 	// 	}
-			// 	printf("\t");
-			// 	for (int z = 0; z < 15; z ++) {
-		 	// 		printf("%c", global_game->schema[y][z]);
-			// 	}
-		 	// 	printf("\n");
-		 	// }
-			// printf("\n");
+		 		}
+				printf("\t");
+				for (int z = 0; z < 15; z ++) {
+		 			printf("%c", global_game->schema[y][z]);
+				}
+		 		printf("\n");
+		 	}
+			printf("\n");
 
 			// TODO Yop Clean : Debug pour affichage clean
 			printf("\n");

@@ -5,7 +5,7 @@
 #include <include/interface.h>
 #include <include/bomberman.h>
 
-bomb_t *init_bomb(interface_t *interface)
+bomb_t *init_bomb(SDL_Renderer *renderer)
 {
 	bomb_t *bomb = NULL;
 
@@ -17,27 +17,14 @@ bomb_t *init_bomb(interface_t *interface)
 	}
 
 	bomb->exist = 0;
-	bomb->bombPositionRect.x = 156;
-	bomb->bombPositionRect.y = 78;
-	bomb->bombPositionRect.w = 40;
-	bomb->bombPositionRect.h = 40;
+	setRectangle(&bomb->srcRect, 8*16, 6*16, 16, 16);
 
 	// load bomb texture
-	SDL_Surface *bombSurface = IMG_Load("images/bomb.png");
-
-	if (!bombSurface) {
-		fprintf(stderr, "unable to load image : %s\n", IMG_GetError());
+	bomb->TexBomb = set_texture_bomb(renderer);
+	if (bomb->TexBomb == NULL) {
+		fprintf(stderr, "Error texture bomb\n");
+		destroy_bomb(bomb);
 		return NULL;
-	} else {
-		bomb->TexBomb = SDL_CreateTextureFromSurface(interface->Renderer, bombSurface);
-
-		if (!bomb->TexBomb) {
-			fprintf(stderr, "unable to handle texture : %s\n", SDL_GetError());
-			destroy_bomb(bomb);
-			return NULL;
-		}
-
-		SDL_FreeSurface(bombSurface);
 	}
 
 	return bomb;
@@ -46,17 +33,41 @@ bomb_t *init_bomb(interface_t *interface)
 void placeBomb(bomb_t *bomb, player_t *player)
 {
 	bomb->exist= 1;
-	bomb->bombPositionRect.x = player->destRectPlayer->x + 5;
-	bomb->bombPositionRect.y = player->destRectPlayer->y + 20;
+	setRectangle(&bomb->destRect, player->destRectPlayer->x + 5, player->destRectPlayer->y + 20, 40, 55);
+	// bomb->destRect.x = player->destRectPlayer->x + 5;
+	// bomb->destRect.y = player->destRectPlayer->y + 20;
+	// bomb->destRect.h = 60;
+	// bomb->destRect.w = 60;
 }
 
 void destroy_bomb(bomb_t *bomb)
 {
 	if (bomb) {
-		if (bomb->TexBomb) {
+		if (bomb->TexBomb)
 			SDL_DestroyTexture(bomb->TexBomb);
-		}
 
 		free(bomb);
 	}
+}
+
+SDL_Texture *set_texture_bomb(SDL_Renderer *renderer)
+{
+	SDL_Surface *bombSurface = IMG_Load("images/tiles_bomberman.png");
+	SDL_Texture *texture;
+
+	if (!bombSurface) {
+		fprintf(stderr, "unable to load image : %s\n", IMG_GetError());
+		return NULL;
+	} else {
+		texture = SDL_CreateTextureFromSurface(renderer, bombSurface);
+
+		if (!texture) {
+			fprintf(stderr, "unable to handle texture : %s\n", SDL_GetError());
+			SDL_FreeSurface(bombSurface);
+			return NULL;
+		}
+
+		SDL_FreeSurface(bombSurface);
+	}
+	return texture;
 }

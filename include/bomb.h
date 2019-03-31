@@ -10,16 +10,20 @@ struct bomb_s
 {
 	// Does the bomb exist
 	int exist;
+	int posX, posY;
 
-	// bomb texture
+	// bomb textures
 	SDL_Texture *TexBomb;
 
 	// position of bomb
-	SDL_Rect bombPositionRect;
+	SDL_Rect srcRect;
+	SDL_Rect destRect;
+	
 };
 
-bomb_t *init_bomb(interface_t *interface);
+bomb_t *init_bomb(SDL_Renderer *renderer);
 void placeBomb(bomb_t *bomb, player_t *player);
 void destroy_bomb(bomb_t *bomb);
+SDL_Texture *set_texture_bomb(SDL_Renderer *renderer);
 
 #endif // BOMB_H_
