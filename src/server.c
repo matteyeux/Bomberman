@@ -163,12 +163,15 @@ static int run_server(int sock, server_data_t *server_data)
 */
 void *handler(void *input)
 {
+	int m;
+	int num_player = 0;
+	char **schema;
 	server_data_t *server_data;
 	t_client_request *request;
 	t_server_game *server_game;
-	char **schema;
 
 	server_data = malloc(sizeof(server_data_t));
+
 	if (server_data == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 	}
@@ -176,6 +179,11 @@ void *handler(void *input)
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
 	server_game = malloc(sizeof(t_server_game));
+
+	if (server_game == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
+	}
 
 	server_game->player1.x_pos = 2;
 	server_game->player1.y_pos = 2;
@@ -186,20 +194,16 @@ void *handler(void *input)
 	server_game->player4.x_pos = 12;
 	server_game->player4.y_pos = 10;
 
+	schema = malloc(13 * sizeof(char*));
+
+	schema = handle_file("map.txt");
+
+	for (int i = 0; i < 13; ++i) {
+		memcpy(server_game->schema[i], schema[i], sizeof(char) * 15);
+	}
+
 	while (status != -1) {
 
-		if (server_game == NULL) {
-			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
-			return NULL;
-		}
-
-		request = receive_client_data(server_data);
-
-		if (request == NULL) {
-			free(request);
-			free(server_data);
-			pthread_exit(NULL);
-		}
 
 		// TODO clean Yop
 		//printf("Magic=%d\n", server_data->magic[1]);
@@ -207,15 +211,6 @@ void *handler(void *input)
 		//printf("Magic=%d\n", server_data->magic[3]);
 		//printf("Magic=%d\n", server_data->magic[4]);
 
-		schema = malloc(13 * sizeof(char*));
-
-		schema = handle_file("map.txt");
-		//printf("%s\n", );
-		// copy content of schema in server_game->schema
-
-		for (int i = 0; i < 13; ++i) {
-			memcpy(server_game->schema[i], schema[i], sizeof(char) * 15);
-		}
 
 		// TODO Yop : Bouchonnage des bombes ici
 		server_game->schema[2][3] = 'A';
@@ -230,8 +225,20 @@ void *handler(void *input)
 		server_game->schema[10][2] = '8';
 		server_game->schema[10][12] = '9';
 
-		int m;
-		int num_player = 0;
+
+		// Sending players and bombs into map
+		implement_map(server_game);
+
+		send_data_to_client(server_data, server_game);
+
+		request = receive_client_data(server_data);
+
+		if (request == NULL) {
+			free(request);
+			free(server_data);
+			pthread_exit(NULL);
+		}
+
 		for (int i = 1; i < 4; i++) {
 			m = request->magic;
 			if (m == server_data->magic[i])
@@ -243,10 +250,6 @@ void *handler(void *input)
 
 		player_action(server_game, num_player, request->command);
 
-		// Sending players and bombs into map
-		implement_map(server_game);
-
-		send_data_to_client(server_data, server_game);
 
 		printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %c   %d    %d   %d\n",
 				num_player,
@@ -259,9 +262,9 @@ void *handler(void *input)
 				request->magic);
 
 		free(request);
-		free(schema);
 	}
 
+	free(schema);
 	free(server_data);
 	return (void *)input;
 }
@@ -285,6 +288,7 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 						&server_data->client_addr_len);
 
 	if (receiver == -1) {
+		free(request);
 		return NULL;
 	}
 
@@ -341,7 +345,6 @@ int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 		}
 
 		if (sender == -1) {
-			printf("faile here\n");
 			perror("sendto");
 			close(server_data->sock_fd[i]);
 		}
