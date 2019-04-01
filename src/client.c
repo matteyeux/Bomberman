@@ -124,7 +124,6 @@ t_server_game *receive_server_data(client_t *client_data)
 						&server_addr_len);
 
 	if (receiver == -1 ) {
-		perror("recvfrom");
 		return NULL;
 	}
 
@@ -143,7 +142,7 @@ int get_magic(client_t *client_struct)
 
 void *client_listening(void *client_data)
 {
-	while (1) {
+	while (global_game != NULL) {
 		global_game = receive_server_data((client_t *)client_data);
 	}
 

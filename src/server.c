@@ -12,6 +12,7 @@
 #include <include/server.h>
 #include <include/server_player.h>
 #include <include/server_map.h>
+#include <include/server_bomb.h>
 #include <include/client.h>
 #include <include/bomberman.h>
 #include <include/map.h>
@@ -96,6 +97,22 @@ static int run_server(int sock, server_data_t *server_data)
 	client_cnt = 0;
 	client_addr_len = sizeof(struct sockaddr_in);
 
+	server_data->server_game = malloc(sizeof(t_server_game));
+
+	if (server_data->server_game == NULL){
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return -1;
+	}
+
+	server_data->server_game->player1.x_pos = 2;
+	server_data->server_game->player1.y_pos = 2;
+	server_data->server_game->player2.x_pos = 12;
+	server_data->server_game->player2.y_pos = 2;
+	server_data->server_game->player3.x_pos = 2;
+	server_data->server_game->player3.y_pos = 10;
+	server_data->server_game->player4.x_pos = 12;
+	server_data->server_game->player4.y_pos = 10;
+
 	while (sock_fd && status != -1) {
 		memset(&magic_array, 0, sizeof(magic_array));
 
@@ -165,33 +182,38 @@ void *handler(void *input)
 {
 	server_data_t *server_data;
 	t_client_request *request;
-	t_server_game *server_game;
+    bomb_server_t *server_bomb;
+
 	char **schema;
 
 	server_data = malloc(sizeof(server_data_t));
 	if (server_data == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
 	}
 
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
-	server_game = malloc(sizeof(t_server_game));
 
-	server_game->player1.x_pos = 2;
-	server_game->player1.y_pos = 2;
-	server_game->player2.x_pos = 12;
-	server_game->player2.y_pos = 2;
-	server_game->player3.x_pos = 2;
-	server_game->player3.y_pos = 10;
-	server_game->player4.x_pos = 12;
-	server_game->player4.y_pos = 10;
+	server_bomb = malloc(sizeof(bomb_server_t));
+
+	if (server_bomb == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
+	}
+
+	server_bomb->player = 0;
+	server_bomb->next = NULL;
+
+	schema = malloc(13 * sizeof(char*));
+
+	schema = handle_file("map.txt");
+
+	for (int i = 0; i < 13; ++i) {
+		memcpy(server_data->server_game->schema[i], schema[i], sizeof(char) * 15);
+	}
 
 	while (status != -1) {
-
-		if (server_game == NULL) {
-			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
-			return NULL;
-		}
 
 		request = receive_client_data(server_data);
 
@@ -201,34 +223,13 @@ void *handler(void *input)
 			pthread_exit(NULL);
 		}
 
-		// TODO clean Yop
-		//printf("Magic=%d\n", server_data->magic[1]);
-		//printf("Magic=%d\n", server_data->magic[2]);
-		//printf("Magic=%d\n", server_data->magic[3]);
-		//printf("Magic=%d\n", server_data->magic[4]);
-
-		schema = malloc(13 * sizeof(char*));
-
-		schema = handle_file("map.txt");
-		//printf("%s\n", );
-		// copy content of schema in server_game->schema
-
-		for (int i = 0; i < 13; ++i) {
-			memcpy(server_game->schema[i], schema[i], sizeof(char) * 15);
-		}
-
 		// TODO Yop : Bouchonnage des bombes ici
-		server_game->schema[2][3] = 'A';
-		server_game->schema[2][4] = 'A';
-		server_game->schema[3][2] = 'A';
-		server_game->schema[5][2] = 'A';
+		server_data->server_game->schema[2][3] = 'A';
+		server_data->server_game->schema[2][4] = 'A';
+		server_data->server_game->schema[3][2] = 'A';
+		server_data->server_game->schema[5][2] = 'A';
 
 		printf("Magic=%d\n", server_data->magic[1]);
-
-		server_game->schema[2][2] = '6';
-		server_game->schema[2][12] = '7';
-		server_game->schema[10][2] = '8';
-		server_game->schema[10][12] = '9';
 
 		int m;
 		int num_player = 0;
@@ -241,12 +242,12 @@ void *handler(void *input)
 			}
 		}
 
-		player_action(server_game, num_player, request->command);
+		player_action(server_data->server_game, server_bomb, num_player, request->command);
 
 		// Sending players and bombs into map
-		implement_map(server_game);
+		implement_map(server_data->server_game, server_bomb);
 
-		send_data_to_client(server_data, server_game);
+		send_data_to_client(server_data, server_data->server_game);
 
 		printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %c   %d    %d   %d\n",
 				num_player,
@@ -259,9 +260,9 @@ void *handler(void *input)
 				request->magic);
 
 		free(request);
-		free(schema);
 	}
 
+	free(schema);
 	free(server_data);
 	return (void *)input;
 }

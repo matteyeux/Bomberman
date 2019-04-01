@@ -3,6 +3,6 @@
 
 #include <include/server.h>
 
-void implement_map(t_server_game *server_game);
+void implement_map(t_server_game *server_game, bomb_server_t *server_bomb);
 
 #endif //BOMBERMAN_SERVER_MAP_H
