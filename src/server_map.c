@@ -34,12 +34,13 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb)
     bomb_server_t *the_bomb = server_bomb;
     while (!last_bomb)
     {
+        if (the_bomb->player != 0)
+        {
+            server_game->schema[the_bomb->y][the_bomb->x] = 'A';
+        }
+
         if (the_bomb->next != NULL)
         {
-            if (the_bomb->player != 0)
-            {
-                server_game->schema[the_bomb->y][the_bomb->x] = 'A';
-            }
             the_bomb = the_bomb->next;
         }else{
             last_bomb = true;
