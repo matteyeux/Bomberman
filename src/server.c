@@ -245,7 +245,7 @@ void *handler(void *input)
 		player_action(server_data->server_game, server_bomb, num_player, request->command);
 
 		// Sending players and bombs into map
-		implement_map(server_data->server_game);
+		implement_map(server_data->server_game, server_bomb);
 
 		send_data_to_client(server_data, server_data->server_game);
 

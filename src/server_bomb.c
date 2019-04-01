@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <include/server_bomb.h>
 #include <include/server.h>
 
-void create_new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player)
+void new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player)
 {
     t_player_infos *the_player;
 
@@ -23,28 +24,22 @@ void create_new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int
             break;
     }
 
-    if (server_bomb->next == NULL)
-    {
-        printf("NULLLLLLL\n");
-    }else{
-        printf("EXIST !!!!!\n");
-    }
-
     bomb_server_t *new_bomb;
     new_bomb = init_bomb_server(player, the_player->x_pos, the_player->y_pos);
 
-    //printf("BOMB : %d %d\n", new_bomb->x, new_bomb->y);
-
-    server_bomb = new_bomb;
-
-    printf("NewBomPoint : %p\n", &new_bomb);
-    server_bomb->next = new_bomb;
-
-    if (server_bomb->next == NULL)
+    bool last_bomb = false;
+    bomb_server_t *the_bomb = server_bomb;
+    while (!last_bomb)
     {
-        printf("NULLLLLLL\n");
-    }else{
-        printf("EXIST !!!!!\n");
+        // TODO Yop : printf("BOMB : %d, %p\n", the_bomb->player, the_bomb->next);
+        if (the_bomb->next != NULL)
+        {
+            the_bomb = the_bomb->next;
+        }else{
+            the_bomb->next = new_bomb;
+            last_bomb = true;
+
+        }
     }
 }
 
