@@ -97,6 +97,22 @@ static int run_server(int sock, server_data_t *server_data)
 	client_cnt = 0;
 	client_addr_len = sizeof(struct sockaddr_in);
 
+	server_data->server_game = malloc(sizeof(t_server_game));
+
+	if (server_data->server_game == NULL){
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return -1;
+	}
+
+	server_data->server_game->player1.x_pos = 2;
+	server_data->server_game->player1.y_pos = 2;
+	server_data->server_game->player2.x_pos = 12;
+	server_data->server_game->player2.y_pos = 2;
+	server_data->server_game->player3.x_pos = 2;
+	server_data->server_game->player3.y_pos = 10;
+	server_data->server_game->player4.x_pos = 12;
+	server_data->server_game->player4.y_pos = 10;
+
 	while (sock_fd && status != -1) {
 		memset(&magic_array, 0, sizeof(magic_array));
 
@@ -166,7 +182,6 @@ void *handler(void *input)
 {
 	server_data_t *server_data;
 	t_client_request *request;
-	t_server_game *server_game;
     bomb_server_t *server_bomb;
 
 	char **schema;
@@ -174,21 +189,18 @@ void *handler(void *input)
 	server_data = malloc(sizeof(server_data_t));
 	if (server_data == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
 	}
 
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
-	server_game = malloc(sizeof(t_server_game));
+
 	server_bomb = malloc(sizeof(bomb_server_t));
 
-	server_game->player1.x_pos = 2;
-	server_game->player1.y_pos = 2;
-	server_game->player2.x_pos = 12;
-	server_game->player2.y_pos = 2;
-	server_game->player3.x_pos = 2;
-	server_game->player3.y_pos = 10;
-	server_game->player4.x_pos = 12;
-	server_game->player4.y_pos = 10;
+	if (server_bomb == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
+	}
 
 	server_bomb->player = 0;
 	server_bomb->next = NULL;
@@ -198,15 +210,10 @@ void *handler(void *input)
 	schema = handle_file("map.txt");
 
 	for (int i = 0; i < 13; ++i) {
-		memcpy(server_game->schema[i], schema[i], sizeof(char) * 15);
+		memcpy(server_data->server_game->schema[i], schema[i], sizeof(char) * 15);
 	}
 
 	while (status != -1) {
-
-		if (server_game == NULL) {
-			fprintf(stderr, "[MALLOC] unable to allocate memory\n");
-			return NULL;
-		}
 
 		request = receive_client_data(server_data);
 
@@ -217,10 +224,10 @@ void *handler(void *input)
 		}
 
 		// TODO Yop : Bouchonnage des bombes ici
-		server_game->schema[2][3] = 'A';
-		server_game->schema[2][4] = 'A';
-		server_game->schema[3][2] = 'A';
-		server_game->schema[5][2] = 'A';
+		server_data->server_game->schema[2][3] = 'A';
+		server_data->server_game->schema[2][4] = 'A';
+		server_data->server_game->schema[3][2] = 'A';
+		server_data->server_game->schema[5][2] = 'A';
 
 		printf("Magic=%d\n", server_data->magic[1]);
 
@@ -235,12 +242,12 @@ void *handler(void *input)
 			}
 		}
 
-		player_action(server_game, server_bomb, num_player, request->command);
+		player_action(server_data->server_game, server_bomb, num_player, request->command);
 
 		// Sending players and bombs into map
-		implement_map(server_game);
+		implement_map(server_data->server_game);
 
-		send_data_to_client(server_data, server_game);
+		send_data_to_client(server_data, server_data->server_game);
 
 		printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %c   %d    %d   %d\n",
 				num_player,
