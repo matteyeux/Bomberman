@@ -9,7 +9,7 @@
 // set to global so run_server can use it
 int status;
 
-void draw_game(global_game_t *game)
+void draw_game(global_game_t *game, t_server_game *sg)
 {
 	interface_t *interface = game->interface;
 	map_t *map = game->map;
@@ -18,25 +18,102 @@ void draw_game(global_game_t *game)
 	int index;
 
 	// back screen
-	SDL_SetRenderDrawColor(interface->Renderer, 16, 120, 48, 255);
+	SDL_SetRenderDrawColor(interface->Renderer, 128, 20, 0, 255);
 	SDL_RenderClear(interface->Renderer);
 
-	for (int i = 0; i < map->nbTileY; i++) {
-		for (int j = 0; j < map->nbTileX; j++) {
-			setRectangle(interface->destRect, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
+	//setRectangle(player->destRectPlayer, map->largeur_tile*2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
+	//SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
+	
+	//setRectangle(sg->player1.dest, 120, 120, map->largeur_tile, map->hauteur_tile);
 
-			// index is the ASCII code of the character
-			index = map->schema[j][i]-48;
-			SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
+	//printf("DRAW GAME SEGFAULT SOMEWHERE\n");
+	//setRectangle(player->destRectPlayer, map->largeur_tile*2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
+	//SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
+
+	// for (int i = 0; i < map->nbTileY; i++) {
+	// 	for (int j = 0; j < map->nbTileX; j++) {
+	// 		SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[map->schema[j][i]-48]->tile, interface->destRect);
+	// 	}
+	// } 
+
+	setRectangle(&sg->player1.src, 4*16, 0, 16, 16);
+	setRectangle(&sg->player2.src, 4*16, 0, 16, 16);
+	setRectangle(&sg->player3.src, 4*16, 0, 16, 16);
+	setRectangle(&sg->player4.src, 4*16, 0, 16, 16);
+
+	if (sg != NULL) {
+		for (int i = 0; i < map->nbTileY; i++) {
+			for (int j = 0; j < map->nbTileX; j++) {
+
+				setRectangle(interface->destRect, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
+		
+				// SET SOURCE RECT PLAYER AND DEST RECT PLAYER
+				//setRectangle(player->srcRectPlayer, 4*16, 0, 16, 16);
+				//setRectangle(player->destRectPlayer, map->largeur_tile * 2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
+
+				setRectangle(&sg->player1.dest,  map->largeur_tile * sg->player1.x_pos, map->hauteur_tile * sg->player1.y_pos, map->largeur_tile, map->hauteur_tile);
+				setRectangle(&sg->player2.dest,  map->largeur_tile * sg->player2.x_pos, map->hauteur_tile * sg->player2.y_pos, map->largeur_tile, map->hauteur_tile);
+				setRectangle(&sg->player3.dest,  map->largeur_tile * sg->player3.x_pos, map->hauteur_tile * sg->player3.y_pos, map->largeur_tile, map->hauteur_tile);
+				setRectangle(&sg->player4.dest,  map->largeur_tile * sg->player4.x_pos, map->hauteur_tile * sg->player4.y_pos, map->largeur_tile, map->hauteur_tile);
+
+
+				// index is the ASCII code of the character
+				index = sg->schema[j][i]-48;
+
+				switch (index) {
+					case 0:
+					case 1:
+					case 2:
+					case 3:
+						SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
+						break;
+					case 6:
+						SDL_RenderCopy(interface->Renderer, player->playerTexture, &sg->player1.src, &sg->player1.dest);
+						break;
+					case 7:
+						SDL_RenderCopy(interface->Renderer, player->playerTexture, &sg->player2.src, &sg->player2.dest);
+						break;
+					case 8:
+						SDL_RenderCopy(interface->Renderer, player->playerTexture, &sg->player3.src, &sg->player3.dest);
+						break;
+					case 9:
+						SDL_RenderCopy(interface->Renderer, player->playerTexture, &sg->player4.src, &sg->player4.dest);
+						break;
+					case 17:
+						setRectangle(&bomb->srcRect, 8*16, 6*16, 16, 16);
+						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						break;
+
+					case 18:
+						setRectangle(&bomb->srcRect, 7*16, 6*16, 16, 16);
+						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						break;
+
+					case 19:
+						setRectangle(&bomb->srcRect, 6*16, 6*16, 16, 16);
+						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						break;
+
+						//printf("\n\nTESTING BOMB \n");
+						//setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						//	if (!bomb->exist)
+						//break;
+				}
+				SDL_RenderCopy(interface->Renderer, bomb->TexBomb, &bomb->srcRect, &bomb->destRect);
+				//if (index == 6 || index == 7 || index == 8 || index == 9) {
+					//player->posX = j;
+					//player->posY = i;
+
+				//	SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
+				//} else if (index == 0 || index == 1 || index == 2 || index == 3) {
+				//	SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
+				//}
+
+			}
+
+			//printf("\n");
 		}
 	}
-
-	// display player
-	if (bomb->exist == 1) {
-		SDL_RenderCopy(interface->Renderer, bomb->TexBomb, NULL, &bomb->bombPositionRect);
-	}
-
-	SDL_RenderCopy(interface->Renderer, player->TexPlayer, NULL, &player->playerPositionRect);
 
 	// show renderer
 	SDL_RenderPresent(interface->Renderer);
@@ -56,24 +133,20 @@ int game_event(global_game_t *game, client_t *client_struct)
 					status = -1;
 					break;
 				case SDLK_UP:
-                    game->player->command = 'U';
-                    send_client_data(client_struct, game->player);
-                    //movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
+					game->player->command = 'U';
+					send_client_data(client_struct, game->player);
 					break;
 				case SDLK_DOWN:
-                    game->player->command = 'D';
-                    send_client_data(client_struct, game->player);
-					//movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
-                    break;
+					game->player->command = 'D';
+					send_client_data(client_struct, game->player);
+					break;
 				case SDLK_LEFT:
-                    game->player->command = 'L';
-                    send_client_data(client_struct, game->player);
-					//movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
-                    break;
-                case SDLK_RIGHT:
-                    game->player->command = 'R';
-                    send_client_data(client_struct, game->player);
-					//movePlayer(game->player, game->interface, e.key.keysym.sym, client_struct);
+					game->player->command = 'L';
+					send_client_data(client_struct, game->player);
+					break;
+				case SDLK_RIGHT:
+					game->player->command = 'R';
+					send_client_data(client_struct, game->player);
 					break;
 				case SDLK_SPACE:
 					game->player->command = 'B';
@@ -83,17 +156,31 @@ int game_event(global_game_t *game, client_t *client_struct)
 				break;
 			}
 
-			// TODO Yop Clean : Debug pour affichage clean
+			for (int y = 0; y < 13; y++) {
+				for (int x = 0; x < 15; x++) {
+					printf("%c", game->map->schema[y][x]);
+				}
+
+				printf("\t");
+
+				for (int z = 0; z < 15; z ++) {
+					printf("%c", global_game->schema[y][z]);
+				}
+				printf("\n");
+			}
 			printf("\n");
+
 		}
 	}
 
 	return status;
 }
 
-void destroy_game(interface_t *interface, player_t *player, bomb_t *bomb)
+void destroy_game(global_game_t *game)
 {
-	destroy_bomb(bomb);
-	destroy_player(player);
-	destroy_interface(interface);
+	destroy_bomb(game->bomb);
+	destroy_player(game->player);
+	destroy_map(game->map);
+	destroy_interface(game->interface);
+	free(game);
 }

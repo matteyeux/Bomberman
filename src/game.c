@@ -41,13 +41,17 @@ global_game_t *init_game(void)
 
 	fprintf(stdout, "Successfully initialize map!\n");
 
-	game->player = init_player(game->interface);
+	game->player = init_player();
 	if (game->player == NULL)
+		return NULL;
+
+	game->player->playerTexture = set_texture_player(game->interface->Renderer);
+	if (game->player->playerTexture == NULL)
 		return NULL;
 
 	fprintf(stdout, "Successfully initialized player !\n");
 
-	game->bomb = init_bomb(game->interface);
+	game->bomb = init_bomb(game->interface->Renderer);
 	if (game->bomb == NULL) 
 		return NULL;
 
@@ -95,61 +99,15 @@ void *game_loop(void *game_struct)
 	} else {
 		// if client cannot connect to server
 		// then destroy game and kill everything else
-		destroy_game(game->interface, game->player, game->bomb);
+		destroy_game(game);
 		exit(-1);
 	}
 
 	while (status != -1) {
 
-		draw_game(game);
+		draw_game(game, global_game);
 
 		status = game_event(game, client_struct);
-
-		// Debug Yop
-		// DON'T FORGET TO CHECK IF global_game != NULL or it will segfault
-		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->schema[1][1], global_game->player1.y_pos, global_game->player1.current_dir);
-		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player1.x_pos, global_game->player1.y_pos, global_game->player1.current_dir);
-		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player2.x_pos, global_game->player2.y_pos, global_game->player2.current_dir);
-		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player3.x_pos, global_game->player3.y_pos, global_game->player3.current_dir);
-		//printf("P2 X:%d Y:%d Dir:%d\n", global_game->player4.x_pos, global_game->player4.y_pos, global_game->player4.current_dir);
-
-
-		printf("Debug Map\n");
-		if (global_game != NULL) {
-			for (int y = 0; y < 13; y++) {
-				for (int x = 0; x < 15; x++) {
-					printf("%c", global_game->schema[y][x]);
-				}
-				printf("\n");
-			}
-			printf("\n");
-		}
-
-
-		// Debug Mathieu
-		//int a = 0, b = 0, c = 0, d = 0;
-		//if (global_game != NULL) {
-		//	if (global_game->player1.x_pos == 12 && a == 0) {
-		//		a = 1;
-		//		printf("global_game->player1.x_pos : %d\n", global_game->player1.x_pos);
-		//	}
-
-		//	if (global_game->player2.x_pos == 13 && b == 0) {
-		//		b = 1;
-		//		printf("global_game->player2.x_pos : %d\n", global_game->player2.x_pos);
-		//	}
-
-		//	if (global_game->player3.x_pos == 14 && c == 0) {
-		//		c = 1;
-		//		printf("global_game->player3.x_pos : %d\n", global_game->player3.x_pos);
-		//	}
-
-		//	if (global_game->player4.x_pos == 15 && d == 0) {
-		//		d = 1;
-		//		printf("global_game->player4.x_pos : %d\n", global_game->player4.x_pos);
-		//	}
-
-		//}
 
 		SDL_Delay(20);
 	}
