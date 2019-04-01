@@ -213,10 +213,9 @@ void *handler(void *input)
 
 
 		// TODO Yop : Bouchonnage des bombes ici
-		server_game->schema[2][3] = 'A';
-		server_game->schema[2][4] = 'A';
-		server_game->schema[3][2] = 'A';
-		server_game->schema[5][2] = 'A';
+		server_game->schema[2][5] = 'A';
+		server_game->schema[3][4] = 'B';
+		server_game->schema[3][2] = 'C';
 
 		printf("Magic=%d\n", server_data->magic[1]);
 
