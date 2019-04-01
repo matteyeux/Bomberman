@@ -79,5 +79,5 @@ bool place_is_free(t_server_game *server_game, int x, int y)
 
 void bomb_drop(t_server_game *server_game, bomb_server_t *server_bomb, int player)
 {
-    new_bomb(server_game, server_bomb, player);
+    create_new_bomb(server_game, server_bomb, player);
 }

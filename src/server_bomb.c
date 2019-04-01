@@ -3,7 +3,7 @@
 #include <include/server_bomb.h>
 #include <include/server.h>
 
-void new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player)
+void create_new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player)
 {
     t_player_infos *the_player;
 
@@ -35,10 +35,10 @@ void new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player
 
     //printf("BOMB : %d %d\n", new_bomb->x, new_bomb->y);
 
-    server_bomb = &new_bomb;
+    server_bomb = new_bomb;
 
     printf("NewBomPoint : %p\n", &new_bomb);
-    //server_bomb->next = &new_bomb;
+    server_bomb->next = new_bomb;
 
     if (server_bomb->next == NULL)
     {

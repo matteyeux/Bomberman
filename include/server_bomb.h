@@ -19,6 +19,6 @@ bomb_server_t *init_bomb_server();
 //void placeBomb(bomb_t *bomb, player_t *player);
 //void destroy_bomb(bomb_t *bomb);
 
-void new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player);
+void create_new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player);
 
 #endif //BOMBERMAN_SERVER_BOMB_H
