@@ -56,7 +56,6 @@ void destroy_map(map_t *map)
 		if (map->tabTiles) {
 			for (int i = 0; i < 5; i++) {
 				if (map->tabTiles[i]) {
-
 					// Free chaque rectangle du tableau de tile
 					if (map->tabTiles[i]->tile)
 						free(map->tabTiles[i]->tile);

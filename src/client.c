@@ -68,8 +68,8 @@ int send_client_data(client_t *client_data, player_t *player)
 
 	/* hardcoded values waiting someone else (not giving any name this time) */
 	request->magic = player->magic;
-	request->x_pos = player->playerPositionRect.x;
-	request->y_pos = player->playerPositionRect.y;
+	request->x_pos = player->posX;
+	request->y_pos = player->posY;
 	request->dir = player->dir;
 	request->command = player->command;
 	request->speed = player->speed;
@@ -79,9 +79,6 @@ int send_client_data(client_t *client_data, player_t *player)
 			 request->dir +
 			 request->command +
 			 request->speed);
-
-	// TODO Yop debug envoi direction, x, y, command, speed
-	//printf("Emit :\n%d : %d - %d  c%d s%d cs%d\n", request->dir, request->x_pos, request->y_pos, request->command, request->speed, request->checksum);
 
 	sender = sendto(client_data->sock, request,
 					sizeof(t_client_request), MSG_NOSIGNAL,

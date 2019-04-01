@@ -4,7 +4,7 @@
 #include <include/server_bomb.h>
 #include <include/server.h>
 
-void new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player)
+void create_new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player)
 {
     t_player_infos *the_player;
 

@@ -113,6 +113,7 @@ static int run_server(int sock, server_data_t *server_data)
 	server_data->server_game->player4.x_pos = 12;
 	server_data->server_game->player4.y_pos = 10;
 
+
 	while (sock_fd && status != -1) {
 		memset(&magic_array, 0, sizeof(magic_array));
 
@@ -180,13 +181,15 @@ static int run_server(int sock, server_data_t *server_data)
 */
 void *handler(void *input)
 {
+	int m;
+	int num_player = 0;
+	char **schema;
 	server_data_t *server_data;
 	t_client_request *request;
     bomb_server_t *server_bomb;
 
-	char **schema;
-
 	server_data = malloc(sizeof(server_data_t));
+
 	if (server_data == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 		return NULL;
@@ -207,14 +210,26 @@ void *handler(void *input)
 
 	schema = malloc(13 * sizeof(char*));
 
+	if (schema == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return NULL;
+	}
+
 	schema = handle_file("map.txt");
 
 	for (int i = 0; i < 13; ++i) {
 		memcpy(server_data->server_game->schema[i], schema[i], sizeof(char) * 15);
 	}
 
-	while (status != -1) {
 
+	while (status != -1) {
+		printf("Magic=%d\n", server_data->magic[1]);
+
+		// Sending players and bombs into map
+		implement_map(server_data->server_game, server_bomb);
+
+		send_data_to_client(server_data, server_data->server_game);
+		
 		request = receive_client_data(server_data);
 
 		if (request == NULL) {
@@ -223,20 +238,9 @@ void *handler(void *input)
 			pthread_exit(NULL);
 		}
 
-		// TODO Yop : Bouchonnage des bombes ici
-		server_data->server_game->schema[2][3] = 'A';
-		server_data->server_game->schema[2][4] = 'A';
-		server_data->server_game->schema[3][2] = 'A';
-		server_data->server_game->schema[5][2] = 'A';
-
-		printf("Magic=%d\n", server_data->magic[1]);
-
-		int m;
-		int num_player = 0;
 		for (int i = 1; i < 4; i++) {
 			m = request->magic;
-			if (m == server_data->magic[i])
-			{
+			if (m == server_data->magic[i]) {
 				num_player = i;
 				break;
 			}
@@ -244,20 +248,6 @@ void *handler(void *input)
 
 		player_action(server_data->server_game, server_bomb, num_player, request->command);
 
-		// Sending players and bombs into map
-		implement_map(server_data->server_game, server_bomb);
-
-		send_data_to_client(server_data, server_data->server_game);
-
-		printf("Recept :\nP dir  X   Y   comm speed checksum    ID\n%d %d   %d  %d %c   %d    %d   %d\n",
-				num_player,
-				request->dir,
-				request->x_pos,
-				request->y_pos,
-				request->command,
-				request->speed,
-				request->checksum,
-				request->magic);
 
 		free(request);
 	}
@@ -286,6 +276,7 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 						&server_data->client_addr_len);
 
 	if (receiver == -1) {
+		free(request);
 		return NULL;
 	}
 
@@ -300,8 +291,6 @@ static t_server_game *put_data_in_game(t_server_game *server_game)
 	// TODO Yop : Bouchonnage ici pour le send
 	server_game->player1.connected = 'e';
 	server_game->player1.alive = 'e';
-	//server_game->player1.x_pos = 2;
-	//server_game->player1.y_pos = 2;
 	server_game->player1.current_dir = 2;
 	server_game->player1.current_speed = 12;
 	server_game->player1.max_speed = 12;
@@ -309,17 +298,9 @@ static t_server_game *put_data_in_game(t_server_game *server_game)
 	server_game->player1.bombs_capacity = 12;
 	server_game->player1.frags = 12;
 
-
-	//server_game->player2.x_pos = 100;
-	//server_game->player2.y_pos = 730;
 	server_game->player2.current_dir = 2;
-
-	//server_game->player3.x_pos = 600;
-	//server_game->player3.y_pos = 100;
 	server_game->player3.current_dir = 2;
 
-	//server_game->player4.x_pos = 600;
-	//server_game->player4.y_pos = 730;
 	server_game->player4.current_dir = 2;
 
 	return server_game;
@@ -333,7 +314,6 @@ int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 
 	for (i = 0; i < MAX_PLAYERS; ++i) {
 		// Debug check sending to ckect number
-		// printf("sending to sock %d\n", i);
 		if (sock_fd_array[i] != -1){
 			sender = sendto(sock_fd_array[i], server_game,
 					sizeof(*(server_game)), MSG_NOSIGNAL,
@@ -342,7 +322,6 @@ int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 		}
 
 		if (sender == -1) {
-			printf("faile here\n");
 			perror("sendto");
 			close(server_data->sock_fd[i]);
 		}
