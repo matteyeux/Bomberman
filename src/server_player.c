@@ -13,6 +13,8 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
         case 'L' :
         case 'R' :
             player_move(server_game, player, command);
+            if (server_bomb)
+                printf("BOMB : %d %d - %p\n", server_bomb->x, server_bomb->y, server_bomb->next);
             break;
         case 'B' :
             bomb_drop(server_game, server_bomb, player);
@@ -22,7 +24,6 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
 
 void player_move(t_server_game *server_game, int player, char command)
 {
-
     t_player_infos *the_player;
 
     switch (player)
@@ -68,9 +69,8 @@ void player_move(t_server_game *server_game, int player, char command)
 
 bool place_is_free(t_server_game *server_game, int x, int y)
 {
-    // TODO Yop printf("=== %c en x%d y%d\n", server_game->schema[y][x], x, y);
-    if (server_game->schema[y][x] == '0' || server_game->schema[y][x] == '1'|| server_game->schema[y][x] == '2') {
-        printf("NOOOOO\n");
+    if (server_game->schema[y][x] == '0' || server_game->schema[y][x] == '1'|| server_game->schema[y][x] == '2')
+    {
         return false;
     }
 
@@ -79,6 +79,5 @@ bool place_is_free(t_server_game *server_game, int x, int y)
 
 void bomb_drop(t_server_game *server_game, bomb_server_t *server_bomb, int player)
 {
-    printf("DROP THE BOMB !!!\n");
     new_bomb(server_game, server_bomb, player);
 }

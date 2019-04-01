@@ -190,6 +190,9 @@ void *handler(void *input)
 	server_game->player4.x_pos = 12;
 	server_game->player4.y_pos = 10;
 
+	server_bomb->player = 0;
+	server_bomb->next = NULL;
+
 	schema = malloc(13 * sizeof(char*));
 
 	schema = handle_file("map.txt");
@@ -213,17 +216,6 @@ void *handler(void *input)
 			pthread_exit(NULL);
 		}
 
-		// TODO clean Yop
-		//printf("Magic=%d\n", server_data->magic[1]);
-		//printf("Magic=%d\n", server_data->magic[2]);
-		//printf("Magic=%d\n", server_data->magic[3]);
-		//printf("Magic=%d\n", server_data->magic[4]);
-
-
-		//printf("%s\n", );
-		// copy content of schema in server_game->schema
-
-
 		// TODO Yop : Bouchonnage des bombes ici
 		server_game->schema[2][3] = 'A';
 		server_game->schema[2][4] = 'A';
@@ -231,11 +223,6 @@ void *handler(void *input)
 		server_game->schema[5][2] = 'A';
 
 		printf("Magic=%d\n", server_data->magic[1]);
-
-		server_game->schema[2][2] = '6';
-		server_game->schema[2][12] = '7';
-		server_game->schema[10][2] = '8';
-		server_game->schema[10][12] = '9';
 
 		int m;
 		int num_player = 0;

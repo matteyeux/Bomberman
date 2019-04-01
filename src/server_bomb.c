@@ -5,21 +5,51 @@
 
 void new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player)
 {
-    printf("GOTTTAAA\n");
+    t_player_infos *the_player;
 
-    if (server_bomb == NULL)
+    switch (player)
+    {
+        case 1 :
+            the_player = &server_game->player1;
+            break;
+        case 2 :
+            the_player = &server_game->player2;
+            break;
+        case 3 :
+            the_player = &server_game->player3;
+            break;
+        case 4 :
+            the_player = &server_game->player4;
+            break;
+    }
+
+    if (server_bomb->next == NULL)
     {
         printf("NULLLLLLL\n");
     }else{
         printf("EXIST !!!!!\n");
     }
 
-    //bomb_server_t *new_bomb;
-    //new_bomb = init_bomb_server(player);
+    bomb_server_t *new_bomb;
+    new_bomb = init_bomb_server(player, the_player->x_pos, the_player->y_pos);
+
+    //printf("BOMB : %d %d\n", new_bomb->x, new_bomb->y);
+
+    server_bomb = &new_bomb;
+
+    printf("NewBomPoint : %p\n", &new_bomb);
+    //server_bomb->next = &new_bomb;
+
+    if (server_bomb->next == NULL)
+    {
+        printf("NULLLLLLL\n");
+    }else{
+        printf("EXIST !!!!!\n");
+    }
 }
 
 
-bomb_server_t *init_bomb_server(int player)
+bomb_server_t *init_bomb_server(int player, int x, int y)
 {
     bomb_server_t *bomb = NULL;
 
@@ -30,11 +60,11 @@ bomb_server_t *init_bomb_server(int player)
         return NULL;
     }
 
-    bomb->x= 0;
-    bomb->y = 0;
+    bomb->x= x;
+    bomb->y = y;
     bomb->player = player;
     bomb->time = 0;
-    //bomb->next = ;
+    bomb->next = NULL;
 
     return bomb;
 }

@@ -12,7 +12,7 @@ struct bomb_server_s
     int y;
     int player;
     long time;
-    //bomb_server_t *next;
+    bomb_server_t *next;
 };
 
 bomb_server_t *init_bomb_server();
