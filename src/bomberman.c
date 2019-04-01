@@ -81,7 +81,7 @@ void draw_game(global_game_t *game, t_server_game *sg)
 					break;
 				case 17:
 					//printf("\n\nTESTING BOMB \n");
-					setRectangle(&bomb->destRect, 3*map->largeur_tile, 2*map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+					setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 					//	if (!bomb->exist)
 						SDL_RenderCopy(interface->Renderer, bomb->TexBomb, &bomb->srcRect, &bomb->destRect);
 					break;
