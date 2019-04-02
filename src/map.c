@@ -55,14 +55,8 @@ void destroy_map(map_t *map)
 	if (map) {
 		if (map->tabTiles) {
 			for (int i = 0; i < 5; i++) {
-				if (map->tabTiles[i]) {
-					// Free chaque rectangle du tableau de tile
-					if (map->tabTiles[i]->tile)
-						free(map->tabTiles[i]->tile);
-
-					// Free la tile courante du tableau de tile
+				if (map->tabTiles[i])
 					free(map->tabTiles[i]);
-				}
 			}
 			free(map->tabTiles);
 		}
@@ -71,12 +65,6 @@ void destroy_map(map_t *map)
 			SDL_DestroyTexture(map->mapTexture);
 
 		if (map->schema) {
-			for (int i = 0; i < map->nbTileY; i++) {
-				if (map->schema[i])
-					free(map->schema[i]);
-				else
-					break;
-			}
 			free(map->schema);
 		}
 		free(map);

@@ -2,3 +2,4 @@ bomberman
 src/*.o
 .idea
 trashcode
+core
