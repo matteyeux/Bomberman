@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 #include <include/client.h>
 #include <include/server.h>
@@ -30,6 +31,13 @@ client_t *init_client(char *ip_addr, unsigned short port)
 	server.sin_family = AF_INET; // IPv4
 	server.sin_addr.s_addr = inet_addr(ip_addr); // serv IP to connect to
 	server.sin_port = htons(port); // serv port
+
+	/*
+	* sometimes the client is set up
+	* before client, this usleep gives time
+	* to setup the server
+	*/
+	usleep(500);
 
 	// connect to server
 	if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
