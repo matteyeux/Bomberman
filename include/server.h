@@ -2,7 +2,6 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <include/player.h>
-#include <include/server_bomb.h>
 
 #ifdef __APPLE__
 #define MSG_NOSIGNAL SO_NOSIGPIPE
@@ -24,6 +23,7 @@ typedef struct server_data_s server_data_t;
 typedef struct s_server_game t_server_game;
 typedef struct s_player_infos t_player_infos;
 typedef struct s_other t_other;
+typedef struct bomb_server_s bomb_server_t;
 typedef char t_map[MAP_SIZE];
 
 struct server_data_s {
@@ -33,6 +33,7 @@ struct server_data_s {
 	struct sockaddr_in client;
 	unsigned int client_addr_len;
 	t_server_game *server_game;
+	bomb_server_t *server_bomb;
 };
 
 struct s_player_infos {
@@ -75,6 +76,15 @@ struct s_server_game {
 
 	t_other infos;
 };
+
+struct bomb_server_s {
+	int x;
+	int y;
+	int player;
+	long time;
+	bomb_server_t *next;
+};
+
 
 int init_server(unsigned short port);
 void *handler(void *input);

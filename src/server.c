@@ -113,6 +113,12 @@ static int run_server(int sock, server_data_t *server_data)
 	server_data->server_game->player4.x_pos = 12;
 	server_data->server_game->player4.y_pos = 10;
 
+	server_data->server_bomb = malloc(sizeof(bomb_server_t));
+
+	if (server_data->server_bomb == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return -1;
+	}
 
 	while (sock_fd && status != -1) {
 		memset(&magic_array, 0, sizeof(magic_array));
@@ -186,7 +192,6 @@ void *handler(void *input)
 	char **schema;
 	server_data_t *server_data;
 	t_client_request *request;
-    bomb_server_t *server_bomb;
 
 	server_data = malloc(sizeof(server_data_t));
 
@@ -198,15 +203,8 @@ void *handler(void *input)
 	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
 
 
-	server_bomb = malloc(sizeof(bomb_server_t));
-
-	if (server_bomb == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
-		return NULL;
-	}
-
-	server_bomb->player = 0;
-	server_bomb->next = NULL;
+	server_data->server_bomb->player = 0;
+	server_data->server_bomb->next = NULL;
 
 	schema = malloc(13 * sizeof(char*));
 
@@ -226,7 +224,7 @@ void *handler(void *input)
 		printf("Magic=%d\n", server_data->magic[1]);
 
 		// Sending players and bombs into map
-		implement_map(server_data->server_game, server_bomb);
+		implement_map(server_data->server_game, server_data->server_bomb);
 
 		send_data_to_client(server_data, server_data->server_game);
 		
@@ -246,7 +244,7 @@ void *handler(void *input)
 			}
 		}
 
-		player_action(server_data->server_game, server_bomb, num_player, request->command);
+		player_action(server_data->server_game, server_data->server_bomb, num_player, request->command);
 
 
 		free(request);
