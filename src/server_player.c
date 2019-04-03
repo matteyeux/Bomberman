@@ -6,8 +6,9 @@
 #include <include/server_bomb.h>
 
 void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int player, char command) {
-    t_player_infos *the_player;
 
+    // TODO Yop : Swicth a fonctionner
+    t_player_infos *the_player;
     switch (player)
     {
         case 1 :
@@ -37,7 +38,7 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
             bomb_server_t *the_bomb = server_bomb;
             while (!last_bomb)
             {
-                printf("BOMB : %d, %p, %ld\n", the_bomb->player, the_bomb->next, the_bomb->time);
+                //TODO : printf("BOMB : %d, %p, %ld\n", the_bomb->player, the_bomb->next, the_bomb->time);
 
                 if (the_bomb->next != NULL)
                 {
@@ -59,8 +60,9 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
 
 void player_move(t_server_game *server_game, int player, char command)
 {
-    t_player_infos *the_player;
 
+    // TODO Yop : Swicth a fonctionner
+    t_player_infos *the_player;
     switch (player)
     {
         case 1 :

@@ -106,16 +106,16 @@ static int run_server(int sock, server_data_t *server_data)
 
 	server_data->server_game->player1.x_pos = 2;
 	server_data->server_game->player1.y_pos = 2;
-	server_data->server_game->player1.bombs_left = 1;
+	server_data->server_game->player1.bombs_left = 3;
 	server_data->server_game->player2.x_pos = 12;
 	server_data->server_game->player2.y_pos = 2;
-	server_data->server_game->player2.bombs_left = 1;
+	server_data->server_game->player2.bombs_left = 3;
 	server_data->server_game->player3.x_pos = 2;
 	server_data->server_game->player3.y_pos = 10;
-	server_data->server_game->player3.bombs_left = 1;
+	server_data->server_game->player3.bombs_left = 3;
 	server_data->server_game->player4.x_pos = 12;
 	server_data->server_game->player4.y_pos = 10;
-	server_data->server_game->player4.bombs_left = 1;
+	server_data->server_game->player4.bombs_left = 3;
 
 	server_data->server_bomb = malloc(sizeof(bomb_server_t));
 
@@ -223,9 +223,11 @@ void *handler(void *input)
 		memcpy(server_data->server_game->schema[i], schema[i], sizeof(char) * 15);
 	}
 
-
 	while (status != -1) {
-		printf("Magic=%d\n", server_data->magic[1]);
+		// TODO : Clean here
+		//printf("Magic=%d\n", server_data->magic[1]);
+
+		bombs_timer(server_data->server_game, server_data->server_bomb);
 
 		// Sending players and bombs into map
 		implement_map(server_data->server_game, server_data->server_bomb);
