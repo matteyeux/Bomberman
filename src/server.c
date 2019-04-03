@@ -13,6 +13,7 @@
 #include <include/server_player.h>
 #include <include/server_map.h>
 #include <include/server_bomb.h>
+#include <include/server_explosion.h>
 #include <include/client.h>
 #include <include/bomberman.h>
 #include <include/map.h>
@@ -119,7 +120,15 @@ static int run_server(int sock, server_data_t *server_data)
 
 	server_data->server_bomb = malloc(sizeof(bomb_server_t));
 
+	server_data->server_explosion = malloc(sizeof(explosion_server_t));
+	server_data->server_explosion->first = true;
+
 	if (server_data->server_bomb == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return -1;
+	}
+
+	if (server_data->server_explosion == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 		return -1;
 	}
@@ -227,10 +236,11 @@ void *handler(void *input)
 		// TODO : Clean here
 		//printf("Magic=%d\n", server_data->magic[1]);
 
-		bombs_timer(server_data->server_game, server_data->server_bomb);
+		bombs_timer(server_data->server_game, server_data->server_bomb, server_data->server_explosion);
+		explosions_timer(server_data->server_explosion);
 
 		// Sending players and bombs into map
-		implement_map(server_data->server_game, server_data->server_bomb);
+		implement_map(server_data->server_game, server_data->server_bomb, server_data->server_explosion);
 
 		send_data_to_client(server_data, server_data->server_game);
 		
@@ -243,15 +253,15 @@ void *handler(void *input)
 		}
 
 		// TODO Yop : Bouchonnage des explosions ici
-		server_data->server_game->schema[6][6] = 'G';
-		server_data->server_game->schema[6][4] = 'H';
-		server_data->server_game->schema[6][5] = 'H';
-		server_data->server_game->schema[6][7] = 'H';
-		server_data->server_game->schema[6][8] = 'H';
-		server_data->server_game->schema[4][6] = 'I';
-		server_data->server_game->schema[5][6] = 'I';
-		server_data->server_game->schema[7][6] = 'I';
-		server_data->server_game->schema[8][6] = 'I';
+		//server_data->server_game->schema[6][6] = 'G';
+		//server_data->server_game->schema[6][4] = 'H';
+		//server_data->server_game->schema[6][5] = 'H';
+		//server_data->server_game->schema[6][7] = 'H';
+		//server_data->server_game->schema[6][8] = 'H';
+		//server_data->server_game->schema[4][6] = 'I';
+		//server_data->server_game->schema[5][6] = 'I';
+		//server_data->server_game->schema[7][6] = 'I';
+		//server_data->server_game->schema[8][6] = 'I';
 
 		for (int i = 1; i < 4; i++) {
 			m = request->magic;

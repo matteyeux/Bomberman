@@ -5,7 +5,7 @@
 #include <include/server.h>
 #include <include/server_map.h>
 
-void implement_map(t_server_game *server_game, bomb_server_t *server_bomb)
+void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explosion_server_t *server_explosion)
 {
     // Clean map and bombs from players
     for (int y = 0; y < 13; y++) {
@@ -17,6 +17,9 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb)
                 case '8' :
                 case '9' :
                 case 'A' :
+                case 'G' :
+                case 'H' :
+                case 'I' :
                     server_game->schema[y][x] = '3';
                     break;
             }
@@ -47,4 +50,41 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb)
             last_bomb = true;
         }
     }
+
+
+
+    // Drop the explosions ont the map
+    bool last_explosion = false;
+    explosion_server_t *the_explosion = server_explosion;
+    while (!last_explosion)
+    {
+        //printf("EXPLOS ___ %p BOOL%d\n", server_explosion->next, the_explosion->first);
+        // TODO printf("explosion Player %d\n", the_explosion->player);
+        if (the_explosion->first != 1)
+        {
+            printf("EXPLOSIONS ___ %p %d %d\n\n", server_explosion->next, the_explosion->y, the_explosion->x);
+
+            server_game->schema[the_explosion->y][the_explosion->x] = 'G';
+
+
+
+            // Print the expansion of the explosion
+            for (int i=1; i < (the_explosion->size + 1); i++ )
+            {
+                server_game->schema[(the_explosion->y - i)][the_explosion->x] = 'H';
+                server_game->schema[(the_explosion->y + i)][the_explosion->x] = 'H';
+                server_game->schema[the_explosion->y][(the_explosion->x - i)] = 'I';
+                server_game->schema[the_explosion->y][(the_explosion->x + i)] = 'I';
+            }
+        }
+
+        if (the_explosion->next != NULL)
+        {
+            printf("NEXT PAS NUL \n");
+            the_explosion = the_explosion->next;
+        }else{
+            last_explosion = true;
+        }
+    }
+
 }

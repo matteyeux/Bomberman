@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include <include/server_bomb.h>
 #include <include/server.h>
+#include <include/server_bomb.h>
+#include <include/server_explosion.h>
 
 
 void create_new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player)
@@ -68,13 +69,29 @@ bomb_server_t *init_bomb_server(int player, int x, int y)
     bomb->y = y;
     bomb->player = player;
     bomb->time = time_drop;
+    bomb->size = 2;
     bomb->next = NULL;
 
     return bomb;
 }
 
-void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb)
+void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb, explosion_server_t *server_explosion)
 {
+    // TODO : Debug Explosion
+    //bool last_explosion = false;
+    //explosion_server_t *the_explosion = server_explosion;
+    //while (!last_explosion)
+    //{
+    //    printf("EXPLODE : %p, %ld\n", the_explosion->next, the_explosion->time);
+    //
+    //    if (the_explosion->next != NULL)
+    //    {
+    //        the_explosion = the_explosion->next;
+    //    }else{
+    //        last_explosion = true;
+    //    }
+    //}
+
     t_player_infos *the_player;
 
     long time_actual;
@@ -87,7 +104,7 @@ void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb)
     {
         if (the_bomb->player != 0)
         {
-            if ((time_actual - the_bomb->time) > 2 )
+            if ((time_actual - the_bomb->time) > 1 ) // TODO : time for bomb explode
             {
                 server_bomb->next = the_bomb->next;
 
@@ -108,6 +125,9 @@ void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb)
                         break;
                 }
                 the_player->bombs_left++;
+
+                create_new_explosion(server_explosion, the_bomb->size, the_bomb->x, the_bomb->y);
+                printf("SIZE %d", the_bomb->size);
 
                 free(the_bomb);
             }

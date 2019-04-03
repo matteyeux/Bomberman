@@ -2,6 +2,7 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <include/player.h>
+#include <stdbool.h>
 
 #ifdef __APPLE__
 #define MSG_NOSIGNAL SO_NOSIGPIPE
@@ -35,6 +36,7 @@ struct server_data_s {
 	unsigned int client_addr_len;
 	t_server_game *server_game;
 	bomb_server_t *server_bomb;
+	explosion_server_t *server_explosion;
 };
 
 struct s_player_infos {
@@ -70,7 +72,7 @@ struct s_server_game {
 
 	t_player_infos player[3];
 
-	char schema[15][13];
+	char schema[13][15];
 
 	t_other infos;
 };
@@ -80,15 +82,18 @@ struct bomb_server_s {
 	int y;
 	int player;
 	long time;
+	int size;
 	bomb_server_t *next;
 };
 
 struct explosion_server_s {
+	bool first;
 	int x;
 	int y;
 	int size;
 	long time;
 	bomb_server_t *next;
+	bomb_server_t *prev;
 };
 
 

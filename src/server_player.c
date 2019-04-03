@@ -34,11 +34,12 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
 
             player_move(server_game, player, command);
 
+            // TODO : Debug Bomb
             bool last_bomb = false;
             bomb_server_t *the_bomb = server_bomb;
             while (!last_bomb)
             {
-                TODO : printf("BOMB : %d, %p, %ld\n", the_bomb->player, the_bomb->next, the_bomb->time);
+                //printf("BOMB : %d, %p, %ld\n", the_bomb->player, the_bomb->next, the_bomb->time);
 
                 if (the_bomb->next != NULL)
                 {
