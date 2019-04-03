@@ -2,13 +2,12 @@
 #include <include/server_explosion.h>
 #include <time.h>
 
-void create_new_explosion(explosion_server_t *server_explosion, int size, int x, int y)
+void create_new_explosion(t_server_game *server_game, explosion_server_t *server_explosion, int size, int x, int y)
 {
     printf("CREATE EXPLOSION  !!!!!!!!\n");
 
-
     explosion_server_t *new_explosion;
-    new_explosion = init_explosion_server(size, x, y);
+    new_explosion = init_explosion_server(server_game, size, x, y);
 
     bool last_explosion = false;
     explosion_server_t *the_explosion = server_explosion;
@@ -26,13 +25,11 @@ void create_new_explosion(explosion_server_t *server_explosion, int size, int x,
 }
 
 
-explosion_server_t *init_explosion_server(int size, int x, int y)
+explosion_server_t *init_explosion_server(t_server_game *server_game, int size, int x, int y)
 {
     long time_drop;
     time_drop = time(NULL);
-
     explosion_server_t *explosion = NULL;
-
     explosion = malloc(sizeof(explosion_server_t));
 
     if (explosion == NULL) {
@@ -44,13 +41,45 @@ explosion_server_t *init_explosion_server(int size, int x, int y)
     explosion->x= x;
     explosion->y = y;
     explosion->size = size;
+    explosion->size_right = 1;
+    explosion->size_left = size;
+    explosion->size_down = size;
     explosion->time = time_drop;
     explosion->prev = NULL;
     explosion->next = NULL;
 
+    bool up     = true;
+    bool right  = true;
+    bool down   = true;
+    bool left   = true;
+
+
+    for (int i=1; i < (explosion->size + 1); i++ )
+    {
+        if (up && !wall_in_place(server_game, x, y - 1))
+        {
+            explosion->size_up = i;
+        }else{
+            up = false;
+        }
+    }
+
+
     return explosion;
 }
 
+bool wall_in_place(t_server_game *server_game, int x, int y)
+{
+    switch (server_game->schema[y][x])
+    {
+        case '2' :
+            printf("\nBREAK THE WALL ^^^^^ \n");
+        case '1' :
+            return true;
+    }
+
+    return false;
+}
 
 void explosions_timer(explosion_server_t *server_explosion)
 {

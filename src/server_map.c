@@ -72,15 +72,23 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
             bool down = true;
             bool left = true;
             // Print the expansion of the explosion
-            /*
+
             for (int i=1; i < (the_explosion->size + 1); i++ )
             {
-                server_game->schema[(the_explosion->y - i)][the_explosion->x] = 'H';
-                server_game->schema[(the_explosion->y + i)][the_explosion->x] = 'H';
-                server_game->schema[the_explosion->y][(the_explosion->x - i)] = 'I';
-                server_game->schema[the_explosion->y][(the_explosion->x + i)] = 'I';
+                if ( i < (the_explosion->size_up + 1))
+                {
+                    server_game->schema[(the_explosion->y - i)][the_explosion->x] = 'H';
+                }
+                if ( i < (the_explosion->size_right + 1)) {
+                    server_game->schema[the_explosion->y][(the_explosion->x + i)] = 'I';
+                }
+                if ( i < (the_explosion->size_down + 1)) {
+                    server_game->schema[(the_explosion->y + i)][the_explosion->x] = 'H';
+                }
+                if ( i < (the_explosion->size_left+ 1)) {
+                    server_game->schema[the_explosion->y][(the_explosion->x - i)] = 'I';
+                }
             }
-            */
         }
 
         if (the_explosion->next != NULL)

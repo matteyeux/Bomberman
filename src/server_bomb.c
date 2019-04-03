@@ -126,7 +126,7 @@ void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb, explosi
                 }
                 the_player->bombs_left++;
 
-                create_new_explosion(server_explosion, the_bomb->size, the_bomb->x, the_bomb->y);
+                create_new_explosion(server_game, server_explosion, the_bomb->size, the_bomb->x, the_bomb->y);
                 printf("SIZE %d", the_bomb->size);
 
                 free(the_bomb);

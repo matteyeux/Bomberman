@@ -3,19 +3,25 @@
 
 #include <include/server.h>
 
-explosion_server_t *init_explosion_server(int size, int x, int y);
+explosion_server_t *init_explosion_server(t_server_game *server_game, int size, int x, int y);
 
 struct explosion_server_s {
     bool first;
     int x;
     int y;
     int size;
+    int size_up;
+    int size_right;
+    int size_down;
+    int size_left;
     long time;
     bomb_server_t *next;
     bomb_server_t *prev;
 };
 
-void create_new_explosion(explosion_server_t *server_explosion, int size, int x, int y);
+void create_new_explosion(t_server_game *server_game, explosion_server_t *server_explosion, int size, int x, int y);
+bool wall_in_place(t_server_game *server_game, int x, int y);
+
 void explosions_timer(explosion_server_t *server_explosion);
 
 #endif //BOMBERMAN_SERVER_EXPLOSION_H
