@@ -11,7 +11,6 @@
 #include <include/server.h>
 #include <include/game.h>
 
-#define IP "127.0.0.1"
 #define PORT 12345
 
 global_game_t *init_game(void)
@@ -76,7 +75,7 @@ void *game_loop(void *game_struct)
 	client_t *client_struct;
 	pthread_t thread_client;
 
-	client_struct = init_client(IP, PORT);
+	client_struct = init_client(game->ip, game->port);
 
 	if (client_struct != NULL) {
 		magic = get_magic(client_struct);
@@ -134,24 +133,36 @@ void *game_loop(void *game_struct)
 	return (void *)game_struct;
 }
 
-
-/*
-* temp workaround, waiting for the menu
-* blame lepage_b
-*/
-void *start_networking(void *input)
+void setup_game(menu_return_t *menu)
 {
-	char *type =  (char *)input;
+	pthread_t thread_sdl, thread_net;
+	global_game_t *game = NULL;
 
-	if (!strcmp(type, "server")) {
-		init_server(PORT);
-	} else if (!strcmp(type, "client")) {
-		printf("client\n");
+	game = init_game();
 
-	} else {
-		printf("no\n");
-		return NULL;
+	if (game == NULL) {
+		fprintf(stderr, "failed to to init game\n");
+		exit(EXIT_FAILURE);
 	}
 
-	return (void *)type;
+	if (menu->ret == 1) {
+		if (pthread_create(&thread_net, NULL, init_server, (void*) menu) < 0) {
+			perror("pthread_create");
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	game->ip = menu->ip;
+	game->port = menu->port;
+
+	if (pthread_create(&thread_sdl, NULL, game_loop, (void*) game) < 0) {
+		perror("pthread_create");
+		exit(EXIT_FAILURE);
+	}
+
+	/* join SDL thead */
+	if (pthread_join(thread_sdl, NULL) != 0) {
+		perror("pthread_join");
+		exit(EXIT_FAILURE);
+	}
 }

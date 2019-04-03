@@ -1,6 +1,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
+#include <include/menu.h>
 #include <include/player.h>
 #include <stdbool.h>
 
@@ -77,7 +78,7 @@ struct s_server_game {
 	t_other infos;
 };
 
-int init_server(unsigned short port);
+void *init_server(void *input);
 void *handler(void *input);
 
 #endif
