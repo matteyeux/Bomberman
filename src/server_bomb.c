@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 #include <include/server_bomb.h>
 #include <include/server.h>
+
 
 void create_new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player)
 {
@@ -49,6 +51,10 @@ void create_new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int
 
 bomb_server_t *init_bomb_server(int player, int x, int y)
 {
+    long time_drop;
+    time_drop = time(NULL);
+    printf("\n ---- %ld secondes ----\n", time_drop);
+
     bomb_server_t *bomb = NULL;
 
     bomb = malloc(sizeof(bomb_server_t));
@@ -61,7 +67,7 @@ bomb_server_t *init_bomb_server(int player, int x, int y)
     bomb->x= x;
     bomb->y = y;
     bomb->player = player;
-    bomb->time = 0;
+    bomb->time = time_drop;
     bomb->next = NULL;
 
     return bomb;

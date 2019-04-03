@@ -5,7 +5,6 @@
 #include <include/server_player.h>
 #include <include/server_bomb.h>
 
-
 void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int player, char command) {
     t_player_infos *the_player;
 
@@ -31,13 +30,14 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
         case 'D' :
         case 'L' :
         case 'R' :
+
             player_move(server_game, player, command);
 
             bool last_bomb = false;
             bomb_server_t *the_bomb = server_bomb;
             while (!last_bomb)
             {
-                printf("BOMB : %d, %p\n", the_bomb->player, the_bomb->next);
+                printf("BOMB : %d, %p, %ld\n", the_bomb->player, the_bomb->next, the_bomb->time);
 
                 if (the_bomb->next != NULL)
                 {
