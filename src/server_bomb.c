@@ -80,8 +80,6 @@ void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb)
     long time_actual;
     time_actual = time(NULL);
 
-    printf("\nTIME NOW : %ld\n", time_actual);
-
     bool last_bomb = false;
     bomb_server_t *the_bomb = server_bomb;
 
@@ -91,7 +89,6 @@ void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb)
         {
             if ((time_actual - the_bomb->time) > 2 )
             {
-                printf("DELETTTEEE BOOOOMMMMMB\n");
                 server_bomb->next = the_bomb->next;
 
                 // TODO Yop : Swicth a fonctionner
@@ -110,7 +107,6 @@ void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb)
                         the_player = &server_game->player4;
                         break;
                 }
-
                 the_player->bombs_left++;
 
                 free(the_bomb);

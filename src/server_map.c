@@ -34,6 +34,7 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb)
     bomb_server_t *the_bomb = server_bomb;
     while (!last_bomb)
     {
+        // TODO printf("Bomb Player %d\n", the_bomb->player);
         if (the_bomb->player != 0)
         {
             server_game->schema[the_bomb->y][the_bomb->x] = 'A';
