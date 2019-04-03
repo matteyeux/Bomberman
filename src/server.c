@@ -19,6 +19,7 @@
 
 int sock;
 int sock_fd_array[4];
+t_client_request *request;
 
 /*
 * function defined else it would cause
@@ -28,6 +29,7 @@ int sock_fd_array[4];
 static int run_server(int sock, server_data_t *server_data);
 static t_client_request *receive_client_data(server_data_t *server_data);
 static int send_data_to_client(server_data_t *server_data, t_server_game *server_game);
+void *recv_loop(void *server_data);
 
 int init_server(unsigned short port)
 {
@@ -191,7 +193,7 @@ void *handler(void *input)
 	int num_player = 0;
 	char **schema;
 	server_data_t *server_data;
-	t_client_request *request;
+	//t_client_request *request;
 
 	server_data = malloc(sizeof(server_data_t));
 
@@ -219,6 +221,12 @@ void *handler(void *input)
 		memcpy(server_data->server_game->schema[i], schema[i], sizeof(char) * 15);
 	}
 
+	pthread_t thread_refresh;
+
+	if (pthread_create(&thread_refresh, NULL, recv_loop, (void*) server_data) < 0) {
+		perror("pthread_create");
+		exit(EXIT_FAILURE);
+	}
 
 	while (status != -1) {
 		printf("Magic=%d\n", server_data->magic[1]);
@@ -228,7 +236,7 @@ void *handler(void *input)
 
 		send_data_to_client(server_data, server_data->server_game);
 		
-		request = receive_client_data(server_data);
+		//request = receive_client_data(server_data);
 
 		if (request == NULL) {
 			free(request);
@@ -336,6 +344,22 @@ int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 		}
 	}
 
-
 	return 0;
+}
+
+#include <time.h>
+void *recv_loop(void *server_data)
+{
+	server_data_t *data = server_data;
+
+	while (1) {
+		printf("waiting\n");
+		request = receive_client_data(data);
+		printf("THREAD MAGIC : %d\n", request->magic);
+		printf("done\n");
+		usleep(500);
+		free(request);
+	}
+
+	return (void *)data;
 }
