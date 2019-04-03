@@ -13,6 +13,7 @@
 #include <include/server_player.h>
 #include <include/server_map.h>
 #include <include/server_bomb.h>
+#include <include/server_explosion.h>
 #include <include/client.h>
 #include <include/bomberman.h>
 #include <include/map.h>
@@ -106,16 +107,28 @@ static int run_server(int sock, server_data_t *server_data)
 
 	server_data->server_game->player1.x_pos = 2;
 	server_data->server_game->player1.y_pos = 2;
+	server_data->server_game->player1.bombs_left = 3;
 	server_data->server_game->player2.x_pos = 12;
 	server_data->server_game->player2.y_pos = 2;
+	server_data->server_game->player2.bombs_left = 3;
 	server_data->server_game->player3.x_pos = 2;
 	server_data->server_game->player3.y_pos = 10;
+	server_data->server_game->player3.bombs_left = 3;
 	server_data->server_game->player4.x_pos = 12;
 	server_data->server_game->player4.y_pos = 10;
+	server_data->server_game->player4.bombs_left = 3;
 
 	server_data->server_bomb = malloc(sizeof(bomb_server_t));
 
+	server_data->server_explosion = malloc(sizeof(explosion_server_t));
+	server_data->server_explosion->first = true;
+
 	if (server_data->server_bomb == NULL) {
+		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		return -1;
+	}
+
+	if (server_data->server_explosion == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
 		return -1;
 	}
@@ -219,12 +232,15 @@ void *handler(void *input)
 		memcpy(server_data->server_game->schema[i], schema[i], sizeof(char) * 15);
 	}
 
-
 	while (status != -1) {
-		printf("Magic=%d\n", server_data->magic[1]);
+		// TODO : Clean here
+		//printf("Magic=%d\n", server_data->magic[1]);
+
+		bombs_timer(server_data->server_game, server_data->server_bomb, server_data->server_explosion);
+		explosions_timer(server_data->server_explosion);
 
 		// Sending players and bombs into map
-		implement_map(server_data->server_game, server_data->server_bomb);
+		implement_map(server_data->server_game, server_data->server_bomb, server_data->server_explosion);
 
 		send_data_to_client(server_data, server_data->server_game);
 		
@@ -237,15 +253,15 @@ void *handler(void *input)
 		}
 
 		// TODO Yop : Bouchonnage des explosions ici
-		server_data->server_game->schema[6][6] = 'G';
-		server_data->server_game->schema[6][4] = 'H';
-		server_data->server_game->schema[6][5] = 'H';
-		server_data->server_game->schema[6][7] = 'H';
-		server_data->server_game->schema[6][8] = 'H';
-		server_data->server_game->schema[4][6] = 'I';
-		server_data->server_game->schema[5][6] = 'I';
-		server_data->server_game->schema[7][6] = 'I';
-		server_data->server_game->schema[8][6] = 'I';
+		//server_data->server_game->schema[6][6] = 'G';
+		//server_data->server_game->schema[6][4] = 'H';
+		//server_data->server_game->schema[6][5] = 'H';
+		//server_data->server_game->schema[6][7] = 'H';
+		//server_data->server_game->schema[6][8] = 'H';
+		//server_data->server_game->schema[4][6] = 'I';
+		//server_data->server_game->schema[5][6] = 'I';
+		//server_data->server_game->schema[7][6] = 'I';
+		//server_data->server_game->schema[8][6] = 'I';
 
 		for (int i = 1; i < 4; i++) {
 			m = request->magic;
@@ -303,7 +319,6 @@ static t_server_game *put_data_in_game(t_server_game *server_game)
 	server_game->player1.current_dir = 2;
 	server_game->player1.current_speed = 12;
 	server_game->player1.max_speed = 12;
-	server_game->player1.bombs_left = 12;
 	server_game->player1.bombs_capacity = 12;
 	server_game->player1.frags = 12;
 

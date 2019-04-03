@@ -10,6 +10,7 @@
 
 client_t *init_client(char *ip_addr, unsigned short port)
 {
+	sleep(1);
 	int sock;
 	client_t *client_struct;
 	struct sockaddr_in server;
