@@ -17,6 +17,7 @@
 #include <include/client.h>
 #include <include/bomberman.h>
 #include <include/map.h>
+#include <include/menu.h>
 
 int sock;
 int sock_fd_array[4];
@@ -30,11 +31,14 @@ static int run_server(int sock, server_data_t *server_data);
 static t_client_request *receive_client_data(server_data_t *server_data);
 static int send_data_to_client(server_data_t *server_data, t_server_game *server_game);
 
-int init_server(unsigned short port)
+void *init_server(void *input)
 {
+	menu_return_t *menu = input;
 	struct sockaddr_in server; /* Local address */
 
+	int port = menu->port;
 	int enable = 1;
+
 	memset(&sock_fd_array, -1, sizeof(sock_fd_array));
 	server_data_t *server_data;
 
@@ -42,7 +46,7 @@ int init_server(unsigned short port)
 
 	if (server_data == NULL) {
 		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
-		return -1;
+		return NULL;
 	}
 
 	/* Create socket for sending/receiving datagrams */
@@ -50,12 +54,12 @@ int init_server(unsigned short port)
 
 	if (sock < 0) {
 		perror("socket");
-		return -1;
+		return NULL;
 	}
 
 	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0) {
 		printf("setsockopt(SO_REUSEADDR) failed");
-		return -1;
+		return NULL;
 	}
 
 	memset(&server, 0, sizeof(server));
@@ -66,7 +70,7 @@ int init_server(unsigned short port)
 	/* Bind to the local address */
 	if (bind(sock, (struct sockaddr *) &server, sizeof(server)) < 0) {
 		perror("bind");
-		return -1;
+		return NULL;
 	}
 
 	printf("Successfully initialized server !\n");
@@ -75,7 +79,7 @@ int init_server(unsigned short port)
 		printf("waiting for incomming connections...\n");
 	} else {
 		perror("listen");
-		return -1;
+		return NULL;
 	}
 
 

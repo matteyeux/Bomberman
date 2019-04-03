@@ -1,20 +1,19 @@
 #include <time.h>
-
 #include <include/menu.h>
+#include <include/game.h>
+
 
 int main(void)
 {
-	menu_t *menu = NULL;
-	int choice = 0;
-
 	srandom(time(0));
 
-	menu = init_menu();
-	choice = menu_loop(menu);
+	menu_return_t *menu_ret;
 
-	if (choice != 0) {
-		clean_menu_and_setup_game(choice);
-	}
+	menu_ret = menu();
+
+	setup_game(menu_ret);
+
+	free(menu_ret);
 
 	return 0;
 }
