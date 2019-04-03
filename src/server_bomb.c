@@ -41,6 +41,9 @@ void create_new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int
 
         }
     }
+
+    the_player->bombs_left = the_player->bombs_left - 1;
+    printf("Bombs left *** %d\n", the_player->bombs_left);
 }
 
 

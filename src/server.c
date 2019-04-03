@@ -106,12 +106,16 @@ static int run_server(int sock, server_data_t *server_data)
 
 	server_data->server_game->player1.x_pos = 2;
 	server_data->server_game->player1.y_pos = 2;
+	server_data->server_game->player1.bombs_left = 1;
 	server_data->server_game->player2.x_pos = 12;
 	server_data->server_game->player2.y_pos = 2;
+	server_data->server_game->player2.bombs_left = 1;
 	server_data->server_game->player3.x_pos = 2;
 	server_data->server_game->player3.y_pos = 10;
+	server_data->server_game->player3.bombs_left = 1;
 	server_data->server_game->player4.x_pos = 12;
 	server_data->server_game->player4.y_pos = 10;
+	server_data->server_game->player4.bombs_left = 1;
 
 	server_data->server_bomb = malloc(sizeof(bomb_server_t));
 
@@ -303,7 +307,6 @@ static t_server_game *put_data_in_game(t_server_game *server_game)
 	server_game->player1.current_dir = 2;
 	server_game->player1.current_speed = 12;
 	server_game->player1.max_speed = 12;
-	server_game->player1.bombs_left = 12;
 	server_game->player1.bombs_capacity = 12;
 	server_game->player1.frags = 12;
 
