@@ -77,26 +77,6 @@ struct s_server_game {
 	t_other infos;
 };
 
-struct bomb_server_s {
-	int x;
-	int y;
-	int player;
-	long time;
-	int size;
-	bomb_server_t *next;
-};
-
-struct explosion_server_s {
-	bool first;
-	int x;
-	int y;
-	int size;
-	long time;
-	bomb_server_t *next;
-	bomb_server_t *prev;
-};
-
-
 int init_server(unsigned short port);
 void *handler(void *input);
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <include/server_bomb.h>
+#include <include/server_explosion.h>
 #include <include/server.h>
 #include <include/server_map.h>
 
@@ -66,9 +67,12 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
 
             server_game->schema[the_explosion->y][the_explosion->x] = 'G';
 
-
-
+            bool up = true;
+            bool right = true;
+            bool down = true;
+            bool left = true;
             // Print the expansion of the explosion
+            /*
             for (int i=1; i < (the_explosion->size + 1); i++ )
             {
                 server_game->schema[(the_explosion->y - i)][the_explosion->x] = 'H';
@@ -76,6 +80,7 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
                 server_game->schema[the_explosion->y][(the_explosion->x - i)] = 'I';
                 server_game->schema[the_explosion->y][(the_explosion->x + i)] = 'I';
             }
+            */
         }
 
         if (the_explosion->next != NULL)
