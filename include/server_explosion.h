@@ -15,8 +15,8 @@ struct explosion_server_s {
     int size_down;
     int size_left;
     long time;
-    bomb_server_t *next;
-    bomb_server_t *prev;
+    explosion_server_t *next;
+    explosion_server_t *prev;
 };
 
 void create_new_explosion(t_server_game *server_game, explosion_server_t *server_explosion, int size, int x, int y);

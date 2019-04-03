@@ -73,7 +73,7 @@ bool wall_in_place(t_server_game *server_game, int x, int y)
     switch (server_game->schema[y][x])
     {
         case '2' :
-            printf("\nBREAK THE WALL ^^^^^ \n");
+            //printf("\nBREAK THE WALL ^^^^^ \n");
         case '1' :
             return true;
     }
