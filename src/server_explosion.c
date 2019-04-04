@@ -205,7 +205,7 @@ void explosions_timer(explosion_server_t *server_explosion)
     {
         if (the_explosion->first != 1)
         {
-            if ((time_actual - the_explosion->time) >= 0 ) // TODO : time for explosion explode
+            if ((time_actual - the_explosion->time) > 0 ) // TODO : time for explosion explode
             {
                 server_explosion->next = the_explosion->next;
                 free(the_explosion);
