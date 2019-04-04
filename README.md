@@ -16,7 +16,7 @@ $ sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
 Pour compiler : `make`
 ### Documentation
 
-Documentation générée avec Doxygen disponible ici : bomberman.matteyeux.com.
+Documentation générée avec Doxygen disponible ici : [bomberman.matteyeux.com](http://bomberman.matteyeux.com)
 
 Ou vous pouvez aussi la générer vous-même avec make : `make docs`.
 
