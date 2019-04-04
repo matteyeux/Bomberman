@@ -153,7 +153,7 @@ static int run_server(int sock, server_data_t *server_data)
 			* if we hit this condition, close server
 			*/
 			if (sock_fd == -1) {
-				printf("[INFO] connections closed\n", );
+				printf("[INFO] connections closed\n");
 				return -1;
 			}
 
