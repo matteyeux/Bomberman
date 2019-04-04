@@ -77,6 +77,8 @@ void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb, explosi
     //    }
     //}
 
+    t_player_infos *the_player;
+
     long time_actual;
     time_actual = time(NULL);
 
@@ -92,7 +94,6 @@ void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb, explosi
                 server_bomb->next = the_bomb->next;
 
                 // Get the player
-                t_player_infos *the_player;
                 the_player = get_the_player(server_game, the_bomb->player);
 
                 // Add one bomb to the player possibilities
