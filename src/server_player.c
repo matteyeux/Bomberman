@@ -5,25 +5,11 @@
 #include <include/server_player.h>
 #include <include/server_bomb.h>
 
-void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int player, char command) {
-
-    // TODO Yop : Swicth a fonctionner
+void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int player, char command)
+{
+    // Get the player
     t_player_infos *the_player;
-    switch (player)
-    {
-        case 1 :
-            the_player = &server_game->player1;
-            break;
-        case 2 :
-            the_player = &server_game->player2;
-            break;
-        case 3 :
-            the_player = &server_game->player3;
-            break;
-        case 4 :
-            the_player = &server_game->player4;
-            break;
-    }
+    the_player = get_the_player(server_game, player);
 
     // If player is dead, don't take any information
     if (the_player->live != 1)
@@ -50,11 +36,10 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
     }
 }
 
-void player_move(t_server_game *server_game, int player, char command)
+t_player_infos *get_the_player(t_server_game *server_game, int player)
 {
-
-    // TODO Yop : Swicth a fonctionner
     t_player_infos *the_player;
+
     switch (player)
     {
         case 1 :
@@ -70,6 +55,15 @@ void player_move(t_server_game *server_game, int player, char command)
             the_player = &server_game->player4;
             break;
     }
+
+    return the_player;
+}
+
+void player_move(t_server_game *server_game, int player, char command)
+{
+    // Get the player
+    t_player_infos *the_player;
+    the_player = get_the_player(server_game, player);
 
     switch (command)
     {

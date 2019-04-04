@@ -3,30 +3,15 @@
 #include <stdbool.h>
 #include <time.h>
 #include <include/server.h>
+#include <include/server_player.h>
 #include <include/server_bomb.h>
 #include <include/server_explosion.h>
 
-
 void create_new_bomb(t_server_game *server_game, bomb_server_t *server_bomb, int player)
 {
-
-    // TODO Yop : Swicth a fonctionner
+    // Get the player
     t_player_infos *the_player;
-    switch (player)
-    {
-        case 1 :
-            the_player = &server_game->player1;
-            break;
-        case 2 :
-            the_player = &server_game->player2;
-            break;
-        case 3 :
-            the_player = &server_game->player3;
-            break;
-        case 4 :
-            the_player = &server_game->player4;
-            break;
-    }
+    the_player = get_the_player(server_game, player);
 
     bomb_server_t *new_bomb;
     new_bomb = init_bomb_server(player, the_player->x_pos, the_player->y_pos);
@@ -108,27 +93,15 @@ void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb, explosi
             {
                 server_bomb->next = the_bomb->next;
 
-                // TODO Yop : Swicth a fonctionner
-                switch (the_bomb->player)
-                {
-                    case 1 :
-                        the_player = &server_game->player1;
-                        break;
-                    case 2 :
-                        the_player = &server_game->player2;
-                        break;
-                    case 3 :
-                        the_player = &server_game->player3;
-                        break;
-                    case 4 :
-                        the_player = &server_game->player4;
-                        break;
-                }
+                // Get the player
+                t_player_infos *the_player;
+                the_player = get_the_player(server_game, the_bomb->player);
+
+                // Add one bomb to the player possibilities
                 the_player->bombs_left++;
 
+                // Create explosion and delete bomb
                 create_new_explosion(server_game, server_explosion, the_bomb->size, the_bomb->x, the_bomb->y);
-                printf("SIZE %d", the_bomb->size);
-
                 free(the_bomb);
             }
         }
