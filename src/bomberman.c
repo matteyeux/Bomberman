@@ -91,42 +91,42 @@ void draw_game(global_game_t *game, t_server_game *sg)
 						SDL_RenderCopy(interface->Renderer, explosion->explTexture, &explosion->srcRect, &explosion->destRect);
 						break;
 					case 83-48:
-						setRectangle(player->srcRectPlayer, 0*16, 5*16, 16, 16);
+						setRectangle(player->srcRectPlayer, 0*16, 0*16, 16, 16);
 						setRectangle(player->destRectPlayer, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 						break;
 					case 84-48:
-						setRectangle(player->srcRectPlayer, 0*16, 5*16, 16, 16);
+						setRectangle(player->srcRectPlayer, 1*16, 0*16, 16, 16);
 						setRectangle(player->destRectPlayer, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 						break;
 					case 85-48:
-						setRectangle(player->srcRectPlayer, 0*16, 5*16, 16, 16);
+						setRectangle(player->srcRectPlayer, 2*16, 0*16, 16, 16);
 						setRectangle(player->destRectPlayer, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 						break;
 					case 86-48:
-						setRectangle(player->srcRectPlayer, 0*16, 5*16, 16, 16);
+						setRectangle(player->srcRectPlayer, 3*16, 0*16, 16, 16);
 						setRectangle(player->destRectPlayer, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 						break;
 					case 87-48:
-						setRectangle(player->srcRectPlayer, 0*16, 5*16, 16, 16);
+						setRectangle(player->srcRectPlayer, 0*16, 1*16, 16, 16);
 						setRectangle(player->destRectPlayer, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 						break;
 					case 88-48:
-						setRectangle(player->srcRectPlayer, 0*16, 5*16, 16, 16);
+						setRectangle(player->srcRectPlayer, 1*16, 1*16, 16, 16);
 						setRectangle(player->destRectPlayer, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 						break;
 					case 89-48:
-						setRectangle(player->srcRectPlayer, 0*16, 5*16, 16, 16);
+						setRectangle(player->srcRectPlayer, 2*16, 1*16, 16, 16);
 						setRectangle(player->destRectPlayer, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 						break;
 					case 90-48:
-						setRectangle(player->srcRectPlayer, 0*16, 5*16, 16, 16);
+						setRectangle(player->srcRectPlayer, 3*16, 1*16, 16, 16);
 						setRectangle(player->destRectPlayer, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 						break;
