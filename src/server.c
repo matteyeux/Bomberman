@@ -110,16 +110,20 @@ static int run_server(int sock, server_data_t *server_data)
 
 	server_data->server_game->player1.x_pos = 2;
 	server_data->server_game->player1.y_pos = 2;
+	server_data->server_game->player1.live = 1;
 	server_data->server_game->player1.bombs_left = 3;
-	server_data->server_game->player2.x_pos = 12;
-	server_data->server_game->player2.y_pos = 2;
-	server_data->server_game->player2.bombs_left = 3;
-	server_data->server_game->player3.x_pos = 2;
-	server_data->server_game->player3.y_pos = 10;
-	server_data->server_game->player3.bombs_left = 3;
-	server_data->server_game->player4.x_pos = 12;
-	server_data->server_game->player4.y_pos = 10;
-	server_data->server_game->player4.bombs_left = 3;
+    server_data->server_game->player2.x_pos = 12;
+    server_data->server_game->player2.y_pos = 2;
+    server_data->server_game->player2.live = 1;
+    server_data->server_game->player2.bombs_left = 3;
+    server_data->server_game->player3.x_pos = 2;
+    server_data->server_game->player3.y_pos = 10;
+    server_data->server_game->player3.live = 1;
+    server_data->server_game->player3.bombs_left = 3;
+    server_data->server_game->player4.x_pos = 12;
+    server_data->server_game->player4.y_pos = 10;
+    server_data->server_game->player4.live = 1;
+    server_data->server_game->player4.bombs_left = 3;
 
 	server_data->server_bomb = malloc(sizeof(bomb_server_t));
 
@@ -220,33 +224,10 @@ t_client_request *receive_client_data(server_data_t *server_data)
 	return request;
 }
 
-/*
-* temporary function to put data in struct
-*/
-t_server_game *put_data_in_game(t_server_game *server_game)
-{
-	// TODO Yop : Bouchonnage ici pour le send
-	server_game->player1.connected = 'e';
-	server_game->player1.alive = 'e';
-	server_game->player1.current_dir = 2;
-	server_game->player1.current_speed = 12;
-	server_game->player1.max_speed = 12;
-	server_game->player1.bombs_capacity = 12;
-	server_game->player1.frags = 12;
-
-	server_game->player2.current_dir = 2;
-	server_game->player3.current_dir = 2;
-
-	server_game->player4.current_dir = 2;
-
-	return server_game;
-}
-
 int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 {
 	ssize_t sender;
 	int i;
-	server_game = put_data_in_game(server_game);
 
 	for (i = 0; i < MAX_PLAYERS; ++i) {
 		// Debug check sending to ckect number

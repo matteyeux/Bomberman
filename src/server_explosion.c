@@ -64,6 +64,7 @@ explosion_server_t *init_explosion_server(t_server_game *server_game, int size, 
             {
                 case 0:
                     explosion->size_up = i;
+                    kill_player_on_place(server_game, x, y - i);
                     break;
                 case 2:
                     explosion->size_up = i;
@@ -81,6 +82,7 @@ explosion_server_t *init_explosion_server(t_server_game *server_game, int size, 
             {
                 case 0:
                     explosion->size_right = i;
+                    kill_player_on_place(server_game, x + i, y);
                     break;
                 case 2:
                     explosion->size_right = i;
@@ -98,6 +100,7 @@ explosion_server_t *init_explosion_server(t_server_game *server_game, int size, 
             {
                 case 0:
                     explosion->size_down = i;
+                    kill_player_on_place(server_game, x, y + i);
                     break;
                 case 2:
                     explosion->size_down = i;
@@ -115,6 +118,7 @@ explosion_server_t *init_explosion_server(t_server_game *server_game, int size, 
             {
                 case 0:
                     explosion->size_left = i;
+                    kill_player_on_place(server_game, x - i, y);
                     break;
                 case 2:
                     explosion->size_left = i;
@@ -144,6 +148,29 @@ int wall_in_place(t_server_game *server_game, int x, int y)
     }
 
     return 0;
+}
+
+void kill_player_on_place(t_server_game *server_game, int x, int y)
+{
+    if (server_game->player1.x_pos == x && server_game->player1.y_pos == y)
+    {
+        server_game->player1.live = 0;
+    }
+
+    if (server_game->player2.x_pos == x && server_game->player2.y_pos == y)
+    {
+        server_game->player2.live = 0;
+    }
+
+    if (server_game->player3.x_pos == x && server_game->player3.y_pos == y)
+    {
+        server_game->player3.live = 0;
+    }
+
+    if (server_game->player4.x_pos == x && server_game->player4.y_pos == y)
+    {
+        server_game->player4.live = 0;
+    }
 }
 
 void explosions_timer(explosion_server_t *server_explosion)

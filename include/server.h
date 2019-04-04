@@ -42,7 +42,8 @@ struct server_data_s {
 
 struct s_player_infos {
 	char connected;
-	char alive;
+	//char alive;
+	int live;
 	int x_pos;
 	int y_pos;
 	int current_dir;

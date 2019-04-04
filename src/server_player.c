@@ -25,29 +25,20 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
             break;
     }
 
+    // If player is dead, don't take any information
+    if (the_player->live != 1)
+    {
+        printf("IS DEAD\n");
+        return;
+    }
+
     switch (command)
     {
         case 'U' :
         case 'D' :
         case 'L' :
         case 'R' :
-
             player_move(server_game, player, command);
-
-            // TODO : Debug Bomb
-            bool last_bomb = false;
-            bomb_server_t *the_bomb = server_bomb;
-            while (!last_bomb)
-            {
-                //printf("BOMB : %d, %p, %ld\n", the_bomb->player, the_bomb->next, the_bomb->time);
-
-                if (the_bomb->next != NULL)
-                {
-                    the_bomb = the_bomb->next;
-                }else{
-                    last_bomb = true;
-                }
-            }
 
             break;
         case 'B' :

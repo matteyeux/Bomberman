@@ -28,10 +28,22 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
     }
 
     // Drop Players on the map
-    server_game->schema[server_game->player1.y_pos][server_game->player1.x_pos] = '6';
-    server_game->schema[server_game->player2.y_pos][server_game->player2.x_pos] = '7';
-    server_game->schema[server_game->player3.y_pos][server_game->player3.x_pos] = '8';
-    server_game->schema[server_game->player4.y_pos][server_game->player4.x_pos] = '9';
+    if (server_game->player1.live == 1)
+    {
+        server_game->schema[server_game->player1.y_pos][server_game->player1.x_pos] = '6';
+    }
+    if (server_game->player2.live == 1)
+    {
+        server_game->schema[server_game->player2.y_pos][server_game->player2.x_pos] = '7';
+    }
+    if (server_game->player3.live == 1)
+    {
+        server_game->schema[server_game->player3.y_pos][server_game->player3.x_pos] = '8';
+    }
+    if (server_game->player4.live == 1)
+    {
+        server_game->schema[server_game->player4.y_pos][server_game->player4.x_pos] = '9';
+    }
 
     // Drop the bombs ont the map
     bool last_bomb = false;
@@ -51,8 +63,6 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
             last_bomb = true;
         }
     }
-
-
 
     // Drop the explosions ont the map
     bool last_explosion = false;
