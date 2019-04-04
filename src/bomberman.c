@@ -22,21 +22,6 @@ void draw_game(global_game_t *game, t_server_game *sg)
 	SDL_SetRenderDrawColor(interface->Renderer, 128, 20, 0, 255);
 	SDL_RenderClear(interface->Renderer);
 
-	//setRectangle(player->destRectPlayer, map->largeur_tile*2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
-	//SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
-	
-	//setRectangle(sg->player1.dest, 120, 120, map->largeur_tile, map->hauteur_tile);
-
-	//printf("DRAW GAME SEGFAULT SOMEWHERE\n");
-	//setRectangle(player->destRectPlayer, map->largeur_tile*2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
-	//SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
-
-	// for (int i = 0; i < map->nbTileY; i++) {
-	// 	for (int j = 0; j < map->nbTileX; j++) {
-	// 		SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[map->schema[j][i]-48]->tile, interface->destRect);
-	// 	}
-	// } 
-
 	setRectangle(&sg->player1.src, 4*16, 0*16, 16, 16);
 	setRectangle(&sg->player2.src, 4*16, 1*16, 16, 16);
 	setRectangle(&sg->player3.src, 1*16, 0*16, 16, 16);
@@ -48,15 +33,10 @@ void draw_game(global_game_t *game, t_server_game *sg)
 
 				setRectangle(interface->destRect, map->largeur_tile*i, map->hauteur_tile*j, map->largeur_tile, map->hauteur_tile);
 		
-				// SET SOURCE RECT PLAYER AND DEST RECT PLAYER
-				//setRectangle(player->srcRectPlayer, 4*16, 0, 16, 16);
-				//setRectangle(player->destRectPlayer, map->largeur_tile * 2, map->hauteur_tile*2, map->largeur_tile, map->hauteur_tile);
-
 				setRectangle(&sg->player1.dest,  map->largeur_tile * sg->player1.x_pos, map->hauteur_tile * sg->player1.y_pos, map->largeur_tile, map->hauteur_tile);
 				setRectangle(&sg->player2.dest,  map->largeur_tile * sg->player2.x_pos, map->hauteur_tile * sg->player2.y_pos, map->largeur_tile, map->hauteur_tile);
 				setRectangle(&sg->player3.dest,  map->largeur_tile * sg->player3.x_pos, map->hauteur_tile * sg->player3.y_pos, map->largeur_tile, map->hauteur_tile);
 				setRectangle(&sg->player4.dest,  map->largeur_tile * sg->player4.x_pos, map->hauteur_tile * sg->player4.y_pos, map->largeur_tile, map->hauteur_tile);
-
 
 				// index is the ASCII code of the character
 				index = sg->schema[j][i]-48;
@@ -110,7 +90,6 @@ void draw_game(global_game_t *game, t_server_game *sg)
 						setRectangle(&explosion->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						SDL_RenderCopy(interface->Renderer, explosion->explTexture, &explosion->srcRect, &explosion->destRect);
 						break;
-
 					case 83-48:
 						setRectangle(player->srcRectPlayer, 0*16, 5*16, 16, 16);
 						setRectangle(player->destRectPlayer, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
@@ -151,24 +130,8 @@ void draw_game(global_game_t *game, t_server_game *sg)
 						setRectangle(player->destRectPlayer, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
 						break;
-						//printf("\n\nTESTING BOMB \n");
-						//setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
-						//	if (!bomb->exist)
-						//break;
 				}
-				//SDL_RenderCopy(interface->Renderer, bomb->TexBomb, &bomb->srcRect, &bomb->destRect);
-				//if (index == 6 || index == 7 || index == 8 || index == 9) {
-					//player->posX = j;
-					//player->posY = i;
-
-				//	SDL_RenderCopy(interface->Renderer, player->playerTexture, player->srcRectPlayer, player->destRectPlayer);
-				//} else if (index == 0 || index == 1 || index == 2 || index == 3) {
-				//	SDL_RenderCopy(interface->Renderer, map->mapTexture, map->tabTiles[index]->tile, interface->destRect);
-				//}
-
 			}
-
-			//printf("\n");
 		}
 	}
 
