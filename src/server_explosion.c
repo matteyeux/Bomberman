@@ -27,8 +27,11 @@ void create_new_explosion(t_server_game *server_game, explosion_server_t *server
 
 explosion_server_t *init_explosion_server(t_server_game *server_game, int size, int x, int y)
 {
+    // Init time drop of explosion
     long time_drop;
     time_drop = time(NULL);
+
+    // init explosion
     explosion_server_t *explosion = NULL;
     explosion = malloc(sizeof(explosion_server_t));
 
@@ -37,48 +40,110 @@ explosion_server_t *init_explosion_server(t_server_game *server_game, int size, 
         return NULL;
     }
 
+    // Init explosion datum
     explosion->first = false;
     explosion->x= x;
     explosion->y = y;
     explosion->size = size;
-    explosion->size_right = 1;
-    explosion->size_left = size;
-    explosion->size_down = size;
     explosion->time = time_drop;
     explosion->prev = NULL;
     explosion->next = NULL;
 
+    // Init booleens for checks
     bool up     = true;
     bool right  = true;
     bool down   = true;
     bool left   = true;
 
-
-    for (int i=1; i < (explosion->size + 1); i++ )
+    // Check for each blocs of explosion (walls and bricks stop it)
+    for (int i=1; i < (explosion->size + 1); i++)
     {
-        if (up && !wall_in_place(server_game, x, y - 1))
+        if (up)
         {
-            explosion->size_up = i;
-        }else{
-            up = false;
+            switch (wall_in_place(server_game, x, y - i))
+            {
+                case 0:
+                    explosion->size_up = i;
+                    break;
+                case 2:
+                    explosion->size_up = i;
+                    up = false;
+                    break;
+                case 1:
+                    up = false;
+                    break;
+            }
+        }
+
+        if (right)
+        {
+            switch (wall_in_place(server_game, x + i, y))
+            {
+                case 0:
+                    explosion->size_right = i;
+                    break;
+                case 2:
+                    explosion->size_right = i;
+                    right = false;
+                    break;
+                case 1:
+                    right = false;
+                    break;
+            }
+        }
+
+        if (down)
+        {
+            switch (wall_in_place(server_game, x, y + i))
+            {
+                case 0:
+                    explosion->size_down = i;
+                    break;
+                case 2:
+                    explosion->size_down = i;
+                    down = false;
+                    break;
+                case 1:
+                    down = false;
+                    break;
+            }
+        }
+
+        if (left)
+        {
+            switch (wall_in_place(server_game, x - i, y))
+            {
+                case 0:
+                    explosion->size_left = i;
+                    break;
+                case 2:
+                    explosion->size_left = i;
+                    left = false;
+                    break;
+                case 1:
+                    left = false;
+                    break;
+            }
         }
     }
-
 
     return explosion;
 }
 
-bool wall_in_place(t_server_game *server_game, int x, int y)
+int wall_in_place(t_server_game *server_game, int x, int y)
 {
+    // Return 0 for nothing, 1 for hardwall, 2 for bricks
     switch (server_game->schema[y][x])
     {
         case '2' :
-            //printf("\nBREAK THE WALL ^^^^^ \n");
+            printf("\n--> FOUND THE BRICKS ^^^^^ \n");
+            return 2;
         case '1' :
-            return true;
+            printf("\n--> FOUND THE HARD WALL ^^^^^ \n");
+            return 1;
     }
 
-    return false;
+    return 0;
 }
 
 void explosions_timer(explosion_server_t *server_explosion)
