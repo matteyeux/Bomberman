@@ -33,26 +33,26 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
         server_game->schema[server_game->player1.y_pos][server_game->player1.x_pos] = '6';
         server_game->schema[0][4] = 'S';
     }else{
-        server_game->schema[0][4] = 'T';
+        server_game->schema[0][4] = 'W';
     }
     if (server_game->player2.live == 1)
     {
         server_game->schema[server_game->player2.y_pos][server_game->player2.x_pos] = '7';
-        server_game->schema[0][6] = 'U';
+        server_game->schema[0][6] = 'T';
     }else{
-        server_game->schema[0][6] = 'V';
+        server_game->schema[0][6] = 'X';
     }
     if (server_game->player3.live == 1)
     {
         server_game->schema[server_game->player3.y_pos][server_game->player3.x_pos] = '8';
-        server_game->schema[0][8] = 'W';
+        server_game->schema[0][8] = 'U';
     }else{
-        server_game->schema[0][8] = 'X';
+        server_game->schema[0][8] = 'Y';
     }
     if (server_game->player4.live == 1)
     {
         server_game->schema[server_game->player4.y_pos][server_game->player4.x_pos] = '9';
-        server_game->schema[0][10] = 'Y';
+        server_game->schema[0][10] = 'V';
     }else{
         server_game->schema[0][10] = 'Z';
     }
