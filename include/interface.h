@@ -6,8 +6,7 @@
 
 typedef struct interface_s interface_t;
 
-struct interface_s
-{
+struct interface_s {
 	// SDL variables
 	SDL_Point screenSize;
 	SDL_Window *Window;

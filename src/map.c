@@ -8,7 +8,7 @@ map_t *init_map(const char *file)
 	// Malloc de la Map
 	map_t *map = malloc(sizeof(map_t));
 	if (map == NULL) {
-		printf("Error Malloc MAP\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 
@@ -19,20 +19,20 @@ map_t *init_map(const char *file)
 	//malloc de nbLignes * sizeof(char*)
 	map->schema = malloc(13 * sizeof(char*));
 	if (map->schema == NULL) {
-		printf("Erreur sur le malloc du schema");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		destroy_map(map);
 		return NULL;
 	}
 
 	map->tabTiles = malloc(5*sizeof(tileProp_t));
 	if (map->tabTiles == NULL) {
-		printf("Error Malloc TabTile\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		destroy_map(map);
 		return NULL;
 	}
 
 	if (!set_tile_array(map)) {
-		printf("Error setting tileArray\n");
+		printf("[ERROR] unable to set tileArray\n");
 		destroy_map(map);
 		return NULL;
 	}
@@ -89,14 +89,14 @@ char **handle_file(const char *file)
 
 	f = fopen(file, "r");
 	if (!f) {
-		printf("ERROR CANNOT READ FILE\n");
+		fprintf(stderr, "[ERROR] unable to read file\n");
 		return NULL;
 	}
 
 	schema = malloc(sizeof(char) * 15 * 13);
 
 	if (schema == NULL) {
-		printf("malloc error\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 
@@ -118,13 +118,13 @@ SDL_Texture *set_texture_map(SDL_Renderer *pRenderer)
 	SDL_Surface *surf = IMG_Load("images/tiles_bomberman.png");
 
 	if (surf == NULL) {
-		fprintf(stderr, "surface KO \n %s \n", IMG_GetError());
+		fprintf(stderr, "[ERROR] surface KO \n %s \n", IMG_GetError());
 		return NULL;
 	} else {
 
 		texture = SDL_CreateTextureFromSurface(pRenderer, surf);
 		if (texture == NULL) {
-			printf("texture KO \n");
+			printf("[ERROR] texture KO \n");
 			SDL_FreeSurface(surf);
 			return NULL;
 		}
@@ -142,7 +142,7 @@ int set_tile_array(map_t *map)
 	for (int i = 0; i < 5; i++) {
 		tiles = malloc(sizeof(tileProp_t));
 		if (tiles == NULL) {
-			printf("Error malloc UNE TILE pour la map\n");
+			fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 			destroy_map(map);
 			return 0;
 		}
@@ -150,7 +150,7 @@ int set_tile_array(map_t *map)
 		tiles->plein = 0;
 		tiles->tile = malloc(sizeof(SDL_Rect));
 		if (!tiles->tile) {
-			printf("Error malloc rect pour la map\n");
+			fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 			destroy_map(map);
 			return 0;
 		}

@@ -18,7 +18,7 @@ client_t *init_client(char *ip_addr, unsigned short port)
 	client_struct = malloc(sizeof(client_t));
 
 	if (client_struct == NULL) {
-		printf("[ERROR] : malloc for client_struct\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 
@@ -50,7 +50,7 @@ client_t *init_client(char *ip_addr, unsigned short port)
 	client_struct->sock = sock;
 
 	if (client_struct == NULL) {
-		printf("struct is null\n");
+		return NULL;
 	}
 
 	return client_struct;
@@ -71,7 +71,7 @@ int send_client_data(client_t *client_data, player_t *player)
 	}
 
 	if (request == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return -1;
 	}
 
@@ -95,7 +95,6 @@ int send_client_data(client_t *client_data, player_t *player)
 					sizeof(client_data->server));
 
 	if (sender == -1 ) {
-		printf("bla\n");
 		perror("sendto");
 		return -1;
 	}
@@ -111,7 +110,7 @@ t_server_game *init_server_game(void)
 	server_game = malloc(sizeof(t_server_game));
 
 	if (server_game == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 

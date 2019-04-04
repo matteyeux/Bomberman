@@ -12,7 +12,7 @@ bomb_t *init_bomb(SDL_Renderer *renderer)
 	bomb = malloc(sizeof(bomb_t));
 
 	if (bomb == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 

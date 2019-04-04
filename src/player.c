@@ -18,11 +18,10 @@ player_t *init_player(void)
 	player = malloc(sizeof(player_t));
 
 	if (player == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 
-	// TODO : changer la generation ID, doit être faite par le serveur
 	player->magic = 0;
 	player->score = 0;
 	player->speed = 10;
@@ -30,61 +29,60 @@ player_t *init_player(void)
 	player->command = 0;
 
 	player->posX = 0;
-    player->posY = 0;
+	player->posY = 0;
 
-    player->playerTexture = NULL;
-    player->srcRectPlayer = malloc(sizeof(SDL_Rect));
-    if (player->srcRectPlayer == NULL) {
-        fprintf(stderr, "Probleme malloc SRC rect player\n");
-        destroy_player(player);
-        return NULL;
-    }
-    player->destRectPlayer = malloc(sizeof(SDL_Rect));
-    if (player->destRectPlayer == NULL) {
-        fprintf(stderr, "Probleme malloc DEST rect player\n");
-        destroy_player(player);
-        return NULL;
-    }
+	player->playerTexture = NULL;
+	player->srcRectPlayer = malloc(sizeof(SDL_Rect));
+	if (player->srcRectPlayer == NULL) {
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
+		destroy_player(player);
+		return NULL;
+	}
+	player->destRectPlayer = malloc(sizeof(SDL_Rect));
+	if (player->destRectPlayer == NULL) {
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
+		destroy_player(player);
+		return NULL;
+	}
 
 	return player;
 }
 
 void destroy_player(player_t *player)
 {
-    if(player) {
-        if (player->playerTexture)
-            SDL_DestroyTexture(player->playerTexture);
+	if (player) {
+		if (player->playerTexture)
+			SDL_DestroyTexture(player->playerTexture);
 
-        if (player->srcRectPlayer)
-            free(player->srcRectPlayer);
+		if (player->srcRectPlayer)
+			free(player->srcRectPlayer);
 
-        if (player->destRectPlayer)
-            free(player->destRectPlayer);
+		if (player->destRectPlayer)
+			free(player->destRectPlayer);
 
-        free(player);
-    }
-    printf("Destruction du player OK \n");
+		free(player);
+	}
 }
 
 SDL_Texture *set_texture_player(SDL_Renderer *pRenderer)
 {
-    SDL_Surface *surfacePlayer = IMG_Load("images/player.png");
-    SDL_Texture *texture = NULL;
-    if (!surfacePlayer) {
-        printf("Error creation surface \n");
-        return (NULL);
-    } else {
+	SDL_Surface *surfacePlayer = IMG_Load("images/player.png");
+	SDL_Texture *texture = NULL;
+	if (!surfacePlayer) {
+		printf("[ERROR] unable to create surface \n");
+		return (NULL);
+	} else {
 
-        texture = SDL_CreateTextureFromSurface(pRenderer, surfacePlayer);
-        if (texture == NULL) {
-            fprintf(stderr, "Probleme creation texture player\n");
-            SDL_FreeSurface(surfacePlayer);
-            return NULL;
-        }
-        
-        SDL_FreeSurface(surfacePlayer);
-    }
+		texture = SDL_CreateTextureFromSurface(pRenderer, surfacePlayer);
+		if (texture == NULL) {
+			fprintf(stderr, "[ERROR] unable to create texture for player\n");
+			SDL_FreeSurface(surfacePlayer);
+			return NULL;
+		}
 
-    return texture;
+		SDL_FreeSurface(surfacePlayer);
+	}
+
+	return texture;
 
 }

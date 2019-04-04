@@ -20,7 +20,7 @@ global_game_t *init_game(void)
 	game = malloc(sizeof(global_game_t));
 
 	if (game == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 
@@ -28,7 +28,7 @@ global_game_t *init_game(void)
 	if (game->interface == NULL) 
 		return NULL;
 
-	fprintf(stdout, "Successfully initialized interface !\n");
+	fprintf(stdout, "[INFO] Successfully initialized interface !\n");
 
 	game->map = init_map("map.txt");
 	if (game->map == NULL)
@@ -38,7 +38,7 @@ global_game_t *init_game(void)
 	if (game->map->mapTexture == NULL)
 		return NULL;
 
-	fprintf(stdout, "Successfully initialize map!\n");
+	fprintf(stdout, "[INFO] Successfully initialize map!\n");
 
 	game->player = init_player();
 	if (game->player == NULL)
@@ -48,13 +48,13 @@ global_game_t *init_game(void)
 	if (game->player->playerTexture == NULL)
 		return NULL;
 
-	fprintf(stdout, "Successfully initialized player !\n");
+	fprintf(stdout, "[INFO] Successfully initialized player !\n");
 
 	game->bomb = init_bomb(game->interface->Renderer);
 	if (game->bomb == NULL) 
 		return NULL;
 
-	fprintf(stdout, "Successfully initialized bomb !\n");
+	fprintf(stdout, "[INFO] Successfully initialized bomb !\n");
 
 	return game;
 }
@@ -81,13 +81,13 @@ void *game_loop(void *game_struct)
 		magic = get_magic(client_struct);
 		client_struct->server_game = init_server_game();
 
-		printf("magic : %d\n", magic);
+		printf("[INFO] magic : %d\n", magic);
 		game->player->magic = magic;
 
 		global_game = malloc(sizeof(t_server_game));
 
 		if (global_game == NULL) {
-			fprintf(stderr, "MALLOC ERROR\n");
+			fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 			return NULL;
 		}
 
@@ -98,6 +98,7 @@ void *game_loop(void *game_struct)
 	} else {
 		// if client cannot connect to server
 		// then destroy game and kill everything else
+		fprintf(stderr, "[ERROR] no server found, sorry :( \n");
 		destroy_game(game);
 		exit(-1);
 	}
@@ -141,7 +142,7 @@ void setup_game(menu_return_t *menu)
 	game = init_game();
 
 	if (game == NULL) {
-		fprintf(stderr, "failed to to init game\n");
+		fprintf(stderr, "[ERROR] failed to to init game\n");
 		exit(EXIT_FAILURE);
 	}
 

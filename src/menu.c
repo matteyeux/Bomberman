@@ -59,7 +59,7 @@ menu_return_t *menu(void)
 	menu_ret = malloc(sizeof(menu_return_t));
 
 	if (menu_ret == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 
@@ -199,7 +199,7 @@ menu_return_t *menu(void)
 	SDL_DestroyTexture(PortText);
 	SDL_DestroyWindow(interface->Window);
 	SDL_DestroyRenderer(interface->Renderer);
-	destroy_interface(interface);
+	//destroy_interface(interface);
 
 	if (quit_bomberman == 1) {
 		exit(0);

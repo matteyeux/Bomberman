@@ -15,21 +15,13 @@ struct player_s
 	int dir;
 	char command;
 
-	// player texture
-	// SDL_Texture *TexPlayer;
-
-	// position of player
-	// SDL_Rect playerPositionRect;
-
 	SDL_Texture *playerTexture;
     SDL_Rect    *srcRectPlayer;
     SDL_Rect    *destRectPlayer;
     int         posX, posY;
 };
 
-//player_t *init_player(interface_t *interface);
 void movePlayer(player_t *player, interface_t *interface, SDL_Keycode direction, client_t *client_struct);
-//void destroy_player(player_t *player);
 bomb_t *dropBomb(player_t *player, bomb_t *bomb);
 
 player_t *init_player(void);
