@@ -45,35 +45,16 @@ menu_return_t *menu(void)
 
 	init_buttons(&buttons);
 
-	// START TODO à raccrocher à interface.c
-	SDL_Init(SDL_INIT_VIDEO);
-	TTF_Init();
+	interface_t *interface;
 
-	// Build window
-	SDL_Window *window = SDL_CreateWindow("Bomberman",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 900, 780, SDL_WINDOW_SHOWN);
+	interface = init_interface();
 
-	if (window == NULL) {
-		printf("Error : %s\n", SDL_GetError());
+	if (interface == NULL)
 		return NULL;
-	}
-
-	// Create renderer
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	if (renderer == NULL) {
-		printf("Error : %s\n", SDL_GetError());
-		return NULL;
-	}
-
-	TTF_Font *arial = TTF_OpenFont("fonts/arial.ttf", 45);
-	if (arial == NULL){
-		printf("Error : %s\n", SDL_GetError());
-		return NULL;
-	}
-	// END TODO à raccrocher à interface.c
 
 	// active transparency
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	load_images(&images, renderer);
+	SDL_SetRenderDrawBlendMode(interface->Renderer, SDL_BLENDMODE_BLEND);
+	load_images(&images, interface->Renderer);
 
 	menu_ret = malloc(sizeof(menu_return_t));
 
@@ -89,14 +70,14 @@ menu_return_t *menu(void)
 	while (game_state != EXIT) {
 		switch (game_state) {
 			case MENU:
-				if (display_image(renderer, images.mainMenuTex) == EXIT_FAILURE)
+				if (display_image(interface->Renderer, images.mainMenuTex) == EXIT_FAILURE)
 					return NULL;
 			break;
 			case JOIN:
-				if (display_image(renderer, images.joinPartyMenuTex) == EXIT_FAILURE)
+				if (display_image(interface->Renderer, images.joinPartyMenuTex) == EXIT_FAILURE)
 					return NULL;
-				SDL_RenderCopy(renderer, IPText, NULL, &IPTextRect);
-				SDL_RenderCopy(renderer, PortText, NULL, &PortTextRect);
+				SDL_RenderCopy(interface->Renderer, IPText, NULL, &IPTextRect);
+				SDL_RenderCopy(interface->Renderer, PortText, NULL, &PortTextRect);
 			break;
 			default:
 			break;
@@ -112,14 +93,14 @@ menu_return_t *menu(void)
 						if (isIPTextInput && IPTextLength > 0) {
 							IPTextLength--;
 							IPTextInput[strlen(IPTextInput)-1] = 0;
-							IPSurfaceText = TTF_RenderText_Blended(arial, IPTextInput, white);
-							IPText = SDL_CreateTextureFromSurface(renderer, IPSurfaceText);
+							IPSurfaceText = TTF_RenderText_Blended(interface->Font, IPTextInput, white);
+							IPText = SDL_CreateTextureFromSurface(interface->Renderer, IPSurfaceText);
 						} // Port
 						else if (isPortTextInput && PortTextLength > 0) {
 							PortTextLength--;
 							PortTextInput[strlen(PortTextInput)-1] = 0;
-							PortSurfaceText = TTF_RenderText_Blended(arial, PortTextInput, white);
-							PortText = SDL_CreateTextureFromSurface(renderer, PortSurfaceText);
+							PortSurfaceText = TTF_RenderText_Blended(interface->Font, PortTextInput, white);
+							PortText = SDL_CreateTextureFromSurface(interface->Renderer, PortSurfaceText);
 						}
 					}
 				}
@@ -130,14 +111,14 @@ menu_return_t *menu(void)
 					if (isIPTextInput && IPTextLength < MAX_IP_LENGTH) {
 						IPTextLength++;
 						strcat(IPTextInput, event.text.text);
-						IPSurfaceText = TTF_RenderText_Blended(arial, IPTextInput, white);
-						IPText = SDL_CreateTextureFromSurface(renderer, IPSurfaceText);
+						IPSurfaceText = TTF_RenderText_Blended(interface->Font, IPTextInput, white);
+						IPText = SDL_CreateTextureFromSurface(interface->Renderer, IPSurfaceText);
 					} // Port
 					else if (isPortTextInput && PortTextLength < MAX_PORT_LENGTH) {
 						PortTextLength++;
 						strcat(PortTextInput, event.text.text);
-						PortSurfaceText = TTF_RenderText_Blended(arial, PortTextInput, white);
-						PortText = SDL_CreateTextureFromSurface(renderer, PortSurfaceText);
+						PortSurfaceText = TTF_RenderText_Blended(interface->Font, PortTextInput, white);
+						PortText = SDL_CreateTextureFromSurface(interface->Renderer, PortSurfaceText);
 					}
 				}
 			break;
@@ -162,6 +143,7 @@ menu_return_t *menu(void)
 						isPortTextInput = FALSE;
 						SDL_StopTextInput();
 					}
+
 					// Click on the "Validate" button
 					if (x >= buttons.validateBtn.min_x && x <= buttons.validateBtn.max_x &&
 						y >= buttons.validateBtn.min_y && y <= buttons.validateBtn.max_y)
@@ -172,7 +154,8 @@ menu_return_t *menu(void)
 						menu_ret->ip = IPTextInput;
 						menu_ret->port = atoi(PortTextInput);
 						menu_ret->ret = 2;
-						// sortir du menu
+
+						// flag set so we can leave menu loop
 						game_state = EXIT;
 					}
 
@@ -181,7 +164,6 @@ menu_return_t *menu(void)
 						y >= buttons.returnBtn.min_y && y <= buttons.returnBtn.max_y)
 					{
 						game_state = MENU;
-						printf("CLICK ON THE RETURN BUTTON\n");
 					}
 				} else if (game_state == MENU) {
 					int button = mouse_bouton(event.button.x, event.button.y, buttons);
@@ -201,13 +183,13 @@ menu_return_t *menu(void)
 				break;
 		}
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+		SDL_SetRenderDrawColor(interface->Renderer, 0, 0, 0, 0);
 		if (isIPTextInput)
-			SDL_RenderFillRect(renderer, &IPTextRect);
+			SDL_RenderFillRect(interface->Renderer, &IPTextRect);
 		if (isPortTextInput)
-			SDL_RenderFillRect(renderer, &PortTextRect);
+			SDL_RenderFillRect(interface->Renderer, &PortTextRect);
 
-		SDL_RenderPresent(renderer);
+		SDL_RenderPresent(interface->Renderer);
 	}
 
 	free_images(&images);
@@ -215,12 +197,9 @@ menu_return_t *menu(void)
 	SDL_FreeSurface(PortSurfaceText);
 	SDL_DestroyTexture(IPText);
 	SDL_DestroyTexture(PortText);
-	SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(renderer);
-	TTF_CloseFont(arial);
-	TTF_Quit();
-	IMG_Quit();
-	SDL_Quit();
+	SDL_DestroyWindow(interface->Window);
+	SDL_DestroyRenderer(interface->Renderer);
+	destroy_interface(interface);
 
 	if (quit_bomberman == 1) {
 		exit(0);
@@ -268,11 +247,11 @@ void load_images(Images *images, SDL_Renderer *renderer)
 	images->joinPartyMenuTex = SDL_CreateTextureFromSurface(renderer, surface);
 }
 
-int display_image(SDL_Renderer *renderer, SDL_Texture *texture)
+int display_image(SDL_Renderer *Renderer, SDL_Texture *texture)
 {
 	SDL_Rect dest = {0, 0, 900, 780};
 
-	if (texture == NULL || SDL_RenderCopy(renderer, texture, NULL, &dest) != 0) {
+	if (texture == NULL || SDL_RenderCopy(Renderer, texture, NULL, &dest) != 0) {
 		printf("Error : %s\n", SDL_GetError());
 		return EXIT_FAILURE;
 	}
@@ -283,6 +262,7 @@ int display_image(SDL_Renderer *renderer, SDL_Texture *texture)
 int mouse_bouton(int x, int y, Buttons buttons)
 {
 	int button = -1;
+
 	if (x >= buttons.createPartyBtn.min_x && x <= buttons.createPartyBtn.max_x) {
 		// Click on the "Join Party" button
 		if (y >= buttons.joinPartyBtn.min_y && y <= buttons.joinPartyBtn.max_y)
@@ -290,7 +270,7 @@ int mouse_bouton(int x, int y, Buttons buttons)
 		// Click on the "Create Party" button
 		else if (y >= buttons.createPartyBtn.min_y && y <= buttons.createPartyBtn.max_y)
 			button = 1;
-		// Click on the "Zxit" button
+		// Click on the "exit" button
 		else if (y >= buttons.exitBtn.min_y && y <= buttons.exitBtn.max_y)
 			button = 2;
 	}
