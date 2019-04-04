@@ -24,7 +24,7 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
         case 'D' :
         case 'L' :
         case 'R' :
-            player_move(server_game, player, command);
+            player_move(server_game, server_bomb, player, command);
 
             break;
         case 'B' :
@@ -59,7 +59,7 @@ t_player_infos *get_the_player(t_server_game *server_game, int player)
     return the_player;
 }
 
-void player_move(t_server_game *server_game, int player, char command)
+void player_move(t_server_game *server_game, bomb_server_t *server_bomb, int player, char command)
 {
     // Get the player
     t_player_infos *the_player;
@@ -68,22 +68,30 @@ void player_move(t_server_game *server_game, int player, char command)
     switch (command)
     {
         case 'U' :
-            if (place_is_free(server_game, the_player->x_pos, the_player->y_pos-1) && place_is_free_of_player(server_game, the_player->x_pos, the_player->y_pos-1)) {
+            if (place_is_free(server_game, the_player->x_pos, the_player->y_pos-1)
+            && place_is_free_of_player(server_game, the_player->x_pos, the_player->y_pos-1)
+            && place_is_free_of_bomb(server_bomb, the_player->x_pos, the_player->y_pos-1)) {
                 the_player->y_pos--;
             }
             break;
         case 'D' :
-            if (place_is_free(server_game, the_player->x_pos, the_player->y_pos+1) && place_is_free_of_player(server_game, the_player->x_pos, the_player->y_pos+1)) {
+            if (place_is_free(server_game, the_player->x_pos, the_player->y_pos+1)
+            && place_is_free_of_player(server_game, the_player->x_pos, the_player->y_pos+1)
+            && place_is_free_of_bomb(server_bomb, the_player->x_pos, the_player->y_pos+1)) {
                 the_player->y_pos++;
             }
             break;
         case 'L' :
-            if (place_is_free(server_game, the_player->x_pos-1, the_player->y_pos) && place_is_free_of_player(server_game, the_player->x_pos-1, the_player->y_pos)) {
+            if (place_is_free(server_game, the_player->x_pos-1, the_player->y_pos)
+            && place_is_free_of_player(server_game, the_player->x_pos-1, the_player->y_pos)
+            && place_is_free_of_bomb(server_bomb, the_player->x_pos-1, the_player->y_pos)) {
                 the_player->x_pos--;
             }
             break;
         case 'R' :
-            if (place_is_free(server_game, the_player->x_pos+1, the_player->y_pos) && place_is_free_of_player(server_game, the_player->x_pos+1, the_player->y_pos)) {
+            if (place_is_free(server_game, the_player->x_pos+1, the_player->y_pos)
+            && place_is_free_of_player(server_game, the_player->x_pos+1, the_player->y_pos)
+            && place_is_free_of_bomb(server_bomb, the_player->x_pos+1, the_player->y_pos)) {
                 the_player->x_pos++;
             }
             break;
