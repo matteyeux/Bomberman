@@ -45,6 +45,10 @@ explosion_server_t *init_explosion_server(t_server_game *server_game, int size, 
     explosion->x= x;
     explosion->y = y;
     explosion->size = size;
+    explosion->size_up    = 0;
+    explosion->size_right = 0;
+    explosion->size_down  = 0;
+    explosion->size_left  = 0;
     explosion->time = time_drop;
     explosion->prev = NULL;
     explosion->next = NULL;
