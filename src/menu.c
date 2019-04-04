@@ -180,6 +180,7 @@ menu_return_t *menu(void)
 				break;
 			case SDL_QUIT:
 				game_state = EXIT;
+				quit_bomberman = 1;
 				break;
 		}
 
