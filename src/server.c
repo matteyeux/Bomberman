@@ -18,6 +18,7 @@
 #include <include/bomberman.h>
 #include <include/map.h>
 #include <include/menu.h>
+#include <include/handler.h>
 
 int sock;
 int sock_fd_array[4];
@@ -28,8 +29,6 @@ int sock_fd_array[4];
 *  file to have its own private copy of the function
 */
 static int run_server(int sock, server_data_t *server_data);
-static t_client_request *receive_client_data(server_data_t *server_data);
-static int send_data_to_client(server_data_t *server_data, t_server_game *server_game);
 
 void *init_server(void *input)
 {
@@ -45,7 +44,7 @@ void *init_server(void *input)
 	server_data = malloc(sizeof(server_data_t));
 
 	if (server_data == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 
@@ -58,7 +57,7 @@ void *init_server(void *input)
 	}
 
 	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0) {
-		printf("setsockopt(SO_REUSEADDR) failed");
+		printf("[ERROR] setsockopt(SO_REUSEADDR) failed");
 		return NULL;
 	}
 
@@ -73,10 +72,10 @@ void *init_server(void *input)
 		return NULL;
 	}
 
-	printf("Successfully initialized server !\n");
+	printf("[INFO] Successfully initialized server !\n");
 
 	if (listen(sock, 4) == 0) {
-		printf("waiting for incomming connections...\n");
+		printf("[INFO] waiting for incomming connections...\n");
 	} else {
 		perror("listen");
 		return NULL;
@@ -105,7 +104,7 @@ static int run_server(int sock, server_data_t *server_data)
 	server_data->server_game = malloc(sizeof(t_server_game));
 
 	if (server_data->server_game == NULL){
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return -1;
 	}
 
@@ -128,12 +127,12 @@ static int run_server(int sock, server_data_t *server_data)
 	server_data->server_explosion->first = true;
 
 	if (server_data->server_bomb == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return -1;
 	}
 
 	if (server_data->server_explosion == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return -1;
 	}
 
@@ -149,12 +148,12 @@ static int run_server(int sock, server_data_t *server_data)
 			sock_fd = -1;
 		} else {
 			sock_fd = accept(sock, (struct sockaddr *)&client, (socklen_t *)&client_addr_len);
+
 			/*
-			* when you press exit you'll get :
-			* accept: Invalid argument
+			* if we hit this condition, close server
 			*/
 			if (sock_fd == -1) {
-				perror("accept");
+				printf("[INFO] connections closed\n", );
 				return -1;
 			}
 
@@ -172,7 +171,7 @@ static int run_server(int sock, server_data_t *server_data)
 			memcpy(&(server_data->client), &client, sizeof(struct sockaddr_in));
 			server_data->client_addr_len = client_addr_len;
 
-			printf("connection accepted\n");
+			printf("[INFO] connection accepted\n");
 
 			send(server_data->sock_fd[client_cnt - 1], &magic_array[server_data->sock_id], sizeof(int), 0);
 
@@ -195,98 +194,7 @@ static int run_server(int sock, server_data_t *server_data)
 	return 0;
 }
 
-/*
-* this function is called in a pthread
-* I pass a struct net_data_s that I cast in
-* a (void *).
-* it recv() from the client (recvfrom) a struct
-* then send back the same struct type with an id incremented by 1.
-*/
-void *handler(void *input)
-{
-	int m;
-	int num_player = 0;
-	char **schema;
-	server_data_t *server_data;
-	t_client_request *request;
-
-	server_data = malloc(sizeof(server_data_t));
-
-	if (server_data == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
-		return NULL;
-	}
-
-	memcpy(server_data, (server_data_t *)input, sizeof(server_data_t));
-
-
-	server_data->server_bomb->player = 0;
-	server_data->server_bomb->next = NULL;
-
-	schema = malloc(13 * sizeof(char*));
-
-	if (schema == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
-		return NULL;
-	}
-
-	schema = handle_file("map.txt");
-
-	for (int i = 0; i < 13; ++i) {
-		memcpy(server_data->server_game->schema[i], schema[i], sizeof(char) * 15);
-	}
-
-	while (status != -1) {
-		// TODO : Clean here
-		//printf("Magic=%d\n", server_data->magic[1]);
-
-		bombs_timer(server_data->server_game, server_data->server_bomb, server_data->server_explosion);
-		explosions_timer(server_data->server_explosion);
-
-		// Sending players and bombs into map
-		implement_map(server_data->server_game, server_data->server_bomb, server_data->server_explosion);
-
-		send_data_to_client(server_data, server_data->server_game);
-		
-		request = receive_client_data(server_data);
-
-		if (request == NULL) {
-			free(request);
-			free(server_data);
-			pthread_exit(NULL);
-		}
-
-		// TODO Yop : Bouchonnage des explosions ici
-		//server_data->server_game->schema[6][6] = 'G';
-		//server_data->server_game->schema[6][4] = 'H';
-		//server_data->server_game->schema[6][5] = 'H';
-		//server_data->server_game->schema[6][7] = 'H';
-		//server_data->server_game->schema[6][8] = 'H';
-		//server_data->server_game->schema[4][6] = 'I';
-		//server_data->server_game->schema[5][6] = 'I';
-		//server_data->server_game->schema[7][6] = 'I';
-		//server_data->server_game->schema[8][6] = 'I';
-
-		for (int i = 1; i < 4; i++) {
-			m = request->magic;
-			if (m == server_data->magic[i]) {
-				num_player = i;
-				break;
-			}
-		}
-
-		player_action(server_data->server_game, server_data->server_bomb, num_player, request->command);
-
-
-		free(request);
-	}
-
-	free(schema);
-	free(server_data);
-	return (void *)input;
-}
-
-static t_client_request *receive_client_data(server_data_t *server_data)
+t_client_request *receive_client_data(server_data_t *server_data)
 {
 	ssize_t receiver;
 
@@ -295,7 +203,7 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 	request = malloc(sizeof(t_client_request));
 
 	if (request == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 
@@ -315,7 +223,7 @@ static t_client_request *receive_client_data(server_data_t *server_data)
 /*
 * temporary function to put data in struct
 */
-static t_server_game *put_data_in_game(t_server_game *server_game)
+t_server_game *put_data_in_game(t_server_game *server_game)
 {
 	// TODO Yop : Bouchonnage ici pour le send
 	server_game->player1.connected = 'e';
@@ -354,7 +262,6 @@ int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 			close(server_data->sock_fd[i]);
 		}
 	}
-
 
 	return 0;
 }

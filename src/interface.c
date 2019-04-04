@@ -10,7 +10,7 @@ interface_t *init_interface(void)
 	interface = malloc(sizeof(interface_t));
 
 	if (interface == NULL) {
-		fprintf(stderr, "[MALLOC] unable to allocate memory\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		return NULL;
 	}
 
@@ -24,14 +24,14 @@ interface_t *init_interface(void)
 	interface->Font = NULL;
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-		fprintf(stderr, "unable to init SDL : %s\n", SDL_GetError());
+		fprintf(stderr, "[ERROR] unable to init SDL : %s\n", SDL_GetError());
 		destroy_interface(interface);
 		return NULL;
 	}
 
 	// init TTF font
 	if (TTF_Init() != 0) {
-		fprintf(stderr, "unable to init TTF : %s\n", TTF_GetError());
+		fprintf(stderr, "[ERROR] unable to init TTF : %s\n", TTF_GetError());
 		destroy_interface(interface);
 		return NULL;
 	}
@@ -39,7 +39,7 @@ interface_t *init_interface(void)
 	// init destRect
 	interface->destRect = malloc(sizeof(SDL_Rect));
 	if (interface->destRect == NULL) {
-		fprintf(stderr, "Malloc destRect failed.\n");
+		fprintf(stderr, "[%s:%d] unable to allocate memory\n", __FILE__, __LINE__);
 		destroy_interface(interface);
 		return NULL;
 	}
@@ -48,7 +48,7 @@ interface_t *init_interface(void)
 	interface->Font = TTF_OpenFont("fonts/arial.ttf", 25);
 
 	if (!interface->Font) {
-		fprintf(stderr, "unable to open TTF : %s\n", TTF_GetError());
+		fprintf(stderr, "[ERROR] unable to open TTF : %s\n", TTF_GetError());
 		destroy_interface(interface);
 		return NULL;
 	}
@@ -61,12 +61,12 @@ interface_t *init_interface(void)
 		interface->Renderer = SDL_CreateRenderer(interface->Window, -1, SDL_RENDERER_ACCELERATED);
 
 		if (!interface->Renderer) {
-			fprintf(stderr, "unable to create renderer : %s\n", SDL_GetError());
+			fprintf(stderr, "[ERROR] unable to create renderer : %s\n", SDL_GetError());
 			destroy_interface(interface);
 			return NULL;
 		}
 	} else {
-		fprintf(stderr, "unable to create window : %s\n", SDL_GetError());
+		fprintf(stderr, "[ERROR] unable to create window : %s\n", SDL_GetError());
 		destroy_interface(interface);
 		return NULL;
 	}

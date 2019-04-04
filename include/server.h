@@ -79,6 +79,7 @@ struct s_server_game {
 };
 
 void *init_server(void *input);
-void *handler(void *input);
+int send_data_to_client(server_data_t *server_data, t_server_game *server_game);
+t_client_request *receive_client_data(server_data_t *server_data);
 
 #endif
