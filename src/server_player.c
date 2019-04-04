@@ -131,14 +131,23 @@ bool place_is_free_of_bomb(bomb_server_t *server_bomb, int x, int y)
     bomb_server_t *the_bomb = server_bomb;
 
     while (!last_bomb) {
-        // TODO Yop : printf("BOMB : %d, %p\n", the_bomb->player, the_bomb->next);
-        if (the_bomb->next != NULL) {
+        // Check if there is bomb in the place
+        if (the_bomb->x == x && the_bomb->y == y)
+        {
+            return false;
+        }
+
+        // go to the next bomb of the chained list or break the while
+        if (the_bomb->next != NULL)
+        {
             the_bomb = the_bomb->next;
         } else {
-            the_bomb->next = new_bomb;
             last_bomb = true;
         }
     }
+
+    // default return true
+    return true;
 }
 
 void bomb_drop(t_server_game *server_game, bomb_server_t *server_bomb, int player)
