@@ -56,6 +56,12 @@ global_game_t *init_game(void)
 
 	fprintf(stdout, "Successfully initialized bomb !\n");
 
+	game->explosion = init_explosion(game->interface->Renderer);
+	if (game->explosion == NULL)
+		return NULL;
+
+	fprintf(stdout, "Successfully initialized explosions !\n");
+
 	return game;
 }
 

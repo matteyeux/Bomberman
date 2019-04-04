@@ -11,10 +11,11 @@ int status;
 
 void draw_game(global_game_t *game, t_server_game *sg)
 {
-	interface_t *interface = game->interface;
-	map_t *map = game->map;
-	bomb_t *bomb = game->bomb;
-	player_t *player = game->player;
+	interface_t *interface 	= game->interface;
+	map_t 		*map 		= game->map;
+	bomb_t 		*bomb 		= game->bomb;
+	player_t 	*player 	= game->player;
+	explosion_t *explosion 	= game->explosion;
 	int index;
 
 	// back screen
@@ -91,6 +92,18 @@ void draw_game(global_game_t *game, t_server_game *sg)
 
 					case 19:
 						setRectangle(&bomb->srcRect, 6*16, 6*16, 16, 16);
+						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						break;
+					case 23:
+						setRectangle(&bomb->srcRect, 5*16, 3*16, 16, 16);
+						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						break;
+					case 24:
+						setRectangle(&bomb->srcRect, 5*16, 4*16, 16, 16);
+						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						break;
+					case 25:
+						setRectangle(&bomb->srcRect, 0*16, 5*16, 16, 16);
 						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
 						break;
 
