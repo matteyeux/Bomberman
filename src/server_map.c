@@ -67,10 +67,10 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
 
             server_game->schema[the_explosion->y][the_explosion->x] = 'G';
 
-            bool up = true;
-            bool right = true;
-            bool down = true;
-            bool left = true;
+            //bool up = true;
+            //bool right = true;
+            //bool down = true;
+            //bool left = true;
             // Print the expansion of the explosion
 
             for (int i=1; i < (the_explosion->size + 1); i++ )

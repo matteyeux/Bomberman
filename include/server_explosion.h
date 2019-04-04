@@ -20,7 +20,7 @@ struct explosion_server_s {
 };
 
 void create_new_explosion(t_server_game *server_game, explosion_server_t *server_explosion, int size, int x, int y);
-bool wall_in_place(t_server_game *server_game, int x, int y);
+int wall_in_place(t_server_game *server_game, int x, int y);
 
 void explosions_timer(explosion_server_t *server_explosion);
 

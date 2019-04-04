@@ -69,7 +69,7 @@ bomb_server_t *init_bomb_server(int player, int x, int y)
     bomb->y = y;
     bomb->player = player;
     bomb->time = time_drop;
-    bomb->size = 2;
+    bomb->size = 4;
     bomb->next = NULL;
 
     return bomb;
