@@ -3,6 +3,7 @@
 #include <include/bomb.h>
 #include <include/map.h>
 #include <include/menu.h>
+#include <include/explosion.h>
 
 #ifndef GAME_H_
 #define GAME_H_
@@ -16,6 +17,7 @@ struct global_game_s {
 	map_t *map;
 	char *ip;
 	u_short port;
+	explosion_t *explosion;
 };
 
 global_game_t *init_game(void);

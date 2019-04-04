@@ -10,6 +10,7 @@
 #include <include/client.h>
 #include <include/server.h>
 #include <include/game.h>
+#include <include/explosion.h>
 
 #define PORT 12345
 
@@ -55,6 +56,12 @@ global_game_t *init_game(void)
 		return NULL;
 
 	fprintf(stdout, "[INFO] Successfully initialized bomb !\n");
+
+	game->explosion = init_explosion(game->interface->Renderer);
+	if (game->explosion == NULL)
+		return NULL;
+
+	fprintf(stdout, "Successfully initialized explosions !\n");
 
 	return game;
 }
