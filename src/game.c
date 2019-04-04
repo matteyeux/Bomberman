@@ -10,6 +10,7 @@
 #include <include/client.h>
 #include <include/server.h>
 #include <include/game.h>
+#include <include/explosion.h>
 
 #define PORT 12345
 

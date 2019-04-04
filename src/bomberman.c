@@ -83,28 +83,32 @@ void draw_game(global_game_t *game, t_server_game *sg)
 					case 17:
 						setRectangle(&bomb->srcRect, 8*16, 6*16, 16, 16);
 						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						SDL_RenderCopy(interface->Renderer, bomb->TexBomb, &bomb->srcRect, &bomb->destRect);
 						break;
-
 					case 18:
 						setRectangle(&bomb->srcRect, 7*16, 6*16, 16, 16);
 						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						SDL_RenderCopy(interface->Renderer, bomb->TexBomb, &bomb->srcRect, &bomb->destRect);
 						break;
-
 					case 19:
 						setRectangle(&bomb->srcRect, 6*16, 6*16, 16, 16);
 						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						SDL_RenderCopy(interface->Renderer, bomb->TexBomb, &bomb->srcRect, &bomb->destRect);
 						break;
 					case 23:
-						setRectangle(&bomb->srcRect, 5*16, 3*16, 16, 16);
-						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						setRectangle(&explosion->srcRect, 5*16, 3*16, 16, 16);
+						setRectangle(&explosion->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						SDL_RenderCopy(interface->Renderer, explosion->explTexture, &explosion->srcRect, &explosion->destRect);
 						break;
 					case 24:
-						setRectangle(&bomb->srcRect, 5*16, 4*16, 16, 16);
-						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						setRectangle(&explosion->srcRect, 5*16, 4*16, 16, 16);
+						setRectangle(&explosion->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						SDL_RenderCopy(interface->Renderer, explosion->explTexture, &explosion->srcRect, &explosion->destRect);
 						break;
 					case 25:
-						setRectangle(&bomb->srcRect, 0*16, 5*16, 16, 16);
-						setRectangle(&bomb->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						setRectangle(&explosion->srcRect, 0*16, 5*16, 16, 16);
+						setRectangle(&explosion->destRect, i * map->largeur_tile, j * map->hauteur_tile, map->largeur_tile, map->hauteur_tile);
+						SDL_RenderCopy(interface->Renderer, explosion->explTexture, &explosion->srcRect, &explosion->destRect);
 						break;
 
 						//printf("\n\nTESTING BOMB \n");
@@ -112,7 +116,7 @@ void draw_game(global_game_t *game, t_server_game *sg)
 						//	if (!bomb->exist)
 						//break;
 				}
-				SDL_RenderCopy(interface->Renderer, bomb->TexBomb, &bomb->srcRect, &bomb->destRect);
+				//SDL_RenderCopy(interface->Renderer, bomb->TexBomb, &bomb->srcRect, &bomb->destRect);
 				//if (index == 6 || index == 7 || index == 8 || index == 9) {
 					//player->posX = j;
 					//player->posY = i;
