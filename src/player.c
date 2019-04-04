@@ -66,7 +66,7 @@ void destroy_player(player_t *player)
 
 SDL_Texture *set_texture_player(SDL_Renderer *pRenderer)
 {
-	SDL_Surface *surfacePlayer = IMG_Load("images/player.png");
+	SDL_Surface *surfacePlayer = IMG_Load("images/sprite_player.png");
 	SDL_Texture *texture = NULL;
 	if (!surfacePlayer) {
 		printf("[ERROR] unable to create surface \n");

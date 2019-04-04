@@ -22,10 +22,10 @@ void draw_game(global_game_t *game, t_server_game *sg)
 	SDL_SetRenderDrawColor(interface->Renderer, 128, 20, 0, 255);
 	SDL_RenderClear(interface->Renderer);
 
-	setRectangle(&sg->player1.src, 4*16, 0*16, 16, 16);
-	setRectangle(&sg->player2.src, 4*16, 1*16, 16, 16);
-	setRectangle(&sg->player3.src, 1*16, 0*16, 16, 16);
-	setRectangle(&sg->player4.src, 1*16, 1*16, 16, 16);
+	setRectangle(&sg->player1.src, 0*16, 0*16, 16, 16);
+	setRectangle(&sg->player2.src, 1*16, 0*16, 16, 16);
+	setRectangle(&sg->player3.src, 2*16, 0*16, 16, 16);
+	setRectangle(&sg->player4.src, 3*16, 0*16, 16, 16);
 
 	if (sg != NULL) {
 		for (int i = 0; i < map->nbTileY; i++) {
