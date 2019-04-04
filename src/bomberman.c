@@ -175,21 +175,6 @@ int game_event(global_game_t *game, client_t *client_struct)
 				default :
 				break;
 			}
-
-			for (int y = 0; y < 13; y++) {
-				for (int x = 0; x < 15; x++) {
-					printf("%c", game->map->schema[y][x]);
-				}
-
-				printf("\t");
-
-				for (int z = 0; z < 15; z ++) {
-					printf("%c", global_game->schema[y][z]);
-				}
-				printf("\n");
-			}
-			printf("\n");
-
 		}
 	}
 
