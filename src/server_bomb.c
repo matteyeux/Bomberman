@@ -102,6 +102,7 @@ void bombs_timer(t_server_game *server_game, bomb_server_t *server_bomb, explosi
                 // Create explosion and delete bomb
                 create_new_explosion(server_game, server_explosion, the_bomb->size, the_bomb->x, the_bomb->y);
                 free(the_bomb);
+                return;
             }
         }
 
