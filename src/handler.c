@@ -69,18 +69,7 @@ void *handler(void *input)
 			pthread_exit(NULL);
 		}
 
-		// TODO Yop : Bouchonnage des explosions ici
-		//server_data->server_game->schema[6][6] = 'G';
-		//server_data->server_game->schema[6][4] = 'H';
-		//server_data->server_game->schema[6][5] = 'H';
-		//server_data->server_game->schema[6][7] = 'H';
-		//server_data->server_game->schema[6][8] = 'H';
-		//server_data->server_game->schema[4][6] = 'I';
-		//server_data->server_game->schema[5][6] = 'I';
-		//server_data->server_game->schema[7][6] = 'I';
-		//server_data->server_game->schema[8][6] = 'I';
-
-		for (int i = 1; i < 4; i++) {
+		for (int i = 1; i < 5; i++) {
 			m = request->magic;
 			if (m == server_data->magic[i]) {
 				num_player = i;
