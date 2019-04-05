@@ -116,17 +116,6 @@ void *game_loop(void *game_struct)
 
 		status = game_event(game, client_struct);
 
-		printf("Debug Map\n");
-		if (global_game != NULL) {
-			for (int y = 0; y < 13; y++) {
-				for (int x = 0; x < 15; x++) {
-					printf("%c", global_game->schema[y][x]);
-				}
-				printf("\n");
-			}
-			printf("\n");
-		}
-
 		SDL_Delay(20);
 	}
 
