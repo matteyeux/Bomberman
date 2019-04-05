@@ -108,25 +108,13 @@ static int run_server(int sock, server_data_t *server_data)
 		return -1;
 	}
 
-	server_data->server_game->player1.x_pos = 2;
-	server_data->server_game->player1.y_pos = 2;
-	server_data->server_game->player1.live = 1;
-	server_data->server_game->player1.bombs_left = 3;
-    server_data->server_game->player2.x_pos = 12;
-    server_data->server_game->player2.y_pos = 2;
-    server_data->server_game->player2.live = 1;
-    server_data->server_game->player2.bombs_left = 3;
-    server_data->server_game->player3.x_pos = 2;
-    server_data->server_game->player3.y_pos = 10;
-    server_data->server_game->player3.live = 1;
-    server_data->server_game->player3.bombs_left = 3;
-    server_data->server_game->player4.x_pos = 12;
-    server_data->server_game->player4.y_pos = 10;
-    server_data->server_game->player4.live = 1;
-    server_data->server_game->player4.bombs_left = 3;
+	// Init base player datum
+	init_player_informations(server_data);
 
+	// Init server_bomb
 	server_data->server_bomb = malloc(sizeof(bomb_server_t));
 
+	// Init	server_explosion
 	server_data->server_explosion = malloc(sizeof(explosion_server_t));
 	server_data->server_explosion->first = true;
 
@@ -245,4 +233,25 @@ int send_data_to_client(server_data_t *server_data, t_server_game *server_game)
 	}
 
 	return 0;
+}
+
+void init_player_informations(server_data_t *server_data)
+{
+	// init datum of player
+	server_data->server_game->player1.x_pos = 2;
+	server_data->server_game->player1.y_pos = 2;
+	server_data->server_game->player1.live = 1;
+	server_data->server_game->player1.bombs_left = 3;
+	server_data->server_game->player2.x_pos = 12;
+	server_data->server_game->player2.y_pos = 2;
+	server_data->server_game->player2.live = 1;
+	server_data->server_game->player2.bombs_left = 3;
+	server_data->server_game->player3.x_pos = 2;
+	server_data->server_game->player3.y_pos = 10;
+	server_data->server_game->player3.live = 1;
+	server_data->server_game->player3.bombs_left = 3;
+	server_data->server_game->player4.x_pos = 12;
+	server_data->server_game->player4.y_pos = 10;
+	server_data->server_game->player4.live = 1;
+	server_data->server_game->player4.bombs_left = 3;
 }
