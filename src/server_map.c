@@ -28,6 +28,9 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
     }
 
     // Drop Players on the map
+    //
+    // if alive Drop Players alive on top
+    //  else    Drop Players dead on top
     if (server_game->player1.live == 1)
     {
         server_game->schema[server_game->player1.y_pos][server_game->player1.x_pos] = '6';
@@ -62,7 +65,6 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
     bomb_server_t *the_bomb = server_bomb;
     while (!last_bomb)
     {
-        // TODO printf("Bomb Player %d\n", the_bomb->player);
         if (the_bomb->player != 0)
         {
             server_game->schema[the_bomb->y][the_bomb->x] = 'A';
@@ -88,12 +90,6 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
             printf("EXPLOSIONS ___ %p %d %d\n\n", server_explosion->next, the_explosion->y, the_explosion->x);
 
             server_game->schema[the_explosion->y][the_explosion->x] = 'G';
-
-            //bool up = true;
-            //bool right = true;
-            //bool down = true;
-            //bool left = true;
-            // Print the expansion of the explosion
 
             for (int i=1; i < (the_explosion->size + 1); i++ )
             {

@@ -18,6 +18,7 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
         return;
     }
 
+    // Check the command of the player
     switch (command)
     {
         case 'U' :
@@ -65,6 +66,8 @@ void player_move(t_server_game *server_game, bomb_server_t *server_bomb, int pla
     t_player_infos *the_player;
     the_player = get_the_player(server_game, player);
 
+    // For each command check if : place is free, no player on place, no bomb on place
+    //     -> then move
     switch (command)
     {
         case 'U' :
@@ -135,9 +138,11 @@ bool place_is_free_of_player(t_server_game *server_game, int x, int y)
 
 bool place_is_free_of_bomb(bomb_server_t *server_bomb, int x, int y)
 {
+    // init the_bomb for temporary using it in loop
     bool last_bomb = false;
     bomb_server_t *the_bomb = server_bomb;
 
+    // for each bomb, we check the place
     while (!last_bomb) {
         // Check if there is bomb in the place
         if (the_bomb->x == x && the_bomb->y == y)

@@ -4,16 +4,15 @@
 
 void create_new_explosion(t_server_game *server_game, explosion_server_t *server_explosion, int size, int x, int y)
 {
-    printf("CREATE EXPLOSION  !!!!!!!!\n");
-
+    // init new explosion
     explosion_server_t *new_explosion;
     new_explosion = init_explosion_server(server_game, size, x, y);
 
+    // Put the explosion at the end the chained list
     bool last_explosion = false;
     explosion_server_t *the_explosion = server_explosion;
     while (!last_explosion)
     {
-        // TODO Yop : printf("BOMB : %d, %p\n", the_bomb->player, the_bomb->next);
         if (the_explosion->next != NULL)
         {
             the_explosion = the_explosion->next;
@@ -23,7 +22,6 @@ void create_new_explosion(t_server_game *server_game, explosion_server_t *server
         }
     }
 }
-
 
 explosion_server_t *init_explosion_server(t_server_game *server_game, int size, int x, int y)
 {
@@ -140,7 +138,7 @@ explosion_server_t *init_explosion_server(t_server_game *server_game, int size, 
 
 int wall_in_place(t_server_game *server_game, int x, int y)
 {
-    // Return 0 for nothing, 1 for hardwall, 2 for bricks
+    // Return 0 for nothing, 1 for hard wall, 2 for bricks wall
     switch (server_game->schema[y][x])
     {
         case '2' :
@@ -156,6 +154,8 @@ int wall_in_place(t_server_game *server_game, int x, int y)
 
 void kill_player_on_place(t_server_game *server_game, int x, int y)
 {
+    // If any player on the place, kill him
+
     if (server_game->player1.x_pos == x && server_game->player1.y_pos == y)
     {
         server_game->player1.live = 0;
@@ -179,39 +179,29 @@ void kill_player_on_place(t_server_game *server_game, int x, int y)
 
 void explosions_timer(explosion_server_t *server_explosion)
 {
-    // TODO : Debug Explosion
-    //bool last_explosion = false;
-    //explosion_server_t *the_explosion = server_explosion;
-    //while (!last_explosion)
-    //{
-    //    printf("EXPLODE : %p, %ld\n", the_explosion->next, the_explosion->time);
-    //
-    //    if (the_explosion->next != NULL)
-    //    {
-    //        the_explosion = the_explosion->next;
-    //    }else{
-    //        last_explosion = true;
-    //    }
-    //}
-
-
+    // Take unix time of now
     long time_actual;
     time_actual = time(NULL);
 
+    // init the_explosion for temporary using it in loop
     bool last_explosion = false;
     explosion_server_t *the_explosion = server_explosion;
 
     while (!last_explosion)
     {
+        // If it is not the initial explosion (used for passing in arguments)
         if (the_explosion->first != 1)
         {
-            if ((time_actual - the_explosion->time) > 0 ) // TODO : time for explosion explode
+            // If time the explosion was init and now have 1 seconds or more difference
+            if ((time_actual - the_explosion->time) > 0 )
             {
+                // put address of the next explosion in the initial explosion and delete the explosion
                 server_explosion->next = the_explosion->next;
                 free(the_explosion);
             }
         }
 
+        // go to the next explosion
         if (the_explosion->next != NULL)
         {
             the_explosion = the_explosion->next;
