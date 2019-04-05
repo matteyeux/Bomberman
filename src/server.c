@@ -158,6 +158,11 @@ static int run_server(int sock, server_data_t *server_data)
 			magic_array[server_data->sock_id] = rand();
 			server_data->magic[(server_data->sock_id + 1)] = magic_array[server_data->sock_id];
 
+            // Get the player
+            t_player_infos *the_player;
+            the_player = get_the_player(server_data->server_game, (server_data->sock_id + 1));
+            the_player->live = 1;
+
 			server_data->sock_fd[client_cnt - 1] = sock_fd;
 
 			memcpy(&(server_data->client), &client, sizeof(struct sockaddr_in));
@@ -240,18 +245,18 @@ void init_player_informations(server_data_t *server_data)
 	// init datum of player
 	server_data->server_game->player1.x_pos = 2;
 	server_data->server_game->player1.y_pos = 2;
-	server_data->server_game->player1.live = 1;
+	server_data->server_game->player1.live = 0;
 	server_data->server_game->player1.bombs_left = 3;
 	server_data->server_game->player2.x_pos = 12;
 	server_data->server_game->player2.y_pos = 2;
-	server_data->server_game->player2.live = 1;
+	server_data->server_game->player2.live = 0;
 	server_data->server_game->player2.bombs_left = 3;
 	server_data->server_game->player3.x_pos = 2;
 	server_data->server_game->player3.y_pos = 10;
-	server_data->server_game->player3.live = 1;
+	server_data->server_game->player3.live = 0;
 	server_data->server_game->player3.bombs_left = 3;
 	server_data->server_game->player4.x_pos = 12;
 	server_data->server_game->player4.y_pos = 10;
-	server_data->server_game->player4.live = 1;
+	server_data->server_game->player4.live = 0;
 	server_data->server_game->player4.bombs_left = 3;
 }
