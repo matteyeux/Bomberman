@@ -27,26 +27,14 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
         }
     }
 
-    // Drop the bombs ont the map
-    bool last_bomb = false;
-    bomb_server_t *the_bomb = server_bomb;
-    while (!last_bomb)
-    {
-        // If it is not the initial bomb (used for passing in arguments)
-        if (the_bomb->player != 0)
-        {
-            server_game->schema[the_bomb->y][the_bomb->x] = 'A';
-        }
+    // Implement Elements on the map
+    implement_bomb_on_map(server_game, server_bomb);
+    implement_player_on_map(server_game);
+    implement_explosion_on_map(server_game, server_explosion);
+}
 
-        // go to the next bomb
-        if (the_bomb->next != NULL)
-        {
-            the_bomb = the_bomb->next;
-        }else{
-            last_bomb = true;
-        }
-    }
-
+void implement_player_on_map(t_server_game *server_game)
+{
     // Drop Players on the map
     //
     // if alive Drop Players alive on top
@@ -78,7 +66,30 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
     } else {
         server_game->schema[0][10] = 'Z';
     }
+}
 
+void implement_bomb_on_map(t_server_game *server_game, bomb_server_t *server_bomb)
+{
+    // Drop the bombs ont the map
+    bool last_bomb = false;
+    bomb_server_t *the_bomb = server_bomb;
+    while (!last_bomb) {
+        // If it is not the initial bomb (used for passing in arguments)
+        if (the_bomb->player != 0) {
+            server_game->schema[the_bomb->y][the_bomb->x] = 'A';
+        }
+
+        // go to the next bomb
+        if (the_bomb->next != NULL) {
+            the_bomb = the_bomb->next;
+        } else {
+            last_bomb = true;
+        }
+    }
+}
+
+void implement_explosion_on_map(t_server_game *server_game, explosion_server_t *server_explosion)
+{
     // Drop the explosions ont the map
     bool last_explosion = false;
     explosion_server_t *the_explosion = server_explosion;
@@ -122,3 +133,4 @@ void implement_map(t_server_game *server_game, bomb_server_t *server_bomb, explo
     }
 
 }
+
