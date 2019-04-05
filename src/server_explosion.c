@@ -142,10 +142,8 @@ int wall_in_place(t_server_game *server_game, int x, int y)
     switch (server_game->schema[y][x])
     {
         case '2' :
-            printf("\n--> FOUND THE BRICKS ^^^^^ \n");
             return 2;
         case '1' :
-            printf("\n--> FOUND THE HARD WALL ^^^^^ \n");
             return 1;
     }
 

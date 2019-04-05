@@ -11,10 +11,9 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
     t_player_infos *the_player;
     the_player = get_the_player(server_game, player);
 
-    // If player is dead, don't take any information
+    // If player is dead, don't take any information and break all actions, dead people don' move, except zombies, but it not this game...
     if (the_player->live != 1)
     {
-        printf("IS DEAD\n");
         return;
     }
 
@@ -26,7 +25,6 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
         case 'L' :
         case 'R' :
             player_move(server_game, server_bomb, player, command);
-
             break;
         case 'B' :
             if (the_player->bombs_left > 0)
