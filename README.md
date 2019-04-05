@@ -1,6 +1,6 @@
 # Bomberman
 
-
+[![Build Status](https://travis-ci.com/matteyeux/Bomberman.svg?token=vsNybsdJnqqFaoRpWKLL&branch=develop)](https://travis-ci.com/matteyeux/Bomberman)
 <center><img src="https://matteyeux.com/map_demo.png"></center>
 
 ### Build
