@@ -4,7 +4,7 @@
 <center><img src="https://matteyeux.com/map_demo.png"></center>
 
 ### Build
-Les paquets suivants sont nécessaires pour la compilation (sous Debian/Ubuntu)
+Dependencies : 
 - libsdl2-dev
 - libsdl2-image-dev
 - libsdl2-ttf-dev
@@ -13,21 +13,26 @@ Les paquets suivants sont nécessaires pour la compilation (sous Debian/Ubuntu)
 $ sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
 ```
 
-Pour compiler : `make`
+To build  : `make`
+
 ### Documentation
 
-Documentation générée avec Doxygen disponible ici : [bomberman.matteyeux.com](http://bomberman.matteyeux.com)
+Documentation is here : [bomberman.matteyeux.com](http://bomberman.matteyeux.com)
 
-Ou vous pouvez aussi la générer vous-même avec make : `make docs`.
+You can generate doc with : `make docs`.
 
 ### Menu
 
 <center><img src="https://matteyeux.com/menu_demo.png"></center>
 
-Si vous êtes dans une VM, il y a une erreur lors de la saisie de l'IP qui genere des charactères  spéciaux.
+If you are running it in a VM there is an issue with unknown caracters.
 
 
 ### support
+Tested on GNU/Linux Debian 9
 
-Testé uniquements sur les systèmes GNU/Linux. Il est recommandé d'utiliser Debian 9.
-
+### Credits 
+[Yoann Humeau](https://github.com/YoannHumeau) <br>
+[Boris Lepage](https://github.com/BorisLepage) <br>
+[Alexandre Majda](https://github.com/alexandremajda) <br>
+[Mathieu Hautebas](https://github.com/matteyeux)
