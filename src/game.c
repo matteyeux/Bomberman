@@ -61,7 +61,7 @@ global_game_t *init_game(void)
 	if (game->explosion == NULL)
 		return NULL;
 
-	fprintf(stdout, "Successfully initialized explosions !\n");
+	fprintf(stdout, "[INFO] Successfully initialized explosions !\n");
 
 	return game;
 }
