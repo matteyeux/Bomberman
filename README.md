@@ -31,7 +31,7 @@ If you are running it in a VM there is an issue with unknown caracters.
 ### support
 Tested on GNU/Linux Debian 9
 
-### Credits
+### Credits 
 [Yoann Humeau](https://github.com/YoannHumeau) <br>
 [Boris Lepage](https://github.com/BorisLepage) <br>
 [Alexandre Majda](https://github.com/alexandremajda) <br>
