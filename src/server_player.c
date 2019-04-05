@@ -11,7 +11,7 @@ void player_action(t_server_game *server_game, bomb_server_t *server_bomb, int p
     t_player_infos *the_player;
     the_player = get_the_player(server_game, player);
 
-    // If player is dead, don't take any information and break all actions, dead people don' move, except zombies, but it not this game...
+    // If player is dead, don't take any information and break all actions, dead people don't move, except zombies, but it not this game...
     if (the_player->live != 1)
     {
         return;
