@@ -34,5 +34,5 @@ Tested on GNU/Linux Debian 9
 ### Credits 
 [Yoann Humeau](https://github.com/YoannHumeau) <br>
 [Boris Lepage](https://github.com/BorisLepage) <br>
-[Alexandre Majda](https://github.com/alexandremajda) <br>
+[Alexandre Majda](https://github.com/Bilbhur) <br>
 [Mathieu Hautebas](https://github.com/matteyeux)
